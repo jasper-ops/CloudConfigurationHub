@@ -24,6 +24,7 @@ public sealed class ConfigurationHubDbContext(DbContextOptions<ConfigurationHubD
             builder.HasKey(project => project.Id);
             builder.Property(project => project.Name).HasMaxLength(200).IsRequired();
             builder.Property(project => project.Key).HasMaxLength(100).IsRequired();
+            builder.Property(project => project.AccessKeyHash).HasMaxLength(128).IsRequired();
             builder.HasIndex(project => project.Key).IsUnique();
             builder.Navigation(project => project.Environments).UsePropertyAccessMode(PropertyAccessMode.Field);
             builder.Navigation(project => project.Configurations).UsePropertyAccessMode(PropertyAccessMode.Field);
@@ -67,7 +68,6 @@ public sealed class ConfigurationHubDbContext(DbContextOptions<ConfigurationHubD
                 releases.Property(release => release.PublishedBy).HasMaxLength(200).IsRequired();
                 releases.Property(release => release.PublishedAt).IsRequired();
                 releases.HasIndex("ProjectId", nameof(ConfigRelease.EnvironmentId), nameof(ConfigRelease.Version)).IsUnique();
-
                 releases.OwnsMany(release => release.Values, values => {
                     values.ToTable("ConfigReleaseValues");
                     values.WithOwner().HasForeignKey("ReleaseId");
@@ -77,6 +77,7 @@ public sealed class ConfigurationHubDbContext(DbContextOptions<ConfigurationHubD
                     values.Property(value => value.Value).IsRequired();
                     values.Property(value => value.IsSensitive).IsRequired();
                 });
+                releases.Navigation(release => release.Values).UsePropertyAccessMode(PropertyAccessMode.Field);
             });
         });
     }

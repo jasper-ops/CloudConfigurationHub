@@ -15,12 +15,14 @@ public sealed class Project {
     private Project() {
         Name = string.Empty;
         Key = string.Empty;
+        AccessKeyHash = string.Empty;
     }
 
     private Project(Guid id, string name, string key) {
         Id = id;
         Name = name;
         Key = key;
+        AccessKeyHash = string.Empty;
     }
 
     /// <summary>
@@ -37,6 +39,11 @@ public sealed class Project {
     /// 项目唯一 Key，用于 SDK 读取配置时定位项目。
     /// </summary>
     public string Key { get; }
+
+    /// <summary>
+    /// 项目级只读 Access Key 的哈希值。
+    /// </summary>
+    public string AccessKeyHash { get; private set; }
 
     /// <summary>
     /// 项目下已定义的环境集合。
@@ -100,6 +107,14 @@ public sealed class Project {
         var configuration = new ConfigDefinition(Guid.NewGuid(), normalizedGroup, normalizedKey, isSensitive);
         _configurations.Add(configuration);
         return configuration;
+    }
+
+    /// <summary>
+    /// 替换项目级只读 Access Key 的哈希值。
+    /// </summary>
+    /// <param name="accessKeyHash">新的 Access Key 哈希值。</param>
+    public void ReplaceAccessKeyHash(string accessKeyHash) {
+        AccessKeyHash = accessKeyHash;
     }
 
     /// <summary>

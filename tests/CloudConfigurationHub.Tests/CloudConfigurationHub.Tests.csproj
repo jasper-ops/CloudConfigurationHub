@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\src\CloudConfigurationHub.Application\CloudConfigurationHub.Application.csproj" />
     <ProjectReference Include="..\..\src\CloudConfigurationHub.Infrastructure\CloudConfigurationHub.Infrastructure.csproj" />
     <ProjectReference Include="..\..\src\CloudConfigurationHub.Sdk\CloudConfigurationHub.Sdk.csproj" />
+    <ProjectReference Include="..\..\src\CloudConfigurationHub.App\CloudConfigurationHub.App.csproj" />
   </ItemGroup>
 
 </Project>

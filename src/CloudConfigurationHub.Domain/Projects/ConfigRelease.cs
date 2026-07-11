@@ -4,10 +4,11 @@ namespace CloudConfigurationHub.Domain.Projects;
 /// 某个项目环境的一次不可变配置发布版本。
 /// </summary>
 public sealed class ConfigRelease {
+    private readonly List<ConfigReleaseValue> _values = [];
+
     private ConfigRelease() {
         Note = string.Empty;
         PublishedBy = string.Empty;
-        Values = [];
     }
 
     internal ConfigRelease(
@@ -24,7 +25,7 @@ public sealed class ConfigRelease {
         Note = note;
         PublishedBy = publishedBy;
         PublishedAt = publishedAt;
-        Values = values;
+        _values.AddRange(values);
     }
 
     /// <summary>
@@ -60,5 +61,5 @@ public sealed class ConfigRelease {
     /// <summary>
     /// 发布时冻结的配置值快照。
     /// </summary>
-    public IReadOnlyCollection<ConfigReleaseValue> Values { get; }
+    public IReadOnlyCollection<ConfigReleaseValue> Values => _values.AsReadOnly();
 }

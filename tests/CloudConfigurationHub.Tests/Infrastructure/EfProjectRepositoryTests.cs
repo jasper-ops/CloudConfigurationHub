@@ -33,4 +33,39 @@ public sealed class EfProjectRepositoryTests {
         Assert.Equal("prod", Assert.Single(savedProject.Environments).Key);
         Assert.True(Assert.Single(savedProject.Configurations).IsSensitive);
     }
+
+    [Fact]
+    public async Task GetLatestAsync_returns_latest_published_snapshot_for_valid_access_key() {
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        var options = new DbContextOptionsBuilder<ConfigurationHubDbContext>()
+            .UseSqlite(connection)
+            .Options;
+        await using var arrangeContext = new ConfigurationHubDbContext(options);
+        await arrangeContext.Database.EnsureCreatedAsync();
+        var hasher = new Sha256AccessKeyHasher();
+        var project = Project.Create("Order Service", "order-service");
+        project.ReplaceAccessKeyHash(hasher.Hash("secret"));
+        var environment = project.AddEnvironment("Production", "prod");
+        var configuration = project.AddConfiguration("Database", "ConnectionString", isSensitive: false);
+        project.SetDraftValue(environment.Id, configuration.Id, "server=prod-a");
+        project.PublishEnvironment(environment.Id, "首次发布", "admin", DateTimeOffset.Parse("2026-07-11T12:00:00Z"));
+        project.SetDraftValue(environment.Id, configuration.Id, "server=prod-b");
+        project.PublishEnvironment(environment.Id, "第二次发布", "admin", DateTimeOffset.Parse("2026-07-11T12:10:00Z"));
+        var repository = new EfProjectRepository(arrangeContext, NullLogger<EfProjectRepository>.Instance);
+        await repository.AddAsync(project, CancellationToken.None);
+        await using var assertContext = new ConfigurationHubDbContext(options);
+        var reader = new EfPublishedConfigurationReader(
+            assertContext,
+            hasher,
+            NullLogger<EfPublishedConfigurationReader>.Instance);
+
+        var snapshot = await reader.GetLatestAsync("order-service", "prod", "secret", CancellationToken.None);
+        var unauthorizedSnapshot = await reader.GetLatestAsync("order-service", "prod", "wrong", CancellationToken.None);
+
+        Assert.NotNull(snapshot);
+        Assert.Equal(2, snapshot.Version);
+        Assert.Equal("server=prod-b", snapshot.Values["database:connectionstring"]);
+        Assert.Null(unauthorizedSnapshot);
+    }
 }
