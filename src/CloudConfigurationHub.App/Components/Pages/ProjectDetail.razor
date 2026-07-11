@@ -65,6 +65,7 @@
                             <span class="info-pill">
                                 @environment.Name <code>@environment.Key</code>
                                 <a href="@($"projects/{ProjectId}/environments/{environment.Id}/drafts")">@Texts["DraftEdit.EditEnvironment"]</a>
+                                <a href="@($"projects/{ProjectId}/environments/{environment.Id}/publish")">@Texts["PublishEnvironment.PublishEnvironment"]</a>
                             </span>
                         }
                     </div>

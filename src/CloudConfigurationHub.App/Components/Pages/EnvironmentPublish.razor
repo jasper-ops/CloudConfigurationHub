@@ -1,0 +1,261 @@
+@page "/projects/{ProjectId:guid}/environments/{EnvironmentId:guid}/publish"
+@rendermode InteractiveServer
+@using CloudConfigurationHub.Application.Projects
+@using ProjectDetailModel = CloudConfigurationHub.Application.Projects.ProjectDetail
+@using Mediator
+@inject ISender Sender
+@inject NavigationManager NavigationManager
+@inject ILogger<EnvironmentPublish> Logger
+@inject IStringLocalizer<AppText> Texts
+
+<PageTitle>@Texts["PublishEnvironment.PageTitle"]</PageTitle>
+
+<section class="admin-page control-surface narrow-page">
+    @if (isLoading) {
+        <FluentCard Class="state-card">
+            <FluentProgressRing />
+            <p>@Texts["ProjectDetail.Loading"]</p>
+        </FluentCard>
+    }
+    else if (project is null || environment is null) {
+        <FluentCard Class="state-card">
+            <h2>@Texts["ProjectDetail.NotFoundTitle"]</h2>
+            <p>@Texts["PublishEnvironment.NotFoundDescription"]</p>
+            <a class="primary-action" href="projects">@Texts["ProjectDetail.BackToProjects"]</a>
+        </FluentCard>
+    }
+    else {
+        <div class="admin-page-header command-hero release-hero">
+            <div>
+                <p class="eyebrow">@Texts["PublishEnvironment.Eyebrow"]</p>
+                <h1>@Texts["PublishEnvironment.Title"]</h1>
+                <p class="page-description">
+                    @project.Name / <span class="text-code">@environment.Key</span>
+                    <br />
+                    @Texts["PublishEnvironment.Description"]
+                </p>
+            </div>
+            <a class="secondary-action" href="@($"projects/{ProjectId}")">@Texts["ProjectDetail.BackToProject"]</a>
+        </div>
+
+        <FluentCard Class="form-card command-card release-panel">
+            <form class="interactive-form" @onsubmit:preventDefault="true">
+                @if (!string.IsNullOrWhiteSpace(errorMessage)) {
+                    <div class="error-banner" role="alert">@errorMessage</div>
+                }
+
+                <div class="section-heading">
+                    <h2>@Texts["PublishEnvironment.PreviewTitle"]</h2>
+                    <span class="status-pill">@ReleasePreviewRows.Count</span>
+                </div>
+
+                @if (ReleasePreviewRows.Count == 0) {
+                    <div class="mini-empty">
+                        <div class="orb-icon small violet" aria-hidden="true"></div>
+                        <p class="muted-text">@Texts["PublishEnvironment.NoConfigurations"]</p>
+                    </div>
+                }
+                else {
+                    <div class="table-scroll release-preview">
+                        <table class="detail-table">
+                            <thead>
+                                <tr>
+                                    <th>@Texts["PublishEnvironment.ConfigurationKey"]</th>
+                                    <th>@Texts["ProjectDetail.Sensitive"]</th>
+                                    <th>@Texts["PublishEnvironment.DraftValue"]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var row in ReleasePreviewRows) {
+                                    <tr>
+                                        <td><code>@row.ConfigurationKey</code></td>
+                                        <td>
+                                            <span class="status-pill @(row.IsSensitive ? "sensitive" : string.Empty)">
+                                                @(row.IsSensitive ? Texts["Common.Yes"] : Texts["Common.No"])
+                                            </span>
+                                        </td>
+                                        <td>@(row.HasValue ? row.DisplayValue : Texts["PublishEnvironment.EmptyValue"])</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="form-grid release-form-grid">
+                        <label>
+                            <span>@Texts["PublishEnvironment.NoteLabel"]</span>
+                            <textarea class="text-input draft-textarea" name="release-note" @bind="FormModel.Note" @bind:event="oninput"></textarea>
+                            <small>@Texts["PublishEnvironment.NoteHelp"]</small>
+                        </label>
+
+                        <label>
+                            <span>@Texts["PublishEnvironment.PublishedByLabel"]</span>
+                            <input class="text-input" name="published-by" @bind="FormModel.PublishedBy" @bind:event="oninput" />
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="primary-action button-reset" type="button" disabled="@isPublishing" @onclick="PublishAsync">
+                            @(isPublishing ? Texts["PublishEnvironment.Saving"] : Texts["PublishEnvironment.Submit"])
+                        </button>
+                    </div>
+                }
+            </form>
+        </FluentCard>
+    }
+</section>
+
+@code {
+    /// <summary>
+    /// 当前项目 ID。
+    /// </summary>
+    [Parameter]
+    public Guid ProjectId { get; set; }
+
+    /// <summary>
+    /// 当前准备发布的环境 ID。
+    /// </summary>
+    [Parameter]
+    public Guid EnvironmentId { get; set; }
+
+    /// <summary>
+    /// 项目详情读取模型。
+    /// </summary>
+    private ProjectDetailModel? project;
+
+    /// <summary>
+    /// 当前准备发布的环境摘要。
+    /// </summary>
+    private EnvironmentSummary? environment;
+
+    /// <summary>
+    /// 发布预览行集合，用于展示该环境当前草稿快照。
+    /// </summary>
+    private List<ReleasePreviewRow> ReleasePreviewRows { get; } = [];
+
+    /// <summary>
+    /// 发布表单模型。
+    /// </summary>
+    private PublishEnvironmentFormModel FormModel { get; } = new();
+
+    /// <summary>
+    /// 指示页面是否正在加载项目详情。
+    /// </summary>
+    private bool isLoading = true;
+
+    /// <summary>
+    /// 指示发布命令是否正在执行。
+    /// </summary>
+    private bool isPublishing;
+
+    /// <summary>
+    /// 发布失败时展示的错误消息。
+    /// </summary>
+    private string? errorMessage;
+
+    /// <summary>
+    /// 读取项目详情并构建当前环境的发布预览。
+    /// </summary>
+    protected override async Task OnInitializedAsync() {
+        Logger.LogInformation(
+            "管理端开始读取环境发布页面。ProjectId={ProjectId}, EnvironmentId={EnvironmentId}",
+            ProjectId,
+            EnvironmentId);
+        project = await Sender.Send(new GetProjectDetailQuery(ProjectId), CancellationToken.None);
+        environment = project?.Environments.SingleOrDefault(item => item.Id == EnvironmentId);
+        if (project is not null && environment is not null) {
+            foreach (var configuration in project.Configurations) {
+                var draftValue = configuration.Values.SingleOrDefault(item => item.EnvironmentId == EnvironmentId);
+                ReleasePreviewRows.Add(new ReleasePreviewRow {
+                    ConfigurationKey = $"{configuration.Group}:{configuration.Key}",
+                    IsSensitive = configuration.IsSensitive,
+                    HasValue = draftValue?.HasValue == true,
+                    DisplayValue = draftValue?.DisplayValue ?? string.Empty
+                });
+            }
+        }
+
+        isLoading = false;
+        Logger.LogInformation(
+            "管理端环境发布页面读取完成。ProjectId={ProjectId}, EnvironmentId={EnvironmentId}, Found={Found}, PreviewCount={PreviewCount}",
+            ProjectId,
+            EnvironmentId,
+            project is not null && environment is not null,
+            ReleasePreviewRows.Count);
+    }
+
+    /// <summary>
+    /// 发布当前环境配置快照，并回到项目详情页。
+    /// </summary>
+    private async Task PublishAsync() {
+        if (environment is null) {
+            return;
+        }
+
+        isPublishing = true;
+        errorMessage = null;
+        try {
+            var release = await Sender.Send(
+                new PublishEnvironmentCommand(ProjectId, EnvironmentId, FormModel.Note, FormModel.PublishedBy),
+                CancellationToken.None);
+            Logger.LogInformation(
+                "管理端已提交环境配置发布。ProjectId={ProjectId}, EnvironmentId={EnvironmentId}, Version={Version}, PublishedBy={PublishedBy}",
+                ProjectId,
+                EnvironmentId,
+                release.Version,
+                FormModel.PublishedBy);
+            NavigationManager.NavigateTo($"projects/{ProjectId}");
+        }
+        catch (Exception exception) {
+            errorMessage = exception.Message;
+            Logger.LogWarning(
+                exception,
+                "管理端环境配置发布失败。ProjectId={ProjectId}, EnvironmentId={EnvironmentId}",
+                ProjectId,
+                EnvironmentId);
+        }
+        finally {
+            isPublishing = false;
+        }
+    }
+
+    /// <summary>
+    /// 发布环境时的表单输入模型。
+    /// </summary>
+    public sealed class PublishEnvironmentFormModel {
+        /// <summary>
+        /// 发布备注，用于审计本次发布意图与变更说明。
+        /// </summary>
+        public string Note { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 发布人标识，用于审计日志和发布记录。
+        /// </summary>
+        public string PublishedBy { get; set; } = "admin";
+    }
+
+    /// <summary>
+    /// 环境发布前展示的单个配置预览行。
+    /// </summary>
+    public sealed class ReleasePreviewRow {
+        /// <summary>
+        /// 配置完整 Key，格式为分组与 Key 的组合。
+        /// </summary>
+        public string ConfigurationKey { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 指示配置项是否为敏感配置。
+        /// </summary>
+        public bool IsSensitive { get; set; }
+
+        /// <summary>
+        /// 指示该环境当前是否已经设置草稿值。
+        /// </summary>
+        public bool HasValue { get; set; }
+
+        /// <summary>
+        /// 页面展示的草稿值，敏感配置由读取模型负责脱敏。
+        /// </summary>
+        public string DisplayValue { get; set; } = string.Empty;
+    }
+}

@@ -89,7 +89,15 @@ public sealed class AppLocalizationTests {
             "ConfigurationDraftEdit.Title",
             "ConfigurationDraftEdit.ValueLabel",
             "ConfigurationDraftEdit.Submit",
-            "ConfigurationDraftEdit.NoEnvironments"
+            "ConfigurationDraftEdit.NoEnvironments",
+            "PublishEnvironment.PageTitle",
+            "PublishEnvironment.Title",
+            "PublishEnvironment.Submit",
+            "PublishEnvironment.NoteLabel",
+            "PublishEnvironment.PublishedByLabel",
+            "PublishEnvironment.NoConfigurations",
+            "PublishEnvironment.PreviewTitle",
+            "PublishEnvironment.PublishEnvironment"
         };
 
         try {
@@ -322,5 +330,48 @@ public sealed class AppLocalizationTests {
         Assert.Contains("@onsubmit:preventDefault=\"true\"", configurationDraftSource, StringComparison.Ordinal);
         Assert.Contains("@bind:event=\"oninput\"", configurationDraftSource, StringComparison.Ordinal);
         Assert.Contains("Logger.LogInformation", configurationDraftSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Project_detail_publish_page_declares_route_preview_and_publish_command() {
+        var projectDetailPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Pages",
+            "ProjectDetail.razor");
+        var publishPagePath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Pages",
+            "EnvironmentPublish.razor");
+
+        var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
+        var publishSource = File.ReadAllText(Path.GetFullPath(publishPagePath));
+
+        Assert.Contains("PublishEnvironment.PublishEnvironment", projectDetailSource, StringComparison.Ordinal);
+        Assert.Contains("/publish", projectDetailSource, StringComparison.Ordinal);
+
+        Assert.Contains("@page \"/projects/{ProjectId:guid}/environments/{EnvironmentId:guid}/publish\"", publishSource, StringComparison.Ordinal);
+        Assert.Contains("@rendermode InteractiveServer", publishSource, StringComparison.Ordinal);
+        Assert.Contains("new GetProjectDetailQuery", publishSource, StringComparison.Ordinal);
+        Assert.Contains("new PublishEnvironmentCommand", publishSource, StringComparison.Ordinal);
+        Assert.Contains("@onsubmit:preventDefault=\"true\"", publishSource, StringComparison.Ordinal);
+        Assert.Contains("@bind:event=\"oninput\"", publishSource, StringComparison.Ordinal);
+        Assert.Contains("ReleasePreviewRows", publishSource, StringComparison.Ordinal);
+        Assert.Contains("Logger.LogInformation", publishSource, StringComparison.Ordinal);
     }
 }
