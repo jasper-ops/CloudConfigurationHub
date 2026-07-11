@@ -31,6 +31,39 @@
   <data name="Nav.Register" xml:space="preserve"><value>注册</value></data>
   <data name="Nav.Toggle" xml:space="preserve"><value>导航菜单</value></data>
   <data name="Product.Name" xml:space="preserve"><value>Cloud Configuration Hub</value></data>
+  <data name="Common.No" xml:space="preserve"><value>否</value></data>
+  <data name="Common.Yes" xml:space="preserve"><value>是</value></data>
+  <data name="ProjectCreate.Description" xml:space="preserve"><value>项目是配置管理和 SDK 读取的边界。创建后可以继续添加环境、配置项和发布版本。</value></data>
+  <data name="ProjectCreate.GuideEnvironment" xml:space="preserve"><value>环境隔离</value></data>
+  <data name="ProjectCreate.GuideEnvironmentDescription" xml:space="preserve"><value>为 dev、test、prod 等环境维护独立草稿值，发布时按环境生成稳定快照。</value></data>
+  <data name="ProjectCreate.GuideProject" xml:space="preserve"><value>项目边界</value></data>
+  <data name="ProjectCreate.GuideProjectDescription" xml:space="preserve"><value>项目 Key 将成为 SDK 读取与访问密钥管理的核心边界，请保持稳定。</value></data>
+  <data name="ProjectCreate.GuideRelease" xml:space="preserve"><value>发布闭环</value></data>
+  <data name="ProjectCreate.GuideReleaseDescription" xml:space="preserve"><value>草稿变更不会直接影响客户端，只有发布后的版本才会被 SDK 读取。</value></data>
+  <data name="ProjectCreate.GuideTitle" xml:space="preserve"><value>创建引导</value></data>
+  <data name="ProjectCreate.KeyHelp" xml:space="preserve"><value>建议使用小写字母、数字和短横线，例如 order-service。</value></data>
+  <data name="ProjectCreate.KeyLabel" xml:space="preserve"><value>项目 Key</value></data>
+  <data name="ProjectCreate.NameLabel" xml:space="preserve"><value>项目名称</value></data>
+  <data name="ProjectCreate.PageTitle" xml:space="preserve"><value>创建项目</value></data>
+  <data name="ProjectCreate.Saving" xml:space="preserve"><value>正在创建...</value></data>
+  <data name="ProjectCreate.Submit" xml:space="preserve"><value>创建项目</value></data>
+  <data name="ProjectCreate.Title" xml:space="preserve"><value>创建项目</value></data>
+  <data name="ProjectCreate.ValidationRequired" xml:space="preserve"><value>请填写项目名称和项目 Key。</value></data>
+  <data name="ProjectDetail.AddConfiguration" xml:space="preserve"><value>添加配置</value></data>
+  <data name="ProjectDetail.AddEnvironment" xml:space="preserve"><value>添加环境</value></data>
+  <data name="ProjectDetail.BackToProjects" xml:space="preserve"><value>返回项目列表</value></data>
+  <data name="ProjectDetail.ConfigurationKey" xml:space="preserve"><value>配置 Key</value></data>
+  <data name="ProjectDetail.Configurations" xml:space="preserve"><value>配置项</value></data>
+  <data name="ProjectDetail.Environments" xml:space="preserve"><value>环境</value></data>
+  <data name="ProjectDetail.Eyebrow" xml:space="preserve"><value>项目详情</value></data>
+  <data name="ProjectDetail.Loading" xml:space="preserve"><value>正在读取项目详情...</value></data>
+  <data name="ProjectDetail.NoConfigurations" xml:space="preserve"><value>还没有配置项。下一步添加配置分组和 Key。</value></data>
+  <data name="ProjectDetail.NoEnvironments" xml:space="preserve"><value>还没有环境。下一步添加 dev、test 或 prod 环境。</value></data>
+  <data name="ProjectDetail.NotFoundDescription" xml:space="preserve"><value>项目不存在，可能已被删除或链接无效。</value></data>
+  <data name="ProjectDetail.NotFoundTitle" xml:space="preserve"><value>项目不存在</value></data>
+  <data name="ProjectDetail.PageTitle" xml:space="preserve"><value>项目详情</value></data>
+  <data name="ProjectDetail.ProjectKey" xml:space="preserve"><value>项目 Key</value></data>
+  <data name="ProjectDetail.Sensitive" xml:space="preserve"><value>敏感</value></data>
   <data name="Projects.ConfigurationCount" xml:space="preserve"><value>配置</value></data>
   <data name="Projects.Create" xml:space="preserve"><value>创建项目</value></data>
   <data name="Projects.CreateFirst" xml:space="preserve"><value>创建第一个项目</value></data>
@@ -43,6 +76,7 @@
   <data name="Projects.ListAria" xml:space="preserve"><value>项目列表</value></data>
   <data name="Projects.Loading" xml:space="preserve"><value>正在读取项目列表...</value></data>
   <data name="Projects.PageTitle" xml:space="preserve"><value>项目配置</value></data>
+  <data name="Projects.ProjectCount" xml:space="preserve"><value>项目</value></data>
   <data name="Projects.ReleaseCount" xml:space="preserve"><value>发布</value></data>
   <data name="Projects.Title" xml:space="preserve"><value>项目配置中心</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>关于</value></data>

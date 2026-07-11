@@ -22,6 +22,7 @@ public sealed class EfProjectReadModel(
     public async ValueTask<IReadOnlyList<ProjectCard>> ListProjectsAsync(CancellationToken cancellationToken) {
         var projects = await dbContext.Projects
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(project => project.Environments)
             .Include(project => project.Configurations)
             .Include(project => project.Releases)
@@ -50,6 +51,7 @@ public sealed class EfProjectReadModel(
     public async ValueTask<ProjectDetail?> GetProjectDetailAsync(Guid projectId, CancellationToken cancellationToken) {
         var project = await dbContext.Projects
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(item => item.Environments)
             .Include(item => item.Configurations)
             .Include("_draftValues")

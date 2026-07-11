@@ -7,8 +7,8 @@
 
 <PageTitle>@Texts["Projects.PageTitle"]</PageTitle>
 
-<section class="admin-page">
-    <div class="admin-page-header">
+<section class="admin-page control-surface">
+    <div class="admin-page-header command-hero">
         <div>
             <p class="eyebrow">@Texts["Projects.Eyebrow"]</p>
             <h1>@Texts["Projects.Title"]</h1>
@@ -24,16 +24,36 @@
         </FluentCard>
     }
     else if (projects.Count == 0) {
-        <FluentCard Class="state-card">
+        <FluentCard Class="state-card empty-command-card">
+            <div class="orb-icon" aria-hidden="true"></div>
             <h2>@Texts["Projects.EmptyTitle"]</h2>
             <p>@Texts["Projects.EmptyDescription"]</p>
             <a class="primary-action" href="projects/new">@Texts["Projects.CreateFirst"]</a>
         </FluentCard>
     }
     else {
+        <dl class="project-stats dashboard-stats">
+            <div>
+                <dt>@Texts["Projects.ProjectCount"]</dt>
+                <dd>@projects.Count</dd>
+            </div>
+            <div>
+                <dt>@Texts["Projects.EnvironmentCount"]</dt>
+                <dd>@projects.Sum(project => project.EnvironmentCount)</dd>
+            </div>
+            <div>
+                <dt>@Texts["Projects.ConfigurationCount"]</dt>
+                <dd>@projects.Sum(project => project.ConfigurationCount)</dd>
+            </div>
+            <div>
+                <dt>@Texts["Projects.ReleaseCount"]</dt>
+                <dd>@projects.Sum(project => project.ReleaseCount)</dd>
+            </div>
+        </dl>
+
         <div class="project-grid" aria-label="@Texts["Projects.ListAria"]">
             @foreach (var project in projects) {
-                <FluentCard Class="project-card">
+                <FluentCard Class="project-card interactive-card">
                     <div class="project-card-header">
                         <div>
                             <h2>@project.Name</h2>
@@ -62,9 +82,19 @@
 </section>
 
 @code {
+    /// <summary>
+    /// 当前管理端项目列表读取模型。
+    /// </summary>
     private IReadOnlyList<ProjectCard> projects = [];
+
+    /// <summary>
+    /// 指示页面是否仍在读取项目列表。
+    /// </summary>
     private bool isLoading = true;
 
+    /// <summary>
+    /// 初始化页面时读取项目列表，并记录管理端查询链路日志。
+    /// </summary>
     protected override async Task OnInitializedAsync() {
         Logger.LogInformation("管理端开始读取项目列表页面数据。");
         var result = await Sender.Send(new ListProjectsQuery(), CancellationToken.None);

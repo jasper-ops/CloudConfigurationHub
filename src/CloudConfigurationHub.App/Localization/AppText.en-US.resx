@@ -31,6 +31,39 @@
   <data name="Nav.Register" xml:space="preserve"><value>Register</value></data>
   <data name="Nav.Toggle" xml:space="preserve"><value>Navigation menu</value></data>
   <data name="Product.Name" xml:space="preserve"><value>Cloud Configuration Hub</value></data>
+  <data name="Common.No" xml:space="preserve"><value>No</value></data>
+  <data name="Common.Yes" xml:space="preserve"><value>Yes</value></data>
+  <data name="ProjectCreate.Description" xml:space="preserve"><value>A project is the boundary for configuration management and SDK reads. After creating it, add environments, configuration keys, and releases.</value></data>
+  <data name="ProjectCreate.GuideEnvironment" xml:space="preserve"><value>Environment isolation</value></data>
+  <data name="ProjectCreate.GuideEnvironmentDescription" xml:space="preserve"><value>Maintain independent draft values for dev, test, prod, and other environments. Releases create stable environment snapshots.</value></data>
+  <data name="ProjectCreate.GuideProject" xml:space="preserve"><value>Project boundary</value></data>
+  <data name="ProjectCreate.GuideProjectDescription" xml:space="preserve"><value>The project key becomes the core boundary for SDK reads and access key management, so keep it stable.</value></data>
+  <data name="ProjectCreate.GuideRelease" xml:space="preserve"><value>Release loop</value></data>
+  <data name="ProjectCreate.GuideReleaseDescription" xml:space="preserve"><value>Draft changes never affect clients directly. The SDK reads only published versions.</value></data>
+  <data name="ProjectCreate.GuideTitle" xml:space="preserve"><value>Creation guide</value></data>
+  <data name="ProjectCreate.KeyHelp" xml:space="preserve"><value>Use lowercase letters, numbers, and hyphens, for example order-service.</value></data>
+  <data name="ProjectCreate.KeyLabel" xml:space="preserve"><value>Project key</value></data>
+  <data name="ProjectCreate.NameLabel" xml:space="preserve"><value>Project name</value></data>
+  <data name="ProjectCreate.PageTitle" xml:space="preserve"><value>Create project</value></data>
+  <data name="ProjectCreate.Saving" xml:space="preserve"><value>Creating...</value></data>
+  <data name="ProjectCreate.Submit" xml:space="preserve"><value>Create project</value></data>
+  <data name="ProjectCreate.Title" xml:space="preserve"><value>Create project</value></data>
+  <data name="ProjectCreate.ValidationRequired" xml:space="preserve"><value>Enter both project name and project key.</value></data>
+  <data name="ProjectDetail.AddConfiguration" xml:space="preserve"><value>Add configuration</value></data>
+  <data name="ProjectDetail.AddEnvironment" xml:space="preserve"><value>Add environment</value></data>
+  <data name="ProjectDetail.BackToProjects" xml:space="preserve"><value>Back to projects</value></data>
+  <data name="ProjectDetail.ConfigurationKey" xml:space="preserve"><value>Configuration key</value></data>
+  <data name="ProjectDetail.Configurations" xml:space="preserve"><value>Configurations</value></data>
+  <data name="ProjectDetail.Environments" xml:space="preserve"><value>Environments</value></data>
+  <data name="ProjectDetail.Eyebrow" xml:space="preserve"><value>Project details</value></data>
+  <data name="ProjectDetail.Loading" xml:space="preserve"><value>Loading project details...</value></data>
+  <data name="ProjectDetail.NoConfigurations" xml:space="preserve"><value>No configuration keys yet. Next, add a configuration group and key.</value></data>
+  <data name="ProjectDetail.NoEnvironments" xml:space="preserve"><value>No environments yet. Next, add dev, test, or prod environments.</value></data>
+  <data name="ProjectDetail.NotFoundDescription" xml:space="preserve"><value>The project does not exist. It may have been deleted or the link is invalid.</value></data>
+  <data name="ProjectDetail.NotFoundTitle" xml:space="preserve"><value>Project not found</value></data>
+  <data name="ProjectDetail.PageTitle" xml:space="preserve"><value>Project details</value></data>
+  <data name="ProjectDetail.ProjectKey" xml:space="preserve"><value>Project key</value></data>
+  <data name="ProjectDetail.Sensitive" xml:space="preserve"><value>Sensitive</value></data>
   <data name="Projects.ConfigurationCount" xml:space="preserve"><value>Configs</value></data>
   <data name="Projects.Create" xml:space="preserve"><value>Create project</value></data>
   <data name="Projects.CreateFirst" xml:space="preserve"><value>Create first project</value></data>
@@ -43,6 +76,7 @@
   <data name="Projects.ListAria" xml:space="preserve"><value>Project list</value></data>
   <data name="Projects.Loading" xml:space="preserve"><value>Loading projects...</value></data>
   <data name="Projects.PageTitle" xml:space="preserve"><value>Project configuration</value></data>
+  <data name="Projects.ProjectCount" xml:space="preserve"><value>Projects</value></data>
   <data name="Projects.ReleaseCount" xml:space="preserve"><value>Releases</value></data>
   <data name="Projects.Title" xml:space="preserve"><value>Project configuration center</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>About</value></data>
