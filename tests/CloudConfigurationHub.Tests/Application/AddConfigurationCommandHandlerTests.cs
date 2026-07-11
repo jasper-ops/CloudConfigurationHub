@@ -4,42 +4,44 @@ using Microsoft.Extensions.Logging;
 
 namespace CloudConfigurationHub.Tests.Application;
 
-public sealed class CreateProjectCommandHandlerTests {
+public sealed class AddConfigurationCommandHandlerTests {
     [Fact]
-    public async Task Handle_creates_project_saves_it_and_writes_audit_log() {
-        var repository = new FakeProjectRepository();
-        var logger = new FakeLogger<CreateProjectCommandHandler>();
-        var handler = new CreateProjectCommandHandler(repository, logger);
+    public async Task Handle_adds_configuration_saves_project_and_writes_audit_log() {
+        var project = Project.Create("Order Service", "order-service");
+        var repository = new FakeProjectRepository(project);
+        var logger = new FakeLogger<AddConfigurationCommandHandler>();
+        var handler = new AddConfigurationCommandHandler(repository, logger);
 
         var result = await handler.Handle(
-            new CreateProjectCommand("Order Service", "order-service"),
+            new AddConfigurationCommand(project.Id, "Database", "ConnectionString", IsSensitive: true),
             CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result.Id);
-        Assert.Equal("Order Service", result.Name);
-        Assert.Equal("order-service", result.Key);
-        var savedProject = Assert.Single(repository.SavedProjects);
-        Assert.Equal(result.Id, savedProject.Id);
+        Assert.Equal("database", result.Group);
+        Assert.Equal("connectionstring", result.Key);
+        Assert.True(result.IsSensitive);
+        Assert.True(repository.WasSaved);
         var logEntry = Assert.Single(logger.Entries);
         Assert.Equal(LogLevel.Information, logEntry.Level);
-        Assert.Contains("已创建配置项目", logEntry.Message, StringComparison.Ordinal);
-        Assert.Contains("order-service", logEntry.Message, StringComparison.Ordinal);
+        Assert.Contains("已添加配置定义", logEntry.Message, StringComparison.Ordinal);
+        Assert.Contains("database", logEntry.Message, StringComparison.Ordinal);
+        Assert.Contains("connectionstring", logEntry.Message, StringComparison.Ordinal);
     }
 
-    private sealed class FakeProjectRepository : IProjectRepository {
-        public List<Project> SavedProjects { get; } = [];
+    private sealed class FakeProjectRepository(Project? project) : IProjectRepository {
+        public bool WasSaved { get; private set; }
 
         public ValueTask AddAsync(Project project, CancellationToken cancellationToken) {
-            SavedProjects.Add(project);
-            return ValueTask.CompletedTask;
+            throw new NotSupportedException();
         }
 
         public ValueTask<Project?> GetByIdAsync(Guid projectId, CancellationToken cancellationToken) {
-            throw new NotSupportedException();
+            return ValueTask.FromResult(project);
         }
 
         public ValueTask SaveChangesAsync(Project project, CancellationToken cancellationToken) {
-            throw new NotSupportedException();
+            WasSaved = true;
+            return ValueTask.CompletedTask;
         }
     }
 

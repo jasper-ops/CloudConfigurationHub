@@ -68,4 +68,39 @@ public sealed class EfProjectRepositoryTests {
         Assert.Equal("server=prod-b", snapshot.Values["database:connectionstring"]);
         Assert.Null(unauthorizedSnapshot);
     }
+
+    [Fact]
+    public async Task SaveChangesAsync_persists_loaded_project_mutations() {
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        var options = new DbContextOptionsBuilder<ConfigurationHubDbContext>()
+            .UseSqlite(connection)
+            .Options;
+        await using var arrangeContext = new ConfigurationHubDbContext(options);
+        await arrangeContext.Database.EnsureCreatedAsync();
+        var project = Project.Create("Order Service", "order-service");
+        var repository = new EfProjectRepository(arrangeContext, NullLogger<EfProjectRepository>.Instance);
+        await repository.AddAsync(project, CancellationToken.None);
+        var loadedProject = await repository.GetByIdAsync(project.Id, CancellationToken.None)
+            ?? throw new InvalidOperationException("项目未保存。");
+
+        var environment = loadedProject.AddEnvironment("Production", "prod");
+        var configuration = loadedProject.AddConfiguration("Database", "ConnectionString", isSensitive: false);
+        loadedProject.SetDraftValue(environment.Id, configuration.Id, "server=prod");
+        loadedProject.PublishEnvironment(environment.Id, "首次发布", "admin", DateTimeOffset.Parse("2026-07-11T12:00:00Z"));
+        await repository.SaveChangesAsync(loadedProject, CancellationToken.None);
+
+        await using var assertContext = new ConfigurationHubDbContext(options);
+        var savedProject = await assertContext.Projects
+            .Include(item => item.Environments)
+            .Include(item => item.Configurations)
+            .Include(item => item.Releases)
+            .ThenInclude(item => item.Values)
+            .SingleAsync(item => item.Id == project.Id);
+        Assert.Equal("prod", Assert.Single(savedProject.Environments).Key);
+        Assert.Equal("database", Assert.Single(savedProject.Configurations).Group);
+        var release = Assert.Single(savedProject.Releases);
+        Assert.Equal(1, release.Version);
+        Assert.Equal("server=prod", Assert.Single(release.Values).Value);
+    }
 }

@@ -5,8 +5,10 @@ using CloudConfigurationHub.App.Endpoints;
 using CloudConfigurationHub.App.Components;
 using CloudConfigurationHub.App.Components.Account;
 using CloudConfigurationHub.App.Data;
+using CloudConfigurationHub.Application;
 using CloudConfigurationHub.Application.Projects;
 using CloudConfigurationHub.Application.Sdk;
+using CloudConfigurationHub.Infrastructure;
 using CloudConfigurationHub.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -50,6 +52,7 @@ builder.Services.AddScoped<IProjectRepository, EfProjectRepository>();
 builder.Services.AddScoped<IPublishedConfigurationReader, EfPublishedConfigurationReader>();
 builder.Services.AddSingleton<IAccessKeyHasher, Sha256AccessKeyHasher>();
 builder.Services.AddSingleton<IConfigurationChangeBroadcaster, ConfigurationChangeBroadcaster>();
+builder.Services.AddSingleton<IClock, SystemClock>();
 
 var app = builder.Build();
 
