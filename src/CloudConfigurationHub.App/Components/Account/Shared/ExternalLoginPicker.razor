@@ -4,13 +4,14 @@
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
+@inject IStringLocalizer<AppText> Texts
 
 @if (externalLogins.Length == 0)
 {
     <div>
         <p>
-            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-            about setting up this ASP.NET application to support logging in via external services</a>.
+            @Texts["Identity.External.NoneConfigured"]
+            <a href="https://go.microsoft.com/fwlink/?LinkID=532715">@Texts["Identity.External.SetupArticle"]</a>.
         </p>
     </div>
 }
@@ -23,7 +24,7 @@ else
             <p>
                 @foreach (var provider in externalLogins)
                 {
-                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="@Texts["Identity.External.ProviderTitle", provider.DisplayName ?? provider.Name]">@provider.DisplayName</button>
                 }
             </p>
         </div>
@@ -36,8 +37,7 @@ else
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() {
         externalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToArray();
     }
 }

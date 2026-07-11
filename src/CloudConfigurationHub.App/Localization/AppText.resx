@@ -208,6 +208,42 @@
   <data name="Setup.Submit" xml:space="preserve"><value>创建管理员</value></data>
   <data name="Setup.Title" xml:space="preserve"><value>初始化云配置中心</value></data>
   <data name="Setup.ValidationRequired" xml:space="preserve"><value>请填写管理员邮箱、密码和确认密码。</value></data>
+  <data name="Identity.ConfirmPassword" xml:space="preserve"><value>确认密码</value></data>
+  <data name="Identity.Email" xml:space="preserve"><value>邮箱</value></data>
+  <data name="Identity.ErrorWithMessage" xml:space="preserve"><value>错误：{0}</value></data>
+  <data name="Identity.External.NoneConfigured" xml:space="preserve"><value>当前未配置外部认证服务。请参考</value></data>
+  <data name="Identity.External.ProviderTitle" xml:space="preserve"><value>使用 {0} 账号登录</value></data>
+  <data name="Identity.External.SetupArticle" xml:space="preserve"><value>外部登录配置文档</value></data>
+  <data name="Identity.Login.ExternalService" xml:space="preserve"><value>使用其它服务登录。</value></data>
+  <data name="Identity.Login.ForgotPassword" xml:space="preserve"><value>忘记密码？</value></data>
+  <data name="Identity.Login.InvalidAttempt" xml:space="preserve"><value>错误：登录失败，请检查邮箱和密码。</value></data>
+  <data name="Identity.Login.LocalAccount" xml:space="preserve"><value>使用本地账号登录。</value></data>
+  <data name="Identity.Login.PageTitle" xml:space="preserve"><value>登录</value></data>
+  <data name="Identity.Login.Passkey" xml:space="preserve"><value>使用通行密钥登录</value></data>
+  <data name="Identity.Login.RegisterLink" xml:space="preserve"><value>注册新用户</value></data>
+  <data name="Identity.Login.RememberMe" xml:space="preserve"><value>记住我</value></data>
+  <data name="Identity.Login.ResendEmailConfirmation" xml:space="preserve"><value>重新发送邮箱确认</value></data>
+  <data name="Identity.Login.Submit" xml:space="preserve"><value>登录</value></data>
+  <data name="Identity.Login.Title" xml:space="preserve"><value>登录</value></data>
+  <data name="Identity.Manage.ExternalLogins" xml:space="preserve"><value>外部登录</value></data>
+  <data name="Identity.Manage.Passkeys" xml:space="preserve"><value>通行密钥</value></data>
+  <data name="Identity.Manage.PersonalData" xml:space="preserve"><value>个人数据</value></data>
+  <data name="Identity.Manage.Phone" xml:space="preserve"><value>手机号码</value></data>
+  <data name="Identity.Manage.PhonePlaceholder" xml:space="preserve"><value>输入手机号码</value></data>
+  <data name="Identity.Manage.PhoneUpdateFailed" xml:space="preserve"><value>错误：手机号码更新失败。</value></data>
+  <data name="Identity.Manage.Profile" xml:space="preserve"><value>个人资料</value></data>
+  <data name="Identity.Manage.ProfileUpdated" xml:space="preserve"><value>个人资料已更新。</value></data>
+  <data name="Identity.Manage.TwoFactor" xml:space="preserve"><value>双重认证</value></data>
+  <data name="Identity.Manage.Username" xml:space="preserve"><value>用户名</value></data>
+  <data name="Identity.Manage.UsernamePlaceholder" xml:space="preserve"><value>选择用户名</value></data>
+  <data name="Identity.Or" xml:space="preserve"><value>或</value></data>
+  <data name="Identity.Password" xml:space="preserve"><value>密码</value></data>
+  <data name="Identity.Register.CreateAccount" xml:space="preserve"><value>创建新账号。</value></data>
+  <data name="Identity.Register.ExternalService" xml:space="preserve"><value>使用其它服务注册。</value></data>
+  <data name="Identity.Register.PageTitle" xml:space="preserve"><value>注册</value></data>
+  <data name="Identity.Register.Submit" xml:space="preserve"><value>注册</value></data>
+  <data name="Identity.Register.Title" xml:space="preserve"><value>注册</value></data>
+  <data name="Identity.Save" xml:space="preserve"><value>保存</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>关于</value></data>
   <data name="TopNav.OperationalStatus" xml:space="preserve"><value>运行状态</value></data>
   <data name="TopNav.Connected" xml:space="preserve"><value>已连接</value></data>

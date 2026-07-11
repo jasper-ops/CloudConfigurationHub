@@ -7,10 +7,11 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
+@inject IStringLocalizer<AppText> Texts
 
-<PageTitle>Profile</PageTitle>
+<PageTitle>@Texts["Identity.Manage.Profile"]</PageTitle>
 
-<h3>Profile</h3>
+<h3>@Texts["Identity.Manage.Profile"]</h3>
 <StatusMessage />
 
 <div class="row">
@@ -19,15 +20,15 @@
             <DataAnnotationsValidator />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
-                <input type="text" value="@username" id="username" class="form-control" placeholder="Choose your username." disabled />
-                <label for="username" class="form-label">Username</label>
+                <input type="text" value="@username" id="username" class="form-control" placeholder="@Texts["Identity.Manage.UsernamePlaceholder"]" disabled />
+                <label for="username" class="form-label">@Texts["Identity.Manage.Username"]</label>
             </div>
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="form-control" placeholder="Enter your phone number" />
-                <label for="Input.PhoneNumber" class="form-label">Phone number</label>
+                <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="form-control" placeholder="@Texts["Identity.Manage.PhonePlaceholder"]" />
+                <label for="Input.PhoneNumber" class="form-label">@Texts["Identity.Manage.Phone"]</label>
                 <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">@Texts["Identity.Save"]</button>
         </EditForm>
     </div>
 </div>
@@ -43,13 +44,11 @@
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = default!;
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() {
         Input ??= new();
 
         user = await UserManager.GetUserAsync(HttpContext.User);
-        if (user is null)
-        {
+        if (user is null) {
             RedirectManager.RedirectToInvalidUser(UserManager, HttpContext);
             return;
         }
@@ -60,32 +59,27 @@
         Input.PhoneNumber ??= phoneNumber;
     }
 
-    private async Task OnValidSubmitAsync()
-    {
-        if (user is null)
-        {
+    private async Task OnValidSubmitAsync() {
+        if (user is null) {
             RedirectManager.RedirectToInvalidUser(UserManager, HttpContext);
             return;
         }
 
-        if (Input.PhoneNumber != phoneNumber)
-        {
+        if (Input.PhoneNumber != phoneNumber) {
             var setPhoneResult = await UserManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-            if (!setPhoneResult.Succeeded)
-            {
-                RedirectManager.RedirectToCurrentPageWithStatus("Error: Failed to set phone number.", HttpContext);
+            if (!setPhoneResult.Succeeded) {
+                RedirectManager.RedirectToCurrentPageWithStatus(Texts["Identity.Manage.PhoneUpdateFailed"], HttpContext);
                 return;
             }
         }
 
         await SignInManager.RefreshSignInAsync(user);
-        RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
+        RedirectManager.RedirectToCurrentPageWithStatus(Texts["Identity.Manage.ProfileUpdated"], HttpContext);
     }
 
-    private sealed class InputModel
-    {
+    private sealed class InputModel {
         [Phone]
-        [Display(Name = "Phone number")]
+        [Display(Name = "Phone")]
         public string? PhoneNumber { get; set; }
     }
 }

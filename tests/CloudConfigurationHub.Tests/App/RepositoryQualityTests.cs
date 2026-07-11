@@ -81,4 +81,39 @@ public sealed class RepositoryQualityTests {
         Assert.Contains("overflow-x: hidden;", navMenuCss, StringComparison.Ordinal);
         Assert.Contains("text-overflow: ellipsis;", navMenuCss, StringComparison.Ordinal);
     }
+
+    [Fact]
+    public void Key_identity_management_pages_do_not_ship_template_english_copy() {
+        var repositoryRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            ".."));
+        var checkedFiles = new[] {
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Login.razor"),
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Register.razor"),
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Shared", "ExternalLoginPicker.razor"),
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Shared", "ManageNavMenu.razor"),
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Manage", "Index.razor")
+        };
+        var forbiddenTemplateCopy = new[] {
+            ">Log in<",
+            "<PageTitle>Log in</PageTitle>",
+            ">Use a local account to log in.<",
+            "There are no external authentication services configured.",
+            ">Create a new account.<",
+            ">Profile<",
+            ">Phone number<",
+            ">Two-factor authentication<"
+        };
+        var violations = checkedFiles
+            .SelectMany(path => forbiddenTemplateCopy
+                .Where(copy => File.ReadAllText(path).Contains(copy, StringComparison.Ordinal))
+                .Select(copy => $"{Path.GetRelativePath(repositoryRoot, path)} contains \"{copy}\""))
+            .ToArray();
+
+        Assert.Empty(violations);
+    }
 }

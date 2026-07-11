@@ -10,53 +10,54 @@
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IStringLocalizer<AppText> Texts
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>@Texts["Identity.Login.PageTitle"]</PageTitle>
 
-<h1>Log in</h1>
+<h1>@Texts["Identity.Login.Title"]</h1>
 <div class="row">
     <div class="col-lg-6">
         <section>
             <StatusMessage Message="@errorMessage" />
             <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login">
                 <DataAnnotationsValidator />
-                <h2>Use a local account to log in.</h2>
+                <h2>@Texts["Identity.Login.LocalAccount"]</h2>
                 <hr />
                 <ValidationSummary class="text-danger" role="alert" />
                 <div class="form-floating mb-3">
                     <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username webauthn" aria-required="true" placeholder="name@example.com" />
-                    <label for="Input.Email" class="form-label">Email</label>
+                    <label for="Input.Email" class="form-label">@Texts["Identity.Email"]</label>
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
                 <div class="form-floating mb-3">
                     <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="Input.Password" class="form-label">Password</label>
+                    <label for="Input.Password" class="form-label">@Texts["Identity.Password"]</label>
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>
                 <div class="checkbox mb-3">
                     <label class="form-label">
                         <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                        Remember me
+                        @Texts["Identity.Login.RememberMe"]
                     </label>
                 </div>
                 <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    <button type="submit" class="w-100 btn btn-lg btn-primary">@Texts["Identity.Login.Submit"]</button>
                 </div>
                 <hr />
                 <div class="d-flex flex-column">
-                    <span class="text-secondary mx-auto mt-2">OR</span>
-                    <PasskeySubmit Operation="PasskeyOperation.Request" Name="Input.Passkey" EmailName="Input.Email" class="btn btn-link mx-auto">Log in with a passkey</PasskeySubmit>
+                    <span class="text-secondary mx-auto mt-2">@Texts["Identity.Or"]</span>
+                    <PasskeySubmit Operation="PasskeyOperation.Request" Name="Input.Passkey" EmailName="Input.Email" class="btn btn-link mx-auto">@Texts["Identity.Login.Passkey"]</PasskeySubmit>
                 </div>
                 <hr />
                 <div>
                     <p>
-                        <a href="Account/ForgotPassword">Forgot your password?</a>
+                        <a href="Account/ForgotPassword">@Texts["Identity.Login.ForgotPassword"]</a>
                     </p>
                     <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
+                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">@Texts["Identity.Login.RegisterLink"]</a>
                     </p>
                     <p>
-                        <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
+                        <a href="Account/ResendEmailConfirmation">@Texts["Identity.Login.ResendEmailConfirmation"]</a>
                     </p>
                 </div>
             </EditForm>
@@ -64,7 +65,7 @@
     </div>
     <div class="col-lg-4 col-lg-offset-2">
         <section>
-            <h3>Use another service to log in.</h3>
+            <h3>@Texts["Identity.Login.ExternalService"]</h3>
             <hr />
             <ExternalLoginPicker />
         </section>
@@ -84,38 +85,31 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() {
         Input ??= new();
 
         editContext = new EditContext(Input);
 
-        if (HttpMethods.IsGet(HttpContext.Request.Method))
-        {
+        if (HttpMethods.IsGet(HttpContext.Request.Method)) {
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
         }
     }
 
-    public async Task LoginUser()
-    {
-        if (!string.IsNullOrEmpty(Input.Passkey?.Error))
-        {
-            errorMessage = $"Error: {Input.Passkey.Error}";
+    public async Task LoginUser() {
+        if (!string.IsNullOrEmpty(Input.Passkey?.Error)) {
+            errorMessage = Texts["Identity.ErrorWithMessage", Input.Passkey.Error];
             return;
         }
 
         SignInResult result;
-        if (!string.IsNullOrEmpty(Input.Passkey?.CredentialJson))
-        {
+        if (!string.IsNullOrEmpty(Input.Passkey?.CredentialJson)) {
             // When performing passkey sign-in, don't perform form validation.
             result = await SignInManager.PasskeySignInAsync(Input.Passkey.CredentialJson);
         }
-        else
-        {
+        else {
             // If doing a password sign-in, validate the form.
-            if (!editContext.Validate())
-            {
+            if (!editContext.Validate()) {
                 return;
             }
 
@@ -124,30 +118,25 @@
             result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         }
 
-        if (result.Succeeded)
-        {
+        if (result.Succeeded) {
             Logger.LogInformation("User logged in.");
             RedirectManager.RedirectTo(ReturnUrl);
         }
-        else if (result.RequiresTwoFactor)
-        {
+        else if (result.RequiresTwoFactor) {
             RedirectManager.RedirectTo(
                 "Account/LoginWith2fa",
                 new() { ["returnUrl"] = ReturnUrl, ["rememberMe"] = Input.RememberMe });
         }
-        else if (result.IsLockedOut)
-        {
+        else if (result.IsLockedOut) {
             Logger.LogWarning("User account locked out.");
             RedirectManager.RedirectTo("Account/Lockout");
         }
-        else
-        {
-            errorMessage = "Error: Invalid login attempt.";
+        else {
+            errorMessage = Texts["Identity.Login.InvalidAttempt"];
         }
     }
 
-    private sealed class InputModel
-    {
+    private sealed class InputModel {
         [Required]
         [EmailAddress]
         public string Email { get; set; } = "";
