@@ -100,13 +100,14 @@ else {
 }
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 app.UseStartupSetupRedirect();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseAntiforgery();
 
-app.MapStaticAssets();
+app.MapStaticAssets().ShortCircuit();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
 app.MapSdkConfigurationEndpoints();

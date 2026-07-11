@@ -264,6 +264,46 @@ public sealed class AppLocalizationTests {
     }
 
     [Fact]
+    public void App_shell_uses_non_fingerprinted_blazor_framework_script() {
+        var appPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "App.razor");
+
+        var appSource = File.ReadAllText(Path.GetFullPath(appPath));
+
+        Assert.Contains("<script src=\"_framework/blazor.web.js\"></script>", appSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("@Assets[\"_framework/blazor.web.js\"]", appSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Language_switcher_disables_enhanced_navigation_for_request_culture_changes() {
+        var switcherPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "LanguageSwitcher.razor");
+
+        var switcherSource = File.ReadAllText(Path.GetFullPath(switcherPath));
+
+        Assert.Contains("data-enhance-nav=\"false\"", switcherSource, StringComparison.Ordinal);
+        Assert.Contains("ui-culture", switcherSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void App_shell_uses_cpa_inspired_operational_admin_chrome() {
         var layoutPath = Path.Combine(
             AppContext.BaseDirectory,

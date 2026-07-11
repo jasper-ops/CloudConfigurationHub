@@ -2,9 +2,9 @@
 @inject NavigationManager NavigationManager
 
 <div class="language-switcher" aria-label="@AriaLabel">
-    <a class="@GetLinkClass("zh-CN")" href="@BuildCultureUrl("zh-CN")">中文</a>
+    <a class="@GetLinkClass("zh-CN")" href="@BuildCultureUrl("zh-CN")" data-enhance-nav="false">中文</a>
     <span aria-hidden="true">/</span>
-    <a class="@GetLinkClass("en-US")" href="@BuildCultureUrl("en-US")">EN</a>
+    <a class="@GetLinkClass("en-US")" href="@BuildCultureUrl("en-US")" data-enhance-nav="false">EN</a>
 </div>
 
 @code {
@@ -17,7 +17,10 @@
     private string CurrentCultureName => CultureInfo.CurrentUICulture.Name;
 
     private string BuildCultureUrl(string culture) {
-        return NavigationManager.GetUriWithQueryParameter("culture", culture);
+        return NavigationManager.GetUriWithQueryParameters(new Dictionary<string, object?> {
+            ["culture"] = culture,
+            ["ui-culture"] = culture
+        });
     }
 
     private string GetLinkClass(string culture) {

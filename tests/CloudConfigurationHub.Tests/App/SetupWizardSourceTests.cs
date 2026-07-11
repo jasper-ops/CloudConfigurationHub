@@ -82,6 +82,7 @@ public sealed class SetupWizardSourceTests {
         var registerSource = File.ReadAllText(Path.GetFullPath(registerPath));
         var setupExtensionsSource = File.ReadAllText(Path.GetFullPath(setupExtensionsPath));
 
+        Assert.Contains("MapStaticAssets().ShortCircuit()", programSource, StringComparison.Ordinal);
         Assert.Contains("UseStartupSetupRedirect", programSource, StringComparison.Ordinal);
         Assert.Contains("AddStartupSetup", programSource, StringComparison.Ordinal);
         Assert.Contains("InitializeIdentityDatabaseAsync", programSource, StringComparison.Ordinal);
@@ -90,5 +91,29 @@ public sealed class SetupWizardSourceTests {
         Assert.Contains("Setup.FirstRunOnly", registerSource, StringComparison.Ordinal);
         Assert.Contains("NavigationManager.NavigateTo(\"setup\"", registerSource, StringComparison.Ordinal);
         Assert.Contains("\"/_blazor\"", setupExtensionsSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void App_pipeline_serves_static_framework_assets_before_setup_redirect() {
+        var programPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Program.cs");
+
+        var programSource = File.ReadAllText(Path.GetFullPath(programPath));
+        var staticFilesIndex = programSource.IndexOf("app.UseStaticFiles();", StringComparison.Ordinal);
+        var setupRedirectIndex = programSource.IndexOf("app.UseStartupSetupRedirect();", StringComparison.Ordinal);
+
+        Assert.True(staticFilesIndex >= 0, "Program.cs must serve static framework assets.");
+        Assert.Contains("app.MapStaticAssets().ShortCircuit();", programSource, StringComparison.Ordinal);
+        Assert.True(
+            staticFilesIndex < setupRedirectIndex,
+            "Static files must be served before the first-run setup redirect middleware.");
     }
 }
