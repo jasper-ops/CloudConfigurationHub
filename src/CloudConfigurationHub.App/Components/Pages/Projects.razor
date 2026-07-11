@@ -1,0 +1,77 @@
+@page "/projects"
+@using CloudConfigurationHub.Application.Projects
+@using Mediator
+@inject ISender Sender
+@inject ILogger<Projects> Logger
+@inject IStringLocalizer<AppText> Texts
+
+<PageTitle>@Texts["Projects.PageTitle"]</PageTitle>
+
+<section class="admin-page">
+    <div class="admin-page-header">
+        <div>
+            <p class="eyebrow">@Texts["Projects.Eyebrow"]</p>
+            <h1>@Texts["Projects.Title"]</h1>
+            <p class="page-description">@Texts["Projects.Description"]</p>
+        </div>
+        <a class="primary-action" href="projects/new">@Texts["Projects.Create"]</a>
+    </div>
+
+    @if (isLoading) {
+        <FluentCard Class="state-card">
+            <FluentProgressRing />
+            <p>@Texts["Projects.Loading"]</p>
+        </FluentCard>
+    }
+    else if (projects.Count == 0) {
+        <FluentCard Class="state-card">
+            <h2>@Texts["Projects.EmptyTitle"]</h2>
+            <p>@Texts["Projects.EmptyDescription"]</p>
+            <a class="primary-action" href="projects/new">@Texts["Projects.CreateFirst"]</a>
+        </FluentCard>
+    }
+    else {
+        <div class="project-grid" aria-label="@Texts["Projects.ListAria"]">
+            @foreach (var project in projects) {
+                <FluentCard Class="project-card">
+                    <div class="project-card-header">
+                        <div>
+                            <h2>@project.Name</h2>
+                            <p>@project.Key</p>
+                        </div>
+                        <a class="secondary-action compact" href="@($"projects/{project.Id}")">@Texts["Projects.Detail"]</a>
+                    </div>
+                    <dl class="project-stats">
+                        <div>
+                            <dt>@Texts["Projects.EnvironmentCount"]</dt>
+                            <dd>@project.EnvironmentCount</dd>
+                        </div>
+                        <div>
+                            <dt>@Texts["Projects.ConfigurationCount"]</dt>
+                            <dd>@project.ConfigurationCount</dd>
+                        </div>
+                        <div>
+                            <dt>@Texts["Projects.ReleaseCount"]</dt>
+                            <dd>@project.ReleaseCount</dd>
+                        </div>
+                    </dl>
+                </FluentCard>
+            }
+        </div>
+    }
+</section>
+
+@code {
+    private IReadOnlyList<ProjectCard> projects = [];
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync() {
+        Logger.LogInformation("管理端开始读取项目列表页面数据。");
+        var result = await Sender.Send(new ListProjectsQuery(), CancellationToken.None);
+        projects = result.Projects;
+        isLoading = false;
+        Logger.LogInformation(
+            "管理端项目列表页面数据读取完成。ProjectCount={ProjectCount}",
+            projects.Count);
+    }
+}

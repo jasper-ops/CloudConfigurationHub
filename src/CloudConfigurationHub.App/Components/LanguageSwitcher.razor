@@ -1,0 +1,28 @@
+@using System.Globalization
+@inject NavigationManager NavigationManager
+
+<div class="language-switcher" aria-label="@AriaLabel">
+    <a class="@GetLinkClass("zh-CN")" href="@BuildCultureUrl("zh-CN")">中文</a>
+    <span aria-hidden="true">/</span>
+    <a class="@GetLinkClass("en-US")" href="@BuildCultureUrl("en-US")">EN</a>
+</div>
+
+@code {
+    /// <summary>
+    /// 语言切换器的无障碍标签。
+    /// </summary>
+    [Parameter]
+    public string AriaLabel { get; set; } = "Language";
+
+    private string CurrentCultureName => CultureInfo.CurrentUICulture.Name;
+
+    private string BuildCultureUrl(string culture) {
+        return NavigationManager.GetUriWithQueryParameter("culture", culture);
+    }
+
+    private string GetLinkClass(string culture) {
+        return string.Equals(CurrentCultureName, culture, StringComparison.OrdinalIgnoreCase)
+            ? "active"
+            : string.Empty;
+    }
+}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="BlazorError.Message" xml:space="preserve"><value>发生未处理错误。</value></data>
+  <data name="BlazorError.Reload" xml:space="preserve"><value>重新加载</value></data>
+  <data name="Error.Description" xml:space="preserve"><value>处理请求时发生错误。</value></data>
+  <data name="Error.DevelopmentHint" xml:space="preserve"><value>切换到 Development 环境会显示更详细的错误信息。</value></data>
+  <data name="Error.DevelopmentMode" xml:space="preserve"><value>开发模式</value></data>
+  <data name="Error.DevelopmentWarning" xml:space="preserve"><value>生产环境不应启用 Development 环境，因为异常详情可能泄露敏感信息。</value></data>
+  <data name="Error.PageTitle" xml:space="preserve"><value>错误</value></data>
+  <data name="Error.RequestId" xml:space="preserve"><value>请求 ID：</value></data>
+  <data name="Error.Title" xml:space="preserve"><value>错误。</value></data>
+  <data name="Home.Capabilities" xml:space="preserve"><value>能力摘要</value></data>
+  <data name="Home.Description" xml:space="preserve"><value>按项目、环境和配置项管理配置草稿与发布版本，SDK 只读取已发布快照，便于生产系统稳定接入。</value></data>
+  <data name="Home.MetricCqrs" xml:space="preserve"><value>读写分离</value></data>
+  <data name="Home.MetricDdd" xml:space="preserve"><value>领域驱动</value></data>
+  <data name="Home.MetricSse" xml:space="preserve"><value>配置变更推送</value></data>
+  <data name="Home.PageTitle" xml:space="preserve"><value>总览</value></data>
+  <data name="Home.SdkApi" xml:space="preserve"><value>SDK API</value></data>
+  <data name="Home.Title" xml:space="preserve"><value>面向 .NET 服务的云配置中心</value></data>
+  <data name="Home.ViewProjects" xml:space="preserve"><value>查看项目</value></data>
+  <data name="Language.Switcher" xml:space="preserve"><value>语言切换</value></data>
+  <data name="Nav.Login" xml:space="preserve"><value>登录</value></data>
+  <data name="Nav.Logout" xml:space="preserve"><value>退出</value></data>
+  <data name="Nav.Management" xml:space="preserve"><value>管理</value></data>
+  <data name="Nav.Overview" xml:space="preserve"><value>总览</value></data>
+  <data name="Nav.Projects" xml:space="preserve"><value>项目配置</value></data>
+  <data name="Nav.Register" xml:space="preserve"><value>注册</value></data>
+  <data name="Nav.Toggle" xml:space="preserve"><value>导航菜单</value></data>
+  <data name="Product.Name" xml:space="preserve"><value>Cloud Configuration Hub</value></data>
+  <data name="Projects.ConfigurationCount" xml:space="preserve"><value>配置</value></data>
+  <data name="Projects.Create" xml:space="preserve"><value>创建项目</value></data>
+  <data name="Projects.CreateFirst" xml:space="preserve"><value>创建第一个项目</value></data>
+  <data name="Projects.Description" xml:space="preserve"><value>按项目组织环境、配置定义、草稿值和发布版本。使用方通过项目 Key 与环境 Key 读取已发布快照。</value></data>
+  <data name="Projects.Detail" xml:space="preserve"><value>详情</value></data>
+  <data name="Projects.EmptyDescription" xml:space="preserve"><value>创建第一个项目后，就可以继续添加环境、配置项并发布可供 SDK 读取的配置快照。</value></data>
+  <data name="Projects.EmptyTitle" xml:space="preserve"><value>还没有项目</value></data>
+  <data name="Projects.EnvironmentCount" xml:space="preserve"><value>环境</value></data>
+  <data name="Projects.Eyebrow" xml:space="preserve"><value>项目配置</value></data>
+  <data name="Projects.ListAria" xml:space="preserve"><value>项目列表</value></data>
+  <data name="Projects.Loading" xml:space="preserve"><value>正在读取项目列表...</value></data>
+  <data name="Projects.PageTitle" xml:space="preserve"><value>项目配置</value></data>
+  <data name="Projects.ReleaseCount" xml:space="preserve"><value>发布</value></data>
+  <data name="Projects.Title" xml:space="preserve"><value>项目配置中心</value></data>
+  <data name="TopNav.About" xml:space="preserve"><value>关于</value></data>
+</root>

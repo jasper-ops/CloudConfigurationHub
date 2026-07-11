@@ -10,15 +10,24 @@ using CloudConfigurationHub.Application.Projects;
 using CloudConfigurationHub.Application.Sdk;
 using CloudConfigurationHub.Infrastructure;
 using CloudConfigurationHub.Infrastructure.Persistence;
+using Microsoft.FluentUI.AspNetCore.Components;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddHttpClient();
+builder.Services.AddFluentUIComponents();
+builder.Services.AddLocalization();
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
-builder.Services.AddMediator(options => options.Assemblies = [typeof(CreateProjectCommand).Assembly]);
+builder.Services.AddMediator(options => {
+    options.Assemblies = [typeof(CreateProjectCommand).Assembly];
+    options.ServiceLifetime = ServiceLifetime.Scoped;
+});
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityRedirectManager>();
@@ -51,11 +60,23 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 builder.Services.AddScoped<IProjectRepository, EfProjectRepository>();
 builder.Services.AddScoped<IProjectReadModel, EfProjectReadModel>();
 builder.Services.AddScoped<IPublishedConfigurationReader, EfPublishedConfigurationReader>();
+builder.Services.AddScoped<IConfigurationHubDatabaseInitializer, ConfigurationHubDatabaseInitializer>();
 builder.Services.AddSingleton<IAccessKeyHasher, Sha256AccessKeyHasher>();
 builder.Services.AddSingleton<IConfigurationChangeBroadcaster, ConfigurationChangeBroadcaster>();
 builder.Services.AddSingleton<IClock, SystemClock>();
 
 var app = builder.Build();
+await InitializeConfigurationHubDatabaseAsync(app);
+
+var supportedCultures = new[] {
+    new CultureInfo("zh-CN"),
+    new CultureInfo("en-US")
+};
+app.UseRequestLocalization(new RequestLocalizationOptions {
+    DefaultRequestCulture = new RequestCulture("zh-CN"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) {
@@ -81,3 +102,14 @@ app.MapSdkConfigurationEndpoints();
 app.MapAdditionalIdentityEndpoints();
 
 app.Run();
+
+static async Task InitializeConfigurationHubDatabaseAsync(WebApplication app) {
+    using var scope = app.Services.CreateScope();
+    var initializer = scope.ServiceProvider.GetRequiredService<IConfigurationHubDatabaseInitializer>();
+    await initializer.InitializeAsync(CancellationToken.None);
+}
+
+/// <summary>
+/// Web 应用程序入口点类型，用于集成测试通过 <c>WebApplicationFactory</c> 构建宿主。
+/// </summary>
+public partial class Program;

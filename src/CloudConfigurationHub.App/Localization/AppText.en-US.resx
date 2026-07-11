@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="BlazorError.Message" xml:space="preserve"><value>An unhandled error has occurred.</value></data>
+  <data name="BlazorError.Reload" xml:space="preserve"><value>Reload</value></data>
+  <data name="Error.Description" xml:space="preserve"><value>An error occurred while processing your request.</value></data>
+  <data name="Error.DevelopmentHint" xml:space="preserve"><value>Switching to the Development environment shows more detailed error information.</value></data>
+  <data name="Error.DevelopmentMode" xml:space="preserve"><value>Development Mode</value></data>
+  <data name="Error.DevelopmentWarning" xml:space="preserve"><value>The Development environment should not be enabled in production because exception details can expose sensitive information.</value></data>
+  <data name="Error.PageTitle" xml:space="preserve"><value>Error</value></data>
+  <data name="Error.RequestId" xml:space="preserve"><value>Request ID:</value></data>
+  <data name="Error.Title" xml:space="preserve"><value>Error.</value></data>
+  <data name="Home.Capabilities" xml:space="preserve"><value>Capability summary</value></data>
+  <data name="Home.Description" xml:space="preserve"><value>Manage configuration drafts and releases by project, environment, and key. The SDK reads only published snapshots for stable production integration.</value></data>
+  <data name="Home.MetricCqrs" xml:space="preserve"><value>Read/write separation</value></data>
+  <data name="Home.MetricDdd" xml:space="preserve"><value>Domain driven</value></data>
+  <data name="Home.MetricSse" xml:space="preserve"><value>Change streaming</value></data>
+  <data name="Home.PageTitle" xml:space="preserve"><value>Overview</value></data>
+  <data name="Home.SdkApi" xml:space="preserve"><value>SDK API</value></data>
+  <data name="Home.Title" xml:space="preserve"><value>Cloud configuration center for .NET services</value></data>
+  <data name="Home.ViewProjects" xml:space="preserve"><value>View projects</value></data>
+  <data name="Language.Switcher" xml:space="preserve"><value>Language switcher</value></data>
+  <data name="Nav.Login" xml:space="preserve"><value>Login</value></data>
+  <data name="Nav.Logout" xml:space="preserve"><value>Logout</value></data>
+  <data name="Nav.Management" xml:space="preserve"><value>Management</value></data>
+  <data name="Nav.Overview" xml:space="preserve"><value>Overview</value></data>
+  <data name="Nav.Projects" xml:space="preserve"><value>Project configuration</value></data>
+  <data name="Nav.Register" xml:space="preserve"><value>Register</value></data>
+  <data name="Nav.Toggle" xml:space="preserve"><value>Navigation menu</value></data>
+  <data name="Product.Name" xml:space="preserve"><value>Cloud Configuration Hub</value></data>
+  <data name="Projects.ConfigurationCount" xml:space="preserve"><value>Configs</value></data>
+  <data name="Projects.Create" xml:space="preserve"><value>Create project</value></data>
+  <data name="Projects.CreateFirst" xml:space="preserve"><value>Create first project</value></data>
+  <data name="Projects.Description" xml:space="preserve"><value>Organize environments, configuration definitions, draft values, and release versions by project. Clients read published snapshots by project key and environment key.</value></data>
+  <data name="Projects.Detail" xml:space="preserve"><value>Details</value></data>
+  <data name="Projects.EmptyDescription" xml:space="preserve"><value>After creating the first project, you can add environments, configuration keys, and publish snapshots for SDK clients.</value></data>
+  <data name="Projects.EmptyTitle" xml:space="preserve"><value>No projects yet</value></data>
+  <data name="Projects.EnvironmentCount" xml:space="preserve"><value>Environments</value></data>
+  <data name="Projects.Eyebrow" xml:space="preserve"><value>Project configuration</value></data>
+  <data name="Projects.ListAria" xml:space="preserve"><value>Project list</value></data>
+  <data name="Projects.Loading" xml:space="preserve"><value>Loading projects...</value></data>
+  <data name="Projects.PageTitle" xml:space="preserve"><value>Project configuration</value></data>
+  <data name="Projects.ReleaseCount" xml:space="preserve"><value>Releases</value></data>
+  <data name="Projects.Title" xml:space="preserve"><value>Project configuration center</value></data>
+  <data name="TopNav.About" xml:space="preserve"><value>About</value></data>
+</root>

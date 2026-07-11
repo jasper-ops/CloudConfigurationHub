@@ -1,7 +1,32 @@
-﻿@page "/"
+@page "/"
+@inject IStringLocalizer<AppText> Texts
 
-<PageTitle>Home</PageTitle>
+<PageTitle>@Texts["Home.PageTitle"]</PageTitle>
 
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<section class="hero-panel">
+    <div class="hero-copy">
+        <p class="eyebrow">@Texts["Product.Name"]</p>
+        <h1>@Texts["Home.Title"]</h1>
+        <p class="hero-description">
+            @Texts["Home.Description"]
+        </p>
+        <div class="hero-actions">
+            <a class="primary-action" href="projects">@Texts["Home.ViewProjects"]</a>
+            <a class="secondary-action" href="api/sdk/v1/projects/demo/environments/dev/configuration">@Texts["Home.SdkApi"]</a>
+        </div>
+    </div>
+    <div class="hero-metrics" aria-label="@Texts["Home.Capabilities"]">
+        <div>
+            <span>DDD</span>
+            <strong>@Texts["Home.MetricDdd"]</strong>
+        </div>
+        <div>
+            <span>CQRS</span>
+            <strong>@Texts["Home.MetricCqrs"]</strong>
+        </div>
+        <div>
+            <span>SSE</span>
+            <strong>@Texts["Home.MetricSse"]</strong>
+        </div>
+    </div>
+</section>
