@@ -8,13 +8,14 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IUserStore<ApplicationUser> UserStore
 @inject IdentityRedirectManager RedirectManager
+@inject IStringLocalizer<AppText> Texts
 
-<PageTitle>Manage your external logins</PageTitle>
+<PageTitle>@Texts["Identity.Manage.ExternalLoginsTitle"]</PageTitle>
 
 <StatusMessage />
 @if (currentLogins?.Count > 0)
 {
-    <h3>Registered Logins</h3>
+    <h3>@Texts["Identity.Manage.RegisteredLogins"]</h3>
     <table class="table">
         <tbody>
             @foreach (var login in currentLogins)
@@ -29,7 +30,7 @@
                                 <div>
                                     <input type="hidden" name="@nameof(LoginProvider)" value="@login.LoginProvider" />
                                     <input type="hidden" name="@nameof(ProviderKey)" value="@login.ProviderKey" />
-                                    <button type="submit" class="btn btn-primary" title="Remove this @login.ProviderDisplayName login from your account">Remove</button>
+                                    <button type="submit" class="btn btn-primary" title="@Texts["Identity.Manage.RemoveExternalLoginTitle", login.ProviderDisplayName ?? login.LoginProvider]">@Texts["Identity.Remove"]</button>
                                 </div>
                             </form>
                         }
@@ -45,7 +46,7 @@
 }
 @if (otherLogins?.Count > 0)
 {
-    <h4>Add another service to log in.</h4>
+    <h4>@Texts["Identity.Manage.AddAnotherExternalService"]</h4>
     <hr />
     <form class="form-horizontal" action="Account/Manage/LinkExternalLogin" method="post">
         <AntiforgeryToken />
@@ -53,7 +54,7 @@
             <p>
                 @foreach (var provider in otherLogins)
                 {
-                    <button type="submit" class="btn btn-primary" name="Provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                    <button type="submit" class="btn btn-primary" name="Provider" value="@provider.Name" title="@Texts["Identity.External.ProviderTitle", provider.DisplayName ?? provider.Name]">
                         @provider.DisplayName
                     </button>
                 }
@@ -82,11 +83,9 @@
     [SupplyParameterFromQuery]
     private string? Action { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
+    protected override async Task OnInitializedAsync() {
         user = await UserManager.GetUserAsync(HttpContext.User);
-        if (user is null)
-        {
+        if (user is null) {
             RedirectManager.RedirectToInvalidUser(UserManager, HttpContext);
             return;
         }
@@ -97,66 +96,55 @@
             .ToList();
 
         string? passwordHash = null;
-        if (UserStore is IUserPasswordStore<ApplicationUser> userPasswordStore)
-        {
+        if (UserStore is IUserPasswordStore<ApplicationUser> userPasswordStore) {
             passwordHash = await userPasswordStore.GetPasswordHashAsync(user, HttpContext.RequestAborted);
         }
 
         showRemoveButton = passwordHash is not null || currentLogins.Count > 1;
 
-        if (HttpMethods.IsGet(HttpContext.Request.Method) && Action == LinkLoginCallbackAction)
-        {
+        if (HttpMethods.IsGet(HttpContext.Request.Method) && Action == LinkLoginCallbackAction) {
             await OnGetLinkLoginCallbackAsync();
         }
     }
 
-    private async Task OnSubmitAsync()
-    {
-        if (user is null)
-        {
+    private async Task OnSubmitAsync() {
+        if (user is null) {
             RedirectManager.RedirectToInvalidUser(UserManager, HttpContext);
             return;
         }
 
         var result = await UserManager.RemoveLoginAsync(user, LoginProvider!, ProviderKey!);
-        if (!result.Succeeded)
-        {
-            RedirectManager.RedirectToCurrentPageWithStatus("Error: The external login was not removed.", HttpContext);
+        if (!result.Succeeded) {
+            RedirectManager.RedirectToCurrentPageWithStatus(Texts["Identity.Manage.ExternalLoginRemoveFailed"], HttpContext);
         }
-        else
-        {
+        else {
             await SignInManager.RefreshSignInAsync(user);
-            RedirectManager.RedirectToCurrentPageWithStatus("The external login was removed.", HttpContext);
+            RedirectManager.RedirectToCurrentPageWithStatus(Texts["Identity.Manage.ExternalLoginRemoved"], HttpContext);
         }
     }
 
-    private async Task OnGetLinkLoginCallbackAsync()
-    {
-        if (user is null)
-        {
+    private async Task OnGetLinkLoginCallbackAsync() {
+        if (user is null) {
             RedirectManager.RedirectToInvalidUser(UserManager, HttpContext);
             return;
         }
 
         var userId = await UserManager.GetUserIdAsync(user);
         var info = await SignInManager.GetExternalLoginInfoAsync(userId);
-        if (info is null)
-        {
-            RedirectManager.RedirectToCurrentPageWithStatus("Error: Could not load external login info.", HttpContext);
+        if (info is null) {
+            RedirectManager.RedirectToCurrentPageWithStatus(Texts["Identity.Manage.ExternalLoginInfoLoadFailed"], HttpContext);
             return;
         }
 
         var result = await UserManager.AddLoginAsync(user, info);
-        if (result.Succeeded)
-        {
+        if (result.Succeeded) {
             // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            RedirectManager.RedirectToCurrentPageWithStatus("The external login was added.", HttpContext);
+            RedirectManager.RedirectToCurrentPageWithStatus(Texts["Identity.Manage.ExternalLoginAdded"], HttpContext);
         }
-        else
-        {
-            RedirectManager.RedirectToCurrentPageWithStatus("Error: The external login was not added. External logins can only be associated with one account.", HttpContext);
+        else {
+            RedirectManager.RedirectToCurrentPageWithStatus(Texts["Identity.Manage.ExternalLoginAddFailed"], HttpContext);
         }
     }
 }

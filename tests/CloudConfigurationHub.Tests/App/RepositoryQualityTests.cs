@@ -96,7 +96,14 @@ public sealed class RepositoryQualityTests {
             Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Register.razor"),
             Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Shared", "ExternalLoginPicker.razor"),
             Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Shared", "ManageNavMenu.razor"),
-            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Manage", "Index.razor")
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Shared", "ManageLayout.razor"),
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Manage", "Index.razor"),
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Manage", "Email.razor"),
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Manage", "ChangePassword.razor"),
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Manage", "TwoFactorAuthentication.razor"),
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Manage", "ExternalLogins.razor"),
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Manage", "PersonalData.razor"),
+            Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App", "Components", "Account", "Pages", "Manage", "Passkeys.razor")
         };
         var forbiddenTemplateCopy = new[] {
             ">Log in<",
@@ -106,7 +113,21 @@ public sealed class RepositoryQualityTests {
             ">Create a new account.<",
             ">Profile<",
             ">Phone number<",
-            ">Two-factor authentication<"
+            ">Two-factor authentication<",
+            ">Manage your account<",
+            ">Change your account settings<",
+            ">Manage email<",
+            ">Send verification email<",
+            ">Change email<",
+            ">Change password<",
+            ">Update password<",
+            ">Authenticator app<",
+            ">Registered Logins<",
+            ">Personal Data<",
+            ">Download<",
+            ">Manage your passkeys<",
+            ">No passkeys are registered.<",
+            ">Add a new passkey<"
         };
         var violations = checkedFiles
             .SelectMany(path => forbiddenTemplateCopy

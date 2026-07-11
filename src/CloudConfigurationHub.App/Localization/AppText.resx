@@ -226,18 +226,84 @@
   <data name="Identity.Login.Submit" xml:space="preserve"><value>登录</value></data>
   <data name="Identity.Login.Title" xml:space="preserve"><value>登录</value></data>
   <data name="Identity.Manage.ExternalLogins" xml:space="preserve"><value>外部登录</value></data>
+  <data name="Identity.Manage.AccountSettings" xml:space="preserve"><value>修改账号设置</value></data>
+  <data name="Identity.Manage.AccountTitle" xml:space="preserve"><value>管理账号</value></data>
+  <data name="Identity.Manage.AddAnotherExternalService" xml:space="preserve"><value>添加其它外部登录服务。</value></data>
+  <data name="Identity.Manage.AddAuthenticatorApp" xml:space="preserve"><value>添加身份验证器应用</value></data>
+  <data name="Identity.Manage.AddPasskey" xml:space="preserve"><value>添加通行密钥</value></data>
+  <data name="Identity.Manage.AuthenticatorApp" xml:space="preserve"><value>身份验证器应用</value></data>
+  <data name="Identity.Manage.BrowserForgotten" xml:space="preserve"><value>当前浏览器已忘记。下次从该浏览器登录时，需要输入双重认证代码。</value></data>
+  <data name="Identity.Manage.CanGenerateRecoveryCodesPrefix" xml:space="preserve"><value>你可以</value></data>
+  <data name="Identity.Manage.ChangeEmail" xml:space="preserve"><value>修改邮箱</value></data>
+  <data name="Identity.Manage.ChangePassword" xml:space="preserve"><value>修改密码</value></data>
+  <data name="Identity.Manage.DeletePasskeyTitle" xml:space="preserve"><value>从账号中删除此通行密钥</value></data>
+  <data name="Identity.Manage.Disable2Fa" xml:space="preserve"><value>禁用双重认证</value></data>
+  <data name="Identity.Manage.EmailChangeConfirmationSent" xml:space="preserve"><value>邮箱变更确认链接已发送，请检查邮箱。</value></data>
+  <data name="Identity.Manage.EmailPlaceholder" xml:space="preserve"><value>输入邮箱</value></data>
+  <data name="Identity.Manage.EmailTitle" xml:space="preserve"><value>管理邮箱</value></data>
+  <data name="Identity.Manage.EmailUnchanged" xml:space="preserve"><value>邮箱未发生变化。</value></data>
+  <data name="Identity.Manage.EmailVerificationSent" xml:space="preserve"><value>验证邮件已发送，请检查邮箱。</value></data>
+  <data name="Identity.Manage.ExternalLoginAddFailed" xml:space="preserve"><value>错误：外部登录添加失败。外部登录只能关联到一个账号。</value></data>
+  <data name="Identity.Manage.ExternalLoginAdded" xml:space="preserve"><value>外部登录已添加。</value></data>
+  <data name="Identity.Manage.ExternalLoginInfoLoadFailed" xml:space="preserve"><value>错误：无法加载外部登录信息。</value></data>
+  <data name="Identity.Manage.ExternalLoginRemoveFailed" xml:space="preserve"><value>错误：外部登录移除失败。</value></data>
+  <data name="Identity.Manage.ExternalLoginRemoved" xml:space="preserve"><value>外部登录已移除。</value></data>
+  <data name="Identity.Manage.ExternalLoginsTitle" xml:space="preserve"><value>管理外部登录</value></data>
+  <data name="Identity.Manage.ForgetBrowser" xml:space="preserve"><value>忘记此浏览器</value></data>
+  <data name="Identity.Manage.GenerateRecoveryCodesLink" xml:space="preserve"><value>生成一组新的恢复代码</value></data>
+  <data name="Identity.Manage.GenerateRecoveryCodesRequiredPrefix" xml:space="preserve"><value>你必须先</value></data>
+  <data name="Identity.Manage.GenerateRecoveryCodesRequiredSuffix" xml:space="preserve"><value>，才能使用恢复代码登录。</value></data>
+  <data name="Identity.Manage.InvalidPasskeyId" xml:space="preserve"><value>错误：指定的通行密钥 ID 格式无效。</value></data>
+  <data name="Identity.Manage.NewEmail" xml:space="preserve"><value>新邮箱</value></data>
+  <data name="Identity.Manage.NewEmailPlaceholder" xml:space="preserve"><value>输入新邮箱</value></data>
+  <data name="Identity.Manage.NewPassword" xml:space="preserve"><value>新密码</value></data>
+  <data name="Identity.Manage.NewPasswordPlaceholder" xml:space="preserve"><value>输入新密码</value></data>
+  <data name="Identity.Manage.NoPasskeys" xml:space="preserve"><value>当前没有注册通行密钥。</value></data>
+  <data name="Identity.Manage.NoRecoveryCodes" xml:space="preserve"><value>你没有剩余恢复代码。</value></data>
+  <data name="Identity.Manage.OldPassword" xml:space="preserve"><value>旧密码</value></data>
+  <data name="Identity.Manage.OldPasswordPlaceholder" xml:space="preserve"><value>输入旧密码</value></data>
   <data name="Identity.Manage.Passkeys" xml:space="preserve"><value>通行密钥</value></data>
+  <data name="Identity.Manage.PasskeyAddFailed" xml:space="preserve"><value>错误：无法将通行密钥添加到账号。</value></data>
+  <data name="Identity.Manage.PasskeyAddFailedWithMessage" xml:space="preserve"><value>错误：无法添加通行密钥：{0}</value></data>
+  <data name="Identity.Manage.PasskeyDeleted" xml:space="preserve"><value>通行密钥已删除。</value></data>
+  <data name="Identity.Manage.PasskeyDeleteFailed" xml:space="preserve"><value>错误：通行密钥删除失败。</value></data>
+  <data name="Identity.Manage.PasskeyLimitReached" xml:space="preserve"><value>已达到允许的通行密钥数量上限。请先删除一个再添加。</value></data>
+  <data name="Identity.Manage.PasskeyNotProvided" xml:space="preserve"><value>错误：浏览器没有提供通行密钥。</value></data>
+  <data name="Identity.Manage.PasskeysTitle" xml:space="preserve"><value>管理通行密钥</value></data>
+  <data name="Identity.Manage.PasswordChanged" xml:space="preserve"><value>密码已修改。</value></data>
   <data name="Identity.Manage.PersonalData" xml:space="preserve"><value>个人数据</value></data>
+  <data name="Identity.Manage.PersonalDataDeleteWarning" xml:space="preserve"><value>删除这些数据会永久移除你的账号，并且无法恢复。</value></data>
+  <data name="Identity.Manage.PersonalDataDescription" xml:space="preserve"><value>你的账号包含你提供的个人数据。此页面允许你下载或删除这些数据。</value></data>
+  <data name="Identity.Manage.PersonalDataTitle" xml:space="preserve"><value>个人数据</value></data>
   <data name="Identity.Manage.Phone" xml:space="preserve"><value>手机号码</value></data>
   <data name="Identity.Manage.PhonePlaceholder" xml:space="preserve"><value>输入手机号码</value></data>
   <data name="Identity.Manage.PhoneUpdateFailed" xml:space="preserve"><value>错误：手机号码更新失败。</value></data>
   <data name="Identity.Manage.Profile" xml:space="preserve"><value>个人资料</value></data>
   <data name="Identity.Manage.ProfileUpdated" xml:space="preserve"><value>个人资料已更新。</value></data>
+  <data name="Identity.Manage.RecoveryCodesLeft" xml:space="preserve"><value>你还剩 {0} 个恢复代码。</value></data>
+  <data name="Identity.Manage.RegisteredLogins" xml:space="preserve"><value>已注册的外部登录</value></data>
+  <data name="Identity.Manage.RemoveExternalLoginTitle" xml:space="preserve"><value>从账号中移除 {0} 登录</value></data>
+  <data name="Identity.Manage.RenamePasskeyTitle" xml:space="preserve"><value>重命名此通行密钥</value></data>
+  <data name="Identity.Manage.ResetAuthenticatorApp" xml:space="preserve"><value>重置身份验证器应用</value></data>
+  <data name="Identity.Manage.ResetRecoveryCodes" xml:space="preserve"><value>重置恢复代码</value></data>
+  <data name="Identity.Manage.SendVerificationEmail" xml:space="preserve"><value>发送验证邮件</value></data>
+  <data name="Identity.Manage.SetupAuthenticatorApp" xml:space="preserve"><value>设置身份验证器应用</value></data>
+  <data name="Identity.Manage.ShouldGenerateRecoveryCodesPrefix" xml:space="preserve"><value>建议你</value></data>
+  <data name="Identity.Manage.TrackingNotAccepted" xml:space="preserve"><value>隐私和 Cookie 策略尚未接受。</value></data>
+  <data name="Identity.Manage.TrackingRequiredForTwoFactor" xml:space="preserve"><value>必须先接受该策略，才能启用双重认证。</value></data>
   <data name="Identity.Manage.TwoFactor" xml:space="preserve"><value>双重认证</value></data>
+  <data name="Identity.Manage.TwoFactorTitle" xml:space="preserve"><value>双重认证（2FA）</value></data>
+  <data name="Identity.Manage.UnknownPasskeyAction" xml:space="preserve"><value>错误：未知通行密钥操作“{0}”。</value></data>
+  <data name="Identity.Manage.UnnamedPasskey" xml:space="preserve"><value>未命名通行密钥</value></data>
+  <data name="Identity.Manage.UpdatePassword" xml:space="preserve"><value>更新密码</value></data>
   <data name="Identity.Manage.Username" xml:space="preserve"><value>用户名</value></data>
   <data name="Identity.Manage.UsernamePlaceholder" xml:space="preserve"><value>选择用户名</value></data>
   <data name="Identity.Or" xml:space="preserve"><value>或</value></data>
   <data name="Identity.Password" xml:space="preserve"><value>密码</value></data>
+  <data name="Identity.Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="Identity.Download" xml:space="preserve"><value>下载</value></data>
+  <data name="Identity.Remove" xml:space="preserve"><value>移除</value></data>
+  <data name="Identity.Rename" xml:space="preserve"><value>重命名</value></data>
   <data name="Identity.Register.CreateAccount" xml:space="preserve"><value>创建新账号。</value></data>
   <data name="Identity.Register.ExternalService" xml:space="preserve"><value>使用其它服务注册。</value></data>
   <data name="Identity.Register.PageTitle" xml:space="preserve"><value>注册</value></data>

@@ -226,18 +226,84 @@
   <data name="Identity.Login.Submit" xml:space="preserve"><value>Sign in</value></data>
   <data name="Identity.Login.Title" xml:space="preserve"><value>Sign in</value></data>
   <data name="Identity.Manage.ExternalLogins" xml:space="preserve"><value>External sign-ins</value></data>
+  <data name="Identity.Manage.AccountSettings" xml:space="preserve"><value>Change your account settings</value></data>
+  <data name="Identity.Manage.AccountTitle" xml:space="preserve"><value>Manage your account</value></data>
+  <data name="Identity.Manage.AddAnotherExternalService" xml:space="preserve"><value>Add another external sign-in service.</value></data>
+  <data name="Identity.Manage.AddAuthenticatorApp" xml:space="preserve"><value>Add authenticator app</value></data>
+  <data name="Identity.Manage.AddPasskey" xml:space="preserve"><value>Add a new passkey</value></data>
+  <data name="Identity.Manage.AuthenticatorApp" xml:space="preserve"><value>Authenticator app</value></data>
+  <data name="Identity.Manage.BrowserForgotten" xml:space="preserve"><value>The current browser has been forgotten. The next sign-in from this browser will require your 2FA code.</value></data>
+  <data name="Identity.Manage.CanGenerateRecoveryCodesPrefix" xml:space="preserve"><value>You can</value></data>
+  <data name="Identity.Manage.ChangeEmail" xml:space="preserve"><value>Change email</value></data>
+  <data name="Identity.Manage.ChangePassword" xml:space="preserve"><value>Change password</value></data>
+  <data name="Identity.Manage.DeletePasskeyTitle" xml:space="preserve"><value>Remove this passkey from your account</value></data>
+  <data name="Identity.Manage.Disable2Fa" xml:space="preserve"><value>Disable 2FA</value></data>
+  <data name="Identity.Manage.EmailChangeConfirmationSent" xml:space="preserve"><value>Confirmation link to change email sent. Please check your email.</value></data>
+  <data name="Identity.Manage.EmailPlaceholder" xml:space="preserve"><value>Enter your email</value></data>
+  <data name="Identity.Manage.EmailTitle" xml:space="preserve"><value>Manage email</value></data>
+  <data name="Identity.Manage.EmailUnchanged" xml:space="preserve"><value>Your email is unchanged.</value></data>
+  <data name="Identity.Manage.EmailVerificationSent" xml:space="preserve"><value>Verification email sent. Please check your email.</value></data>
+  <data name="Identity.Manage.ExternalLoginAddFailed" xml:space="preserve"><value>Error: the external login was not added. External logins can only be associated with one account.</value></data>
+  <data name="Identity.Manage.ExternalLoginAdded" xml:space="preserve"><value>The external login was added.</value></data>
+  <data name="Identity.Manage.ExternalLoginInfoLoadFailed" xml:space="preserve"><value>Error: could not load external login info.</value></data>
+  <data name="Identity.Manage.ExternalLoginRemoveFailed" xml:space="preserve"><value>Error: the external login was not removed.</value></data>
+  <data name="Identity.Manage.ExternalLoginRemoved" xml:space="preserve"><value>The external login was removed.</value></data>
+  <data name="Identity.Manage.ExternalLoginsTitle" xml:space="preserve"><value>Manage external sign-ins</value></data>
+  <data name="Identity.Manage.ForgetBrowser" xml:space="preserve"><value>Forget this browser</value></data>
+  <data name="Identity.Manage.GenerateRecoveryCodesLink" xml:space="preserve"><value>generate a new set of recovery codes</value></data>
+  <data name="Identity.Manage.GenerateRecoveryCodesRequiredPrefix" xml:space="preserve"><value>You must</value></data>
+  <data name="Identity.Manage.GenerateRecoveryCodesRequiredSuffix" xml:space="preserve"><value>before you can sign in with a recovery code.</value></data>
+  <data name="Identity.Manage.InvalidPasskeyId" xml:space="preserve"><value>Error: the specified passkey ID had an invalid format.</value></data>
+  <data name="Identity.Manage.NewEmail" xml:space="preserve"><value>New email</value></data>
+  <data name="Identity.Manage.NewEmailPlaceholder" xml:space="preserve"><value>Enter a new email</value></data>
+  <data name="Identity.Manage.NewPassword" xml:space="preserve"><value>New password</value></data>
+  <data name="Identity.Manage.NewPasswordPlaceholder" xml:space="preserve"><value>Enter the new password</value></data>
+  <data name="Identity.Manage.NoPasskeys" xml:space="preserve"><value>No passkeys are registered.</value></data>
+  <data name="Identity.Manage.NoRecoveryCodes" xml:space="preserve"><value>You have no recovery codes left.</value></data>
+  <data name="Identity.Manage.OldPassword" xml:space="preserve"><value>Old password</value></data>
+  <data name="Identity.Manage.OldPasswordPlaceholder" xml:space="preserve"><value>Enter the old password</value></data>
   <data name="Identity.Manage.Passkeys" xml:space="preserve"><value>Passkeys</value></data>
+  <data name="Identity.Manage.PasskeyAddFailed" xml:space="preserve"><value>Error: the passkey could not be added to your account.</value></data>
+  <data name="Identity.Manage.PasskeyAddFailedWithMessage" xml:space="preserve"><value>Error: could not add the passkey: {0}</value></data>
+  <data name="Identity.Manage.PasskeyDeleted" xml:space="preserve"><value>Passkey deleted successfully.</value></data>
+  <data name="Identity.Manage.PasskeyDeleteFailed" xml:space="preserve"><value>Error: the passkey could not be deleted.</value></data>
+  <data name="Identity.Manage.PasskeyLimitReached" xml:space="preserve"><value>You have reached the maximum number of allowed passkeys. Please delete one before adding a new one.</value></data>
+  <data name="Identity.Manage.PasskeyNotProvided" xml:space="preserve"><value>Error: the browser did not provide a passkey.</value></data>
+  <data name="Identity.Manage.PasskeysTitle" xml:space="preserve"><value>Manage passkeys</value></data>
+  <data name="Identity.Manage.PasswordChanged" xml:space="preserve"><value>Your password has been changed.</value></data>
   <data name="Identity.Manage.PersonalData" xml:space="preserve"><value>Personal data</value></data>
+  <data name="Identity.Manage.PersonalDataDeleteWarning" xml:space="preserve"><value>Deleting this data will permanently remove your account, and this cannot be recovered.</value></data>
+  <data name="Identity.Manage.PersonalDataDescription" xml:space="preserve"><value>Your account contains personal data that you have provided. This page allows you to download or delete that data.</value></data>
+  <data name="Identity.Manage.PersonalDataTitle" xml:space="preserve"><value>Personal data</value></data>
   <data name="Identity.Manage.Phone" xml:space="preserve"><value>Phone</value></data>
   <data name="Identity.Manage.PhonePlaceholder" xml:space="preserve"><value>Enter your phone number</value></data>
   <data name="Identity.Manage.PhoneUpdateFailed" xml:space="preserve"><value>Error: failed to update phone number.</value></data>
   <data name="Identity.Manage.Profile" xml:space="preserve"><value>Profile</value></data>
   <data name="Identity.Manage.ProfileUpdated" xml:space="preserve"><value>Your profile has been updated.</value></data>
+  <data name="Identity.Manage.RecoveryCodesLeft" xml:space="preserve"><value>You have {0} recovery codes left.</value></data>
+  <data name="Identity.Manage.RegisteredLogins" xml:space="preserve"><value>Registered sign-ins</value></data>
+  <data name="Identity.Manage.RemoveExternalLoginTitle" xml:space="preserve"><value>Remove this {0} sign-in from your account</value></data>
+  <data name="Identity.Manage.RenamePasskeyTitle" xml:space="preserve"><value>Rename this passkey</value></data>
+  <data name="Identity.Manage.ResetAuthenticatorApp" xml:space="preserve"><value>Reset authenticator app</value></data>
+  <data name="Identity.Manage.ResetRecoveryCodes" xml:space="preserve"><value>Reset recovery codes</value></data>
+  <data name="Identity.Manage.SendVerificationEmail" xml:space="preserve"><value>Send verification email</value></data>
+  <data name="Identity.Manage.SetupAuthenticatorApp" xml:space="preserve"><value>Set up authenticator app</value></data>
+  <data name="Identity.Manage.ShouldGenerateRecoveryCodesPrefix" xml:space="preserve"><value>You should</value></data>
+  <data name="Identity.Manage.TrackingNotAccepted" xml:space="preserve"><value>Privacy and cookie policy have not been accepted.</value></data>
+  <data name="Identity.Manage.TrackingRequiredForTwoFactor" xml:space="preserve"><value>You must accept the policy before you can enable two-factor authentication.</value></data>
   <data name="Identity.Manage.TwoFactor" xml:space="preserve"><value>Two-factor authentication</value></data>
+  <data name="Identity.Manage.TwoFactorTitle" xml:space="preserve"><value>Two-factor authentication (2FA)</value></data>
+  <data name="Identity.Manage.UnknownPasskeyAction" xml:space="preserve"><value>Error: unknown passkey action '{0}'.</value></data>
+  <data name="Identity.Manage.UnnamedPasskey" xml:space="preserve"><value>Unnamed passkey</value></data>
+  <data name="Identity.Manage.UpdatePassword" xml:space="preserve"><value>Update password</value></data>
   <data name="Identity.Manage.Username" xml:space="preserve"><value>Username</value></data>
   <data name="Identity.Manage.UsernamePlaceholder" xml:space="preserve"><value>Choose your username</value></data>
   <data name="Identity.Or" xml:space="preserve"><value>OR</value></data>
   <data name="Identity.Password" xml:space="preserve"><value>Password</value></data>
+  <data name="Identity.Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="Identity.Download" xml:space="preserve"><value>Download</value></data>
+  <data name="Identity.Remove" xml:space="preserve"><value>Remove</value></data>
+  <data name="Identity.Rename" xml:space="preserve"><value>Rename</value></data>
   <data name="Identity.Register.CreateAccount" xml:space="preserve"><value>Create a new account.</value></data>
   <data name="Identity.Register.ExternalService" xml:space="preserve"><value>Use another service to register.</value></data>
   <data name="Identity.Register.PageTitle" xml:space="preserve"><value>Register</value></data>
