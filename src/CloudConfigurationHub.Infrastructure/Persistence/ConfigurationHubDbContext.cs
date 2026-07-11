@@ -26,6 +26,7 @@ public sealed class ConfigurationHubDbContext(DbContextOptions<ConfigurationHubD
             builder.Property(project => project.Key).HasMaxLength(100).IsRequired();
             builder.Property(project => project.AccessKeyHash).HasMaxLength(128).IsRequired();
             builder.HasIndex(project => project.Key).IsUnique();
+            builder.Ignore(project => project.DraftValues);
             builder.Navigation(project => project.Environments).UsePropertyAccessMode(PropertyAccessMode.Field);
             builder.Navigation(project => project.Configurations).UsePropertyAccessMode(PropertyAccessMode.Field);
             builder.Navigation(project => project.Releases).UsePropertyAccessMode(PropertyAccessMode.Field);

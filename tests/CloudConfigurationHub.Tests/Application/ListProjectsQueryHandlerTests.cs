@@ -30,6 +30,10 @@ public sealed class ListProjectsQueryHandlerTests {
         public ValueTask<IReadOnlyList<ProjectCard>> ListProjectsAsync(CancellationToken cancellationToken) {
             return ValueTask.FromResult(projects);
         }
+
+        public ValueTask<ProjectDetail?> GetProjectDetailAsync(Guid projectId, CancellationToken cancellationToken) {
+            return ValueTask.FromResult<ProjectDetail?>(null);
+        }
     }
 
     private sealed class FakeLogger<TCategoryName> : ILogger<TCategoryName> {

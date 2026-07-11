@@ -61,6 +61,11 @@ public sealed class Project {
     public IReadOnlyCollection<ConfigRelease> Releases => _releases.AsReadOnly();
 
     /// <summary>
+    /// 项目下所有环境的配置草稿值集合。
+    /// </summary>
+    public IReadOnlyCollection<ConfigDraftValue> DraftValues => _draftValues.AsReadOnly();
+
+    /// <summary>
     /// 创建一个新的配置项目。
     /// </summary>
     /// <param name="name">项目显示名称。</param>
