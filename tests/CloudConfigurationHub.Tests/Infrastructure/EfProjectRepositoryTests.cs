@@ -1,3 +1,4 @@
+using CloudConfigurationHub.Application.Security;
 using CloudConfigurationHub.Domain.Projects;
 using CloudConfigurationHub.Infrastructure.Persistence;
 using Microsoft.Data.Sqlite;
@@ -58,6 +59,7 @@ public sealed class EfProjectRepositoryTests {
         var reader = new EfPublishedConfigurationReader(
             assertContext,
             hasher,
+            new PassThroughSecretProtector(),
             NullLogger<EfPublishedConfigurationReader>.Instance);
 
         var snapshot = await reader.GetLatestAsync("order-service", "prod", "secret", CancellationToken.None);
@@ -67,6 +69,38 @@ public sealed class EfProjectRepositoryTests {
         Assert.Equal(2, snapshot.Version);
         Assert.Equal("server=prod-b", snapshot.Values["database:connectionstring"]);
         Assert.Null(unauthorizedSnapshot);
+    }
+
+    [Fact]
+    public async Task GetLatestAsync_decrypts_sensitive_values_before_returning_sdk_snapshot() {
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        var options = new DbContextOptionsBuilder<ConfigurationHubDbContext>()
+            .UseSqlite(connection)
+            .Options;
+        await using var arrangeContext = new ConfigurationHubDbContext(options);
+        await arrangeContext.Database.EnsureCreatedAsync();
+        var hasher = new Sha256AccessKeyHasher();
+        var protector = new PrefixSecretProtector();
+        var project = Project.Create("Order Service", "order-service");
+        project.ReplaceAccessKeyHash(hasher.Hash("secret"));
+        var environment = project.AddEnvironment("Production", "prod");
+        var configuration = project.AddConfiguration("Database", "Password", isSensitive: true);
+        project.SetDraftValue(environment.Id, configuration.Id, protector.Protect("plain-password"));
+        project.PublishEnvironment(environment.Id, "首次发布", "admin", DateTimeOffset.Parse("2026-07-11T12:00:00Z"));
+        var repository = new EfProjectRepository(arrangeContext, NullLogger<EfProjectRepository>.Instance);
+        await repository.AddAsync(project, CancellationToken.None);
+        await using var assertContext = new ConfigurationHubDbContext(options);
+        var reader = new EfPublishedConfigurationReader(
+            assertContext,
+            hasher,
+            protector,
+            NullLogger<EfPublishedConfigurationReader>.Instance);
+
+        var snapshot = await reader.GetLatestAsync("order-service", "prod", "secret", CancellationToken.None);
+
+        Assert.NotNull(snapshot);
+        Assert.Equal("plain-password", snapshot.Values["database:password"]);
     }
 
     [Fact]
@@ -102,5 +136,33 @@ public sealed class EfProjectRepositoryTests {
         var release = Assert.Single(savedProject.Releases);
         Assert.Equal(1, release.Version);
         Assert.Equal("server=prod", Assert.Single(release.Values).Value);
+    }
+
+    private sealed class PassThroughSecretProtector : ISecretProtector {
+        public string Protect(string plainText) {
+            return plainText;
+        }
+
+        public string Unprotect(string protectedText) {
+            return protectedText;
+        }
+
+        public bool IsProtected(string value) {
+            return false;
+        }
+    }
+
+    private sealed class PrefixSecretProtector : ISecretProtector {
+        public string Protect(string plainText) {
+            return $"protected::{plainText}";
+        }
+
+        public string Unprotect(string protectedText) {
+            return protectedText.Replace("protected::", string.Empty, StringComparison.Ordinal);
+        }
+
+        public bool IsProtected(string value) {
+            return value.StartsWith("protected::", StringComparison.Ordinal);
+        }
     }
 }

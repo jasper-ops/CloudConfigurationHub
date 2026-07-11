@@ -10,6 +10,8 @@ using CloudConfigurationHub.Application.Projects;
 using CloudConfigurationHub.Application.Sdk;
 using CloudConfigurationHub.Infrastructure;
 using CloudConfigurationHub.Infrastructure.Persistence;
+using CloudConfigurationHub.Infrastructure.Security;
+using CloudConfigurationHub.Application.Security;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
@@ -22,6 +24,8 @@ builder.Services.AddRazorComponents()
 builder.Services.AddHttpClient();
 builder.Services.AddFluentUIComponents();
 builder.Services.AddLocalization();
+builder.Services.Configure<ConfigurationValueProtectionOptions>(
+    builder.Configuration.GetSection("ConfigurationHub:Protection"));
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
 builder.Services.AddMediator(options => {
@@ -62,6 +66,7 @@ builder.Services.AddScoped<IProjectReadModel, EfProjectReadModel>();
 builder.Services.AddScoped<IPublishedConfigurationReader, EfPublishedConfigurationReader>();
 builder.Services.AddScoped<IConfigurationHubDatabaseInitializer, ConfigurationHubDatabaseInitializer>();
 builder.Services.AddSingleton<IAccessKeyHasher, Sha256AccessKeyHasher>();
+builder.Services.AddSingleton<ISecretProtector, AesGcmSecretProtector>();
 builder.Services.AddSingleton<IConfigurationChangeBroadcaster, ConfigurationChangeBroadcaster>();
 builder.Services.AddSingleton<IClock, SystemClock>();
 

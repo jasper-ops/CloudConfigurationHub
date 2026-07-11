@@ -1,4 +1,5 @@
 using CloudConfigurationHub.Application.Projects;
+using CloudConfigurationHub.Application.Security;
 using CloudConfigurationHub.Domain.Projects;
 using Microsoft.Extensions.Logging;
 
@@ -9,10 +10,11 @@ public sealed class SetDraftValueCommandHandlerTests {
     public async Task Handle_sets_draft_value_saves_project_and_writes_audit_log() {
         var project = Project.Create("Order Service", "order-service");
         var environment = project.AddEnvironment("Production", "prod");
-        var configuration = project.AddConfiguration("Database", "ConnectionString", isSensitive: true);
+        var configuration = project.AddConfiguration("Database", "ConnectionString", isSensitive: false);
         var repository = new FakeProjectRepository(project);
         var logger = new FakeLogger<SetDraftValueCommandHandler>();
-        var handler = new SetDraftValueCommandHandler(repository, logger);
+        var protector = new FakeSecretProtector();
+        var handler = new SetDraftValueCommandHandler(repository, protector, logger);
 
         await handler.Handle(
             new SetDraftValueCommand(project.Id, environment.Id, configuration.Id, "server=prod"),
@@ -29,6 +31,29 @@ public sealed class SetDraftValueCommandHandlerTests {
         Assert.Contains(configuration.Id.ToString(), logEntry.Message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task Handle_encrypts_sensitive_draft_value_before_saving_project() {
+        var project = Project.Create("Order Service", "order-service");
+        var environment = project.AddEnvironment("Production", "prod");
+        var configuration = project.AddConfiguration("Database", "Password", isSensitive: true);
+        var repository = new FakeProjectRepository(project);
+        var logger = new FakeLogger<SetDraftValueCommandHandler>();
+        var protector = new FakeSecretProtector();
+        var handler = new SetDraftValueCommandHandler(repository, protector, logger);
+
+        await handler.Handle(
+            new SetDraftValueCommand(project.Id, environment.Id, configuration.Id, "plain-password"),
+            CancellationToken.None);
+
+        Assert.True(repository.WasSaved);
+        var release = project.PublishEnvironment(environment.Id, "验证敏感草稿", "test", DateTimeOffset.Parse("2026-07-11T12:00:00Z"));
+        var value = Assert.Single(release.Values);
+        Assert.True(value.IsSensitive);
+        Assert.Equal("protected::plain-password", value.Value);
+        Assert.DoesNotContain("plain-password", value.Value.Replace("protected::plain-password", string.Empty), StringComparison.Ordinal);
+        Assert.Equal("plain-password", protector.LastProtectedValue);
+    }
+
     private sealed class FakeProjectRepository(Project? project) : IProjectRepository {
         public bool WasSaved { get; private set; }
 
@@ -43,6 +68,23 @@ public sealed class SetDraftValueCommandHandlerTests {
         public ValueTask SaveChangesAsync(Project project, CancellationToken cancellationToken) {
             WasSaved = true;
             return ValueTask.CompletedTask;
+        }
+    }
+
+    private sealed class FakeSecretProtector : ISecretProtector {
+        public string? LastProtectedValue { get; private set; }
+
+        public string Protect(string plainText) {
+            LastProtectedValue = plainText;
+            return $"protected::{plainText}";
+        }
+
+        public string Unprotect(string protectedText) {
+            return protectedText.Replace("protected::", string.Empty, StringComparison.Ordinal);
+        }
+
+        public bool IsProtected(string value) {
+            return value.StartsWith("protected::", StringComparison.Ordinal);
         }
     }
 

@@ -1,8 +1,10 @@
 using CloudConfigurationHub.Application;
 using CloudConfigurationHub.Application.Projects;
 using CloudConfigurationHub.Application.Sdk;
+using CloudConfigurationHub.Application.Security;
 using CloudConfigurationHub.Infrastructure;
 using CloudConfigurationHub.Infrastructure.Persistence;
+using CloudConfigurationHub.Infrastructure.Security;
 using Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -24,6 +26,9 @@ public sealed class ApplicationStartupTests {
         services.AddScoped<IProjectReadModel, EfProjectReadModel>();
         services.AddScoped<IPublishedConfigurationReader, EfPublishedConfigurationReader>();
         services.AddSingleton<IAccessKeyHasher, Sha256AccessKeyHasher>();
+        services.AddSingleton<ISecretProtector, AesGcmSecretProtector>();
+        services.Configure<ConfigurationValueProtectionOptions>(options =>
+            options.MasterKey = "test-master-key-for-application-startup-validation");
         services.AddSingleton<IConfigurationChangeBroadcaster, ConfigurationChangeBroadcaster>();
         services.AddSingleton<IClock, SystemClock>();
 

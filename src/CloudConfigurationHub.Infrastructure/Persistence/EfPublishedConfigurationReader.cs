@@ -1,4 +1,5 @@
 using CloudConfigurationHub.Application.Sdk;
+using CloudConfigurationHub.Application.Security;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -9,10 +10,12 @@ namespace CloudConfigurationHub.Infrastructure.Persistence;
 /// </summary>
 /// <param name="dbContext">配置中心数据库上下文。</param>
 /// <param name="accessKeyHasher">Access Key 哈希器。</param>
+/// <param name="secretProtector">敏感配置值保护器，用于向 SDK 返回明文配置值。</param>
 /// <param name="logger">结构化日志记录器，用于记录 SDK 读取持久化侧事件。</param>
 public sealed class EfPublishedConfigurationReader(
     ConfigurationHubDbContext dbContext,
     IAccessKeyHasher accessKeyHasher,
+    ISecretProtector secretProtector,
     ILogger<EfPublishedConfigurationReader> logger) : IPublishedConfigurationReader {
     /// <summary>
     /// 读取指定项目环境的最新已发布配置快照。
@@ -71,13 +74,29 @@ public sealed class EfPublishedConfigurationReader(
         }
 
         logger.LogInformation(
-            "已从数据库读取SDK配置快照。ProjectId={ProjectId}, EnvironmentKey={EnvironmentKey}, Version={Version}, ValueCount={ValueCount}",
+            "已从数据库读取SDK配置快照。ProjectId={ProjectId}, EnvironmentKey={EnvironmentKey}, Version={Version}, ValueCount={ValueCount}, SensitiveValueCount={SensitiveValueCount}",
             normalizedProjectId,
             normalizedEnvironmentKey,
             latestRelease.Version,
-            latestRelease.Values.Count);
+            latestRelease.Values.Count,
+            latestRelease.Values.Count(item => item.IsSensitive));
         return new PublishedConfigurationSnapshot(
             latestRelease.Version,
-            latestRelease.Values.ToDictionary(item => item.ConfigurationKey, item => item.Value));
+            latestRelease.Values.ToDictionary(item => item.ConfigurationKey, ResolveSdkValue));
+    }
+
+    private string ResolveSdkValue(Domain.Projects.ConfigReleaseValue value) {
+        if (!value.IsSensitive) {
+            return value.Value;
+        }
+
+        if (!secretProtector.IsProtected(value.Value)) {
+            logger.LogWarning(
+                "敏感配置发布值未加密，已按兼容模式返回。ConfigurationKey={ConfigurationKey}",
+                value.ConfigurationKey);
+            return value.Value;
+        }
+
+        return secretProtector.Unprotect(value.Value);
     }
 }
