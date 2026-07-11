@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/CloudConfigurationHub.App/CloudConfigurationHub.App.csproj" />
+    <Project Path="src/CloudConfigurationHub.Application/CloudConfigurationHub.Application.csproj" />
+    <Project Path="src/CloudConfigurationHub.Domain/CloudConfigurationHub.Domain.csproj" />
+    <Project Path="src/CloudConfigurationHub.Infrastructure/CloudConfigurationHub.Infrastructure.csproj" />
+    <Project Path="src/CloudConfigurationHub.Sdk/CloudConfigurationHub.Sdk.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/CloudConfigurationHub.Tests/CloudConfigurationHub.Tests.csproj" />
+  </Folder>
+</Solution>

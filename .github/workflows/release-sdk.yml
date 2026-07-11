@@ -1,0 +1,57 @@
+name: Release SDK
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+      - 'v*.*.*-*'
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: |
+            10.0.x
+            8.0.x
+
+      - name: Extract version
+        id: version
+        shell: pwsh
+        run: |
+          $version = "${env:GITHUB_REF_NAME}".TrimStart("v")
+          "value=$version" >> $env:GITHUB_OUTPUT
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Test
+        run: dotnet test --configuration Release --verbosity normal
+
+      - name: Pack SDK
+        run: dotnet pack src/CloudConfigurationHub.Sdk/CloudConfigurationHub.Sdk.csproj --configuration Release --no-restore --output artifacts/packages /p:Version=${{ steps.version.outputs.value }} /p:ContinuousIntegrationBuild=true
+
+      - name: Login to NuGet.org with Trusted Publishing
+        id: nuget-login
+        uses: NuGet/login@v1
+        continue-on-error: true
+        with:
+          user: ${{ vars.NUGET_USER }}
+
+      - name: Publish with Trusted Publishing
+        if: steps.nuget-login.outcome == 'success'
+        run: dotnet nuget push "artifacts/packages/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --skip-duplicate
+
+      - name: Publish with repository secret fallback
+        if: steps.nuget-login.outcome != 'success'
+        run: dotnet nuget push "artifacts/packages/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "${{ secrets.NUGET_API_KEY }}" --skip-duplicate

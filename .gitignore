@@ -1,0 +1,16 @@
+bin/
+obj/
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.nupkg
+*.snupkg
+TestResults/
+coverage/
+artifacts/
+*.db
+*.db-shm
+*.db-wal
+src/CloudConfigurationHub.App/Data/app.db
