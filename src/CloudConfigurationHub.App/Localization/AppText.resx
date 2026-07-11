@@ -186,6 +186,28 @@
   <data name="ReleaseHistory.RollingBack" xml:space="preserve"><value>正在回滚...</value></data>
   <data name="ReleaseHistory.Title" xml:space="preserve"><value>环境发布历史</value></data>
   <data name="ReleaseHistory.Version" xml:space="preserve"><value>版本</value></data>
+  <data name="Setup.AdminCreated" xml:space="preserve"><value>初始管理员已创建。</value></data>
+  <data name="Setup.ConfirmPasswordLabel" xml:space="preserve"><value>确认密码</value></data>
+  <data name="Setup.Creating" xml:space="preserve"><value>正在创建...</value></data>
+  <data name="Setup.Description" xml:space="preserve"><value>首次启动时创建唯一管理员账号。完成后，管理端将通过 ASP.NET Core Identity Cookie 登录保护。</value></data>
+  <data name="Setup.EmailHelp" xml:space="preserve"><value>该邮箱将作为管理员登录账号。</value></data>
+  <data name="Setup.EmailLabel" xml:space="preserve"><value>管理员邮箱</value></data>
+  <data name="Setup.Eyebrow" xml:space="preserve"><value>首次启动</value></data>
+  <data name="Setup.FirstRunOnly" xml:space="preserve"><value>系统只允许通过首次启动向导创建初始管理员，公开注册入口已禁用。</value></data>
+  <data name="Setup.GuideAudit" xml:space="preserve"><value>审计日志</value></data>
+  <data name="Setup.GuideAuditDescription" xml:space="preserve"><value>启动向导创建与拒绝重复创建都会写入结构化日志。</value></data>
+  <data name="Setup.GuideCookie" xml:space="preserve"><value>Cookie 登录</value></data>
+  <data name="Setup.GuideCookieDescription" xml:space="preserve"><value>创建完成后使用标准 Identity 登录页进入管理端。</value></data>
+  <data name="Setup.GuideTitle" xml:space="preserve"><value>启动向导说明</value></data>
+  <data name="Setup.GuideUnique" xml:space="preserve"><value>唯一管理员</value></data>
+  <data name="Setup.GuideUniqueDescription" xml:space="preserve"><value>系统已有用户后，启动向导和注册入口都不会再创建账号。</value></data>
+  <data name="Setup.PageTitle" xml:space="preserve"><value>启动向导</value></data>
+  <data name="Setup.PasswordHelp" xml:space="preserve"><value>请使用符合 Identity 密码策略的强密码。</value></data>
+  <data name="Setup.PasswordLabel" xml:space="preserve"><value>管理员密码</value></data>
+  <data name="Setup.PasswordMismatch" xml:space="preserve"><value>两次输入的密码不一致。</value></data>
+  <data name="Setup.Submit" xml:space="preserve"><value>创建管理员</value></data>
+  <data name="Setup.Title" xml:space="preserve"><value>初始化云配置中心</value></data>
+  <data name="Setup.ValidationRequired" xml:space="preserve"><value>请填写管理员邮箱、密码和确认密码。</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>关于</value></data>
   <data name="TopNav.OperationalStatus" xml:space="preserve"><value>运行状态</value></data>
   <data name="TopNav.Connected" xml:space="preserve"><value>已连接</value></data>

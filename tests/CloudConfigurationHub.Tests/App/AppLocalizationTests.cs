@@ -129,7 +129,16 @@ public sealed class AppLocalizationTests {
             "ReleaseHistory.PublishedAt",
             "TopNav.OperationalStatus",
             "TopNav.Connected",
-            "TopNav.SdkBoundary"
+            "TopNav.SdkBoundary",
+            "Setup.PageTitle",
+            "Setup.Title",
+            "Setup.Description",
+            "Setup.EmailLabel",
+            "Setup.PasswordLabel",
+            "Setup.ConfirmPasswordLabel",
+            "Setup.Submit",
+            "Setup.FirstRunOnly",
+            "Setup.AdminCreated"
         };
 
         try {

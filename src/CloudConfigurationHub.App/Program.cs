@@ -12,6 +12,7 @@ using CloudConfigurationHub.Infrastructure;
 using CloudConfigurationHub.Infrastructure.Persistence;
 using CloudConfigurationHub.Infrastructure.Security;
 using CloudConfigurationHub.Application.Security;
+using CloudConfigurationHub.App.Setup;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.AspNetCore.Localization;
 using System.Globalization;
@@ -28,6 +29,7 @@ builder.Services.Configure<ConfigurationValueProtectionOptions>(
     builder.Configuration.GetSection("ConfigurationHub:Protection"));
 builder.Services.AddOpenApi();
 builder.Services.AddProblemDetails();
+builder.Services.AddAuthorization();
 builder.Services.AddMediator(options => {
     options.Assemblies = [typeof(CreateProjectCommand).Assembly];
     options.ServiceLifetime = ServiceLifetime.Scoped;
@@ -70,8 +72,10 @@ builder.Services.AddSingleton<IAccessKeyGenerator, RandomAccessKeyGenerator>();
 builder.Services.AddSingleton<ISecretProtector, AesGcmSecretProtector>();
 builder.Services.AddSingleton<IConfigurationChangeBroadcaster, ConfigurationChangeBroadcaster>();
 builder.Services.AddSingleton<IClock, SystemClock>();
+builder.Services.AddStartupSetup();
 
 var app = builder.Build();
+await InitializeIdentityDatabaseAsync(app);
 await InitializeConfigurationHubDatabaseAsync(app);
 
 var supportedCultures = new[] {
@@ -97,6 +101,9 @@ else {
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
 
+app.UseStartupSetupRedirect();
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseAntiforgery();
 
 app.MapStaticAssets();
@@ -113,6 +120,12 @@ static async Task InitializeConfigurationHubDatabaseAsync(WebApplication app) {
     using var scope = app.Services.CreateScope();
     var initializer = scope.ServiceProvider.GetRequiredService<IConfigurationHubDatabaseInitializer>();
     await initializer.InitializeAsync(CancellationToken.None);
+}
+
+static async Task InitializeIdentityDatabaseAsync(WebApplication app) {
+    using var scope = app.Services.CreateScope();
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await dbContext.Database.MigrateAsync(CancellationToken.None);
 }
 
 /// <summary>

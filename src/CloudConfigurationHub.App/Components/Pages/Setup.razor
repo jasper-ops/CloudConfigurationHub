@@ -1,0 +1,162 @@
+@page "/setup"
+@rendermode InteractiveServer
+@attribute [AllowAnonymous]
+@inject ISetupStateReader SetupStateReader
+@inject ISetupAdministratorService SetupAdministratorService
+@inject NavigationManager NavigationManager
+@inject ILogger<Setup> Logger
+@inject IStringLocalizer<AppText> Texts
+
+<PageTitle>@Texts["Setup.PageTitle"]</PageTitle>
+
+<section class="hero-panel setup-page">
+    <div class="hero-copy setup-card">
+        <p class="eyebrow">@Texts["Setup.Eyebrow"]</p>
+        <h1>@Texts["Setup.Title"]</h1>
+        <p class="hero-description">@Texts["Setup.Description"]</p>
+
+        @if (!string.IsNullOrWhiteSpace(errorMessage)) {
+            <div class="error-banner" role="alert">@errorMessage</div>
+        }
+
+        @if (isLoading) {
+            <FluentProgressRing />
+        }
+        else {
+            <form class="form-grid setup-form" @onsubmit:preventDefault="true">
+                <label>
+                    <span>@Texts["Setup.EmailLabel"]</span>
+                    <input class="text-input" autocomplete="username" name="setup-email" type="email" @bind="FormModel.Email" @bind:event="oninput" />
+                    <small>@Texts["Setup.EmailHelp"]</small>
+                </label>
+
+                <label>
+                    <span>@Texts["Setup.PasswordLabel"]</span>
+                    <input class="text-input" autocomplete="new-password" name="setup-password" type="password" @bind="FormModel.Password" @bind:event="oninput" />
+                    <small>@Texts["Setup.PasswordHelp"]</small>
+                </label>
+
+                <label>
+                    <span>@Texts["Setup.ConfirmPasswordLabel"]</span>
+                    <input class="text-input" autocomplete="new-password" name="setup-confirm-password" type="password" @bind="FormModel.ConfirmPassword" @bind:event="oninput" />
+                </label>
+
+                <div class="form-actions">
+                    <button class="primary-action button-reset" type="button" disabled="@isSubmitting" @onclick="CreateAdministratorAsync">
+                        @(isSubmitting ? Texts["Setup.Creating"] : Texts["Setup.Submit"])
+                    </button>
+                </div>
+            </form>
+        }
+    </div>
+
+    <div class="hero-metrics setup-guide" aria-label="@Texts["Setup.GuideTitle"]">
+        <div>
+            <span>@Texts["Setup.GuideUnique"]</span>
+            <strong>@Texts["Setup.GuideUniqueDescription"]</strong>
+        </div>
+        <div>
+            <span>@Texts["Setup.GuideCookie"]</span>
+            <strong>@Texts["Setup.GuideCookieDescription"]</strong>
+        </div>
+        <div>
+            <span>@Texts["Setup.GuideAudit"]</span>
+            <strong>@Texts["Setup.GuideAuditDescription"]</strong>
+        </div>
+    </div>
+</section>
+
+@code {
+    /// <summary>
+    /// 启动向导表单模型。
+    /// </summary>
+    private SetupFormModel FormModel { get; } = new();
+
+    /// <summary>
+    /// 页面是否正在读取启动状态。
+    /// </summary>
+    private bool isLoading = true;
+
+    /// <summary>
+    /// 表单是否正在提交。
+    /// </summary>
+    private bool isSubmitting;
+
+    /// <summary>
+    /// 页面级错误消息。
+    /// </summary>
+    private string? errorMessage;
+
+    /// <summary>
+    /// 初始化页面时检查系统是否已经完成首次启动配置。
+    /// </summary>
+    protected override async Task OnInitializedAsync() {
+        var completed = await SetupStateReader.IsSetupCompletedAsync(CancellationToken.None);
+        if (completed) {
+            Logger.LogInformation("访问启动向导时系统已经初始化，重定向到登录页。");
+            NavigationManager.NavigateTo("Account/Login", forceLoad: true);
+            return;
+        }
+
+        isLoading = false;
+    }
+
+    /// <summary>
+    /// 创建初始管理员账号。
+    /// </summary>
+    private async Task CreateAdministratorAsync() {
+        if (isSubmitting) {
+            return;
+        }
+
+        errorMessage = null;
+        if (string.IsNullOrWhiteSpace(FormModel.Email)
+            || string.IsNullOrWhiteSpace(FormModel.Password)
+            || string.IsNullOrWhiteSpace(FormModel.ConfirmPassword)) {
+            errorMessage = Texts["Setup.ValidationRequired"];
+            return;
+        }
+
+        if (!string.Equals(FormModel.Password, FormModel.ConfirmPassword, StringComparison.Ordinal)) {
+            errorMessage = Texts["Setup.PasswordMismatch"];
+            return;
+        }
+
+        isSubmitting = true;
+        try {
+            var result = await SetupAdministratorService.CreateInitialAdministratorAsync(
+                new SetupAdministratorRequest(FormModel.Email, FormModel.Password),
+                CancellationToken.None);
+            if (!result.Succeeded) {
+                errorMessage = result.ErrorMessage;
+                return;
+            }
+
+            Logger.LogInformation("Setup.AdminCreated Email={Email}", FormModel.Email);
+            NavigationManager.NavigateTo("Account/Login", forceLoad: true);
+        }
+        finally {
+            isSubmitting = false;
+        }
+    }
+
+    /// <summary>
+    /// 启动向导表单字段。
+    /// </summary>
+    public sealed class SetupFormModel {
+        /// <summary>
+        /// 初始管理员邮箱。
+        /// </summary>
+        public string Email { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 初始管理员密码。
+        /// </summary>
+        public string Password { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 初始管理员确认密码。
+        /// </summary>
+        public string ConfirmPassword { get; set; } = string.Empty;
+    }
+}

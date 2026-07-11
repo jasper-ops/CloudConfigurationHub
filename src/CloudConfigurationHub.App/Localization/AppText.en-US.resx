@@ -186,6 +186,28 @@
   <data name="ReleaseHistory.RollingBack" xml:space="preserve"><value>Rolling back...</value></data>
   <data name="ReleaseHistory.Title" xml:space="preserve"><value>Environment release history</value></data>
   <data name="ReleaseHistory.Version" xml:space="preserve"><value>Version</value></data>
+  <data name="Setup.AdminCreated" xml:space="preserve"><value>Initial administrator created.</value></data>
+  <data name="Setup.ConfirmPasswordLabel" xml:space="preserve"><value>Confirm password</value></data>
+  <data name="Setup.Creating" xml:space="preserve"><value>Creating...</value></data>
+  <data name="Setup.Description" xml:space="preserve"><value>Create the unique administrator account on first startup. After setup, the management UI is protected by ASP.NET Core Identity cookie sign-in.</value></data>
+  <data name="Setup.EmailHelp" xml:space="preserve"><value>This email becomes the administrator login account.</value></data>
+  <data name="Setup.EmailLabel" xml:space="preserve"><value>Administrator email</value></data>
+  <data name="Setup.Eyebrow" xml:space="preserve"><value>First startup</value></data>
+  <data name="Setup.FirstRunOnly" xml:space="preserve"><value>The system only allows the initial administrator to be created through the first-run setup wizard. Public registration is disabled.</value></data>
+  <data name="Setup.GuideAudit" xml:space="preserve"><value>Audit logs</value></data>
+  <data name="Setup.GuideAuditDescription" xml:space="preserve"><value>Setup creation and repeated setup rejections are written as structured logs.</value></data>
+  <data name="Setup.GuideCookie" xml:space="preserve"><value>Cookie sign-in</value></data>
+  <data name="Setup.GuideCookieDescription" xml:space="preserve"><value>After creation, use the standard Identity login page to enter the management UI.</value></data>
+  <data name="Setup.GuideTitle" xml:space="preserve"><value>Setup guide</value></data>
+  <data name="Setup.GuideUnique" xml:space="preserve"><value>Unique administrator</value></data>
+  <data name="Setup.GuideUniqueDescription" xml:space="preserve"><value>After any user exists, neither the setup wizard nor registration can create more accounts.</value></data>
+  <data name="Setup.PageTitle" xml:space="preserve"><value>Setup wizard</value></data>
+  <data name="Setup.PasswordHelp" xml:space="preserve"><value>Use a strong password that satisfies the Identity password policy.</value></data>
+  <data name="Setup.PasswordLabel" xml:space="preserve"><value>Administrator password</value></data>
+  <data name="Setup.PasswordMismatch" xml:space="preserve"><value>The two passwords do not match.</value></data>
+  <data name="Setup.Submit" xml:space="preserve"><value>Create administrator</value></data>
+  <data name="Setup.Title" xml:space="preserve"><value>Initialize Cloud Configuration Hub</value></data>
+  <data name="Setup.ValidationRequired" xml:space="preserve"><value>Enter administrator email, password, and confirmation password.</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>About</value></data>
   <data name="TopNav.OperationalStatus" xml:space="preserve"><value>Operational status</value></data>
   <data name="TopNav.Connected" xml:space="preserve"><value>Connected</value></data>
