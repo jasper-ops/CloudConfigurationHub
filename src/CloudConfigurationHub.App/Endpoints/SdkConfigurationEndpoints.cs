@@ -1,6 +1,7 @@
 using CloudConfigurationHub.Application.Sdk;
 using Mediator;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Text.Json;
 
 namespace CloudConfigurationHub.App.Endpoints;
 
@@ -22,6 +23,11 @@ public static class SdkConfigurationEndpoints {
             .WithSummary("Get the latest published configuration snapshot for a project environment.")
             .Produces<SdkConfigurationResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status401Unauthorized);
+
+        group.MapGet("/configuration/stream", StreamConfigurationChangesAsync)
+            .WithName("StreamSdkConfigurationChanges")
+            .WithSummary("Stream configuration version changes for a project environment using Server-Sent Events.")
+            .Produces(StatusCodes.Status200OK, contentType: "text/event-stream");
 
         return app;
     }
@@ -50,4 +56,35 @@ public static class SdkConfigurationEndpoints {
 
         return TypedResults.Ok(new SdkConfigurationResponse(snapshot.Version, snapshot.Values));
     }
+
+    /// <summary>
+    /// 使用 SSE 输出指定项目环境的配置版本变更事件。
+    /// </summary>
+    /// <param name="projectId">项目 ID 或项目 Key。</param>
+    /// <param name="environmentKey">环境 Key。</param>
+    /// <param name="broadcaster">配置变更广播器。</param>
+    /// <param name="response">HTTP 响应对象。</param>
+    /// <param name="cancellationToken">取消令牌，用于终止长连接。</param>
+    /// <returns>表示 SSE 输出过程的异步任务。</returns>
+    public static async ValueTask StreamConfigurationChangesAsync(
+        string projectId,
+        string environmentKey,
+        IConfigurationChangeBroadcaster broadcaster,
+        HttpResponse response,
+        CancellationToken cancellationToken) {
+        response.ContentType = "text/event-stream";
+        response.Headers.CacheControl = "no-cache";
+        response.Headers.Connection = "keep-alive";
+        await response.WriteAsync(": connected\n\n", cancellationToken);
+        await response.Body.FlushAsync(cancellationToken);
+
+        await foreach (var changedEvent in broadcaster.Subscribe(projectId, environmentKey, cancellationToken)) {
+            var json = JsonSerializer.Serialize(changedEvent, JsonOptions);
+            await response.WriteAsync("event: version-changed\n", cancellationToken);
+            await response.WriteAsync($"data: {json}\n\n", cancellationToken);
+            await response.Body.FlushAsync(cancellationToken);
+        }
+    }
+
+    private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
 }

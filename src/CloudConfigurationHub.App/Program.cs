@@ -49,6 +49,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 builder.Services.AddScoped<IProjectRepository, EfProjectRepository>();
 builder.Services.AddScoped<IPublishedConfigurationReader, EfPublishedConfigurationReader>();
 builder.Services.AddSingleton<IAccessKeyHasher, Sha256AccessKeyHasher>();
+builder.Services.AddSingleton<IConfigurationChangeBroadcaster, ConfigurationChangeBroadcaster>();
 
 var app = builder.Build();
 

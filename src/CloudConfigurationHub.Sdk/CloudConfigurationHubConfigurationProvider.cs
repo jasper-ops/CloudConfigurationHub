@@ -12,7 +12,9 @@ public sealed class CloudConfigurationHubConfigurationProvider : ConfigurationPr
 
     private readonly CloudConfigurationHubOptions _options;
     private readonly HttpClient _httpClient;
+    private readonly CancellationTokenSource _disposeTokenSource = new();
     private readonly bool _ownsHttpClient;
+    private Task? _sseListenerTask;
 
     /// <summary>
     /// 创建配置 Provider。
@@ -30,19 +32,93 @@ public sealed class CloudConfigurationHubConfigurationProvider : ConfigurationPr
     /// </summary>
     public override void Load() {
         var snapshot = LoadSnapshotWithFallback();
-        Data = snapshot.Values.ToDictionary(
-            item => item.Key,
-            item => (string?)item.Value,
-            StringComparer.OrdinalIgnoreCase);
+        ApplySnapshot(snapshot);
         PersistLocalCache(snapshot);
+        StartSseListenerIfNeeded();
     }
 
     /// <summary>
     /// 释放内部 HTTP 客户端资源。
     /// </summary>
     public void Dispose() {
+        _disposeTokenSource.Cancel();
         if (_ownsHttpClient) {
             _httpClient.Dispose();
+        }
+
+        _disposeTokenSource.Dispose();
+    }
+
+    private void StartSseListenerIfNeeded() {
+        if (!_options.EnableSse || _sseListenerTask is not null) {
+            return;
+        }
+
+        _sseListenerTask = Task.Run(() => ListenForChangesAsync(_disposeTokenSource.Token));
+    }
+
+    private async Task ListenForChangesAsync(CancellationToken cancellationToken) {
+        while (!cancellationToken.IsCancellationRequested) {
+            try {
+                await foreach (var _ in ReadSseEventsAsync(cancellationToken)) {
+                    var snapshot = await LoadRemoteSnapshotAsync(cancellationToken);
+                    ApplySnapshot(snapshot);
+                    PersistLocalCache(snapshot);
+                    OnReload();
+                }
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+                return;
+            }
+            catch (Exception) {
+                await Task.Delay(_options.SseReconnectInterval, cancellationToken);
+            }
+        }
+    }
+
+    private async IAsyncEnumerable<ConfigurationChangedEvent> ReadSseEventsAsync(
+        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken) {
+        var endpoint = new Uri(
+            _options.Endpoint,
+            $"/api/sdk/v1/projects/{Uri.EscapeDataString(_options.ProjectId)}/environments/{Uri.EscapeDataString(_options.EnvironmentKey)}/configuration/stream");
+        using var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
+        request.Headers.Add("X-CCH-Access-Key", _options.AccessKey);
+        using var response = await _httpClient.SendAsync(
+            request,
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken);
+        response.EnsureSuccessStatusCode();
+        await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken);
+        using var reader = new StreamReader(stream);
+        string? eventName = null;
+        var dataLines = new List<string>();
+
+        while (!cancellationToken.IsCancellationRequested) {
+            var line = await reader.ReadLineAsync(cancellationToken);
+            if (line is null) {
+                break;
+            }
+
+            if (line.Length == 0) {
+                if (eventName == "version-changed" && dataLines.Count > 0) {
+                    var json = string.Join('\n', dataLines);
+                    var changedEvent = JsonSerializer.Deserialize<ConfigurationChangedEvent>(json, JsonOptions);
+                    if (changedEvent is not null) {
+                        yield return changedEvent;
+                    }
+                }
+
+                eventName = null;
+                dataLines.Clear();
+                continue;
+            }
+
+            if (line.StartsWith("event: ", StringComparison.Ordinal)) {
+                eventName = line["event: ".Length..];
+            }
+            else if (line.StartsWith("data: ", StringComparison.Ordinal)) {
+                dataLines.Add(line["data: ".Length..]);
+            }
         }
     }
 
@@ -56,19 +132,28 @@ public sealed class CloudConfigurationHubConfigurationProvider : ConfigurationPr
     }
 
     private ConfigurationSnapshot LoadRemoteSnapshot() {
+        return LoadRemoteSnapshotAsync(CancellationToken.None).GetAwaiter().GetResult();
+    }
+
+    private async Task<ConfigurationSnapshot> LoadRemoteSnapshotAsync(CancellationToken cancellationToken) {
         var endpoint = new Uri(
             _options.Endpoint,
             $"/api/sdk/v1/projects/{Uri.EscapeDataString(_options.ProjectId)}/environments/{Uri.EscapeDataString(_options.EnvironmentKey)}/configuration");
         using var request = new HttpRequestMessage(HttpMethod.Get, endpoint);
         request.Headers.Add("X-CCH-Access-Key", _options.AccessKey);
-        using var response = _httpClient.SendAsync(request, CancellationToken.None)
-            .GetAwaiter()
-            .GetResult();
+        using var response = await _httpClient.SendAsync(request, cancellationToken);
         response.EnsureSuccessStatusCode();
-        var snapshot = response.Content.ReadFromJsonAsync<ConfigurationSnapshot>(cancellationToken: CancellationToken.None)
-            .GetAwaiter()
-            .GetResult();
+        var snapshot = await response.Content.ReadFromJsonAsync<ConfigurationSnapshot>(
+            JsonOptions,
+            cancellationToken);
         return snapshot ?? throw new InvalidOperationException("配置中心返回空配置快照。");
+    }
+
+    private void ApplySnapshot(ConfigurationSnapshot snapshot) {
+        Data = snapshot.Values.ToDictionary(
+            item => item.Key,
+            item => (string?)item.Value,
+            StringComparer.OrdinalIgnoreCase);
     }
 
     private bool TryLoadLocalCache(out ConfigurationSnapshot snapshot) {

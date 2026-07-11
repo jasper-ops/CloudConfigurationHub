@@ -1,7 +1,9 @@
 using CloudConfigurationHub.App.Endpoints;
 using CloudConfigurationHub.Application.Sdk;
 using Mediator;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using System.Text;
 
 namespace CloudConfigurationHub.Tests.App;
 
@@ -44,6 +46,37 @@ public sealed class SdkConfigurationEndpointTests {
         Assert.IsType<UnauthorizedHttpResult>(result.Result);
     }
 
+    [Fact]
+    public async Task StreamConfigurationChangesAsync_writes_sse_version_changed_event() {
+        var broadcaster = new ConfigurationChangeBroadcaster();
+        var httpContext = new DefaultHttpContext();
+        await using var responseBody = new MemoryStream();
+        httpContext.Response.Body = responseBody;
+        using var cancellationTokenSource = new CancellationTokenSource();
+
+        var streamTask = SdkConfigurationEndpoints.StreamConfigurationChangesAsync(
+            "order-service",
+            "prod",
+            broadcaster,
+            httpContext.Response,
+            cancellationTokenSource.Token);
+        await WaitUntilAsync(() => responseBody.Length > 0, cancellationTokenSource.Token);
+
+        await broadcaster.PublishAsync(
+            new ConfigurationChangedEvent("order-service", "prod", 13),
+            CancellationToken.None);
+        await WaitUntilAsync(() => Encoding.UTF8.GetString(responseBody.ToArray()).Contains("\"version\":13", StringComparison.Ordinal), cancellationTokenSource.Token);
+        await cancellationTokenSource.CancelAsync();
+
+        await Assert.ThrowsAnyAsync<OperationCanceledException>(() => streamTask.AsTask());
+        var body = Encoding.UTF8.GetString(responseBody.ToArray());
+        Assert.Equal("text/event-stream", httpContext.Response.ContentType);
+        Assert.Contains("event: version-changed", body, StringComparison.Ordinal);
+        Assert.Contains("\"projectId\":\"order-service\"", body, StringComparison.Ordinal);
+        Assert.Contains("\"environmentKey\":\"prod\"", body, StringComparison.Ordinal);
+        Assert.Contains("\"version\":13", body, StringComparison.Ordinal);
+    }
+
     private sealed class FakeSender(PublishedConfigurationSnapshot? snapshot) : ISender {
         public object? LastMessage { get; private set; }
 
@@ -84,6 +117,12 @@ public sealed class SdkConfigurationEndpointTests {
 
         public IAsyncEnumerable<object> CreateStream(object message, CancellationToken cancellationToken) {
             throw new NotSupportedException();
+        }
+    }
+
+    private static async Task WaitUntilAsync(Func<bool> condition, CancellationToken cancellationToken) {
+        while (!condition()) {
+            await Task.Delay(10, cancellationToken);
         }
     }
 }
