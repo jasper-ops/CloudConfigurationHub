@@ -11,11 +11,12 @@
 @inject IEmailSender<ApplicationUser> EmailSender
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IStringLocalizer<AppText> Texts
 
-<PageTitle>Resend email confirmation</PageTitle>
+<PageTitle>@Texts["Identity.ResendEmailConfirmation.Title"]</PageTitle>
 
-<h1>Resend email confirmation</h1>
-<h2>Enter your email.</h2>
+<h1>@Texts["Identity.ResendEmailConfirmation.Title"]</h1>
+<h2>@Texts["Identity.EnterEmail"]</h2>
 <hr />
 <StatusMessage Message="@message" />
 <div class="row">
@@ -25,10 +26,10 @@
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
                 <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com" />
-                <label for="Input.Email" class="form-label">Email</label>
+                <label for="Input.Email" class="form-label">@Texts["Identity.Email"]</label>
                 <ValidationMessage For="() => Input.Email" class="text-danger" />
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Resend</button>
+            <button type="submit" class="w-100 btn btn-lg btn-primary">@Texts["Identity.ResendEmailConfirmation.Submit"]</button>
         </EditForm>
     </div>
 </div>
@@ -39,17 +40,14 @@
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = default!;
 
-    protected override void OnInitialized()
-    {
+    protected override void OnInitialized() {
         Input ??= new();
     }
 
-    private async Task OnValidSubmitAsync()
-    {
+    private async Task OnValidSubmitAsync() {
         var user = await UserManager.FindByEmailAsync(Input.Email!);
-        if (user is null)
-        {
-            message = "Verification email sent. Please check your email.";
+        if (user is null) {
+            message = Texts["Identity.EmailVerificationSent"];
             return;
         }
 
@@ -61,11 +59,10 @@
             new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code });
         await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
 
-        message = "Verification email sent. Please check your email.";
+        message = Texts["Identity.EmailVerificationSent"];
     }
 
-    private sealed class InputModel
-    {
+    private sealed class InputModel {
         [Required]
         [EmailAddress]
         public string Email { get; set; } = "";

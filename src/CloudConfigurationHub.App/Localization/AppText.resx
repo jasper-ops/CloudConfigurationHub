@@ -209,8 +209,47 @@
   <data name="Setup.Title" xml:space="preserve"><value>初始化云配置中心</value></data>
   <data name="Setup.ValidationRequired" xml:space="preserve"><value>请填写管理员邮箱、密码和确认密码。</value></data>
   <data name="Identity.ConfirmPassword" xml:space="preserve"><value>确认密码</value></data>
+  <data name="Identity.ConfirmPasswordPlaceholder" xml:space="preserve"><value>请确认密码</value></data>
   <data name="Identity.Email" xml:space="preserve"><value>邮箱</value></data>
+  <data name="Identity.EmailVerificationSent" xml:space="preserve"><value>验证邮件已发送，请检查邮箱。</value></data>
+  <data name="Identity.EnterEmail" xml:space="preserve"><value>输入邮箱。</value></data>
   <data name="Identity.ErrorWithMessage" xml:space="preserve"><value>错误：{0}</value></data>
+  <data name="Identity.UserLoadFailedWithId" xml:space="preserve"><value>错误：无法加载 ID 为 {0} 的用户。</value></data>
+  <data name="Identity.AccessDenied.Description" xml:space="preserve"><value>你没有访问此资源的权限。</value></data>
+  <data name="Identity.AccessDenied.Title" xml:space="preserve"><value>访问被拒绝</value></data>
+  <data name="Identity.ConfirmEmail.Failed" xml:space="preserve"><value>错误：邮箱确认失败。</value></data>
+  <data name="Identity.ConfirmEmail.Success" xml:space="preserve"><value>感谢你确认邮箱。</value></data>
+  <data name="Identity.ConfirmEmail.Title" xml:space="preserve"><value>确认邮箱</value></data>
+  <data name="Identity.ConfirmEmailChange.EmailChangeFailed" xml:space="preserve"><value>错误：邮箱变更失败。</value></data>
+  <data name="Identity.ConfirmEmailChange.InvalidLink" xml:space="preserve"><value>错误：邮箱变更确认链接无效。</value></data>
+  <data name="Identity.ConfirmEmailChange.Success" xml:space="preserve"><value>感谢你确认邮箱变更。</value></data>
+  <data name="Identity.ConfirmEmailChange.Title" xml:space="preserve"><value>确认邮箱变更</value></data>
+  <data name="Identity.ConfirmEmailChange.UserNameChangeFailed" xml:space="preserve"><value>错误：用户名变更失败。</value></data>
+  <data name="Identity.ForgotPassword.Submit" xml:space="preserve"><value>重置密码</value></data>
+  <data name="Identity.ForgotPassword.Title" xml:space="preserve"><value>忘记密码？</value></data>
+  <data name="Identity.ForgotPasswordConfirmation.Description" xml:space="preserve"><value>请检查邮箱以重置密码。</value></data>
+  <data name="Identity.ForgotPasswordConfirmation.Title" xml:space="preserve"><value>忘记密码确认</value></data>
+  <data name="Identity.InvalidPasswordReset.Description" xml:space="preserve"><value>密码重置链接无效。</value></data>
+  <data name="Identity.InvalidPasswordReset.Title" xml:space="preserve"><value>无效的密码重置</value></data>
+  <data name="Identity.InvalidUser.Title" xml:space="preserve"><value>无效用户</value></data>
+  <data name="Identity.Lockout.Description" xml:space="preserve"><value>此账号已被锁定，请稍后再试。</value></data>
+  <data name="Identity.Lockout.Title" xml:space="preserve"><value>账号已锁定</value></data>
+  <data name="Identity.PasswordPlaceholder" xml:space="preserve"><value>请输入密码</value></data>
+  <data name="Identity.RegisterConfirmation.CheckEmail" xml:space="preserve"><value>请检查邮箱以确认账号。</value></data>
+  <data name="Identity.RegisterConfirmation.ConfirmationLink" xml:space="preserve"><value>点击确认你的账号</value></data>
+  <data name="Identity.RegisterConfirmation.ConfirmationLinkPrefix" xml:space="preserve"><value>通常会通过邮件发送确认链接：</value></data>
+  <data name="Identity.RegisterConfirmation.EmailSenderDocs" xml:space="preserve"><value>邮件发送器配置文档</value></data>
+  <data name="Identity.RegisterConfirmation.NoRealSender" xml:space="preserve"><value>当前应用尚未配置真实邮件发送器，请参考</value></data>
+  <data name="Identity.RegisterConfirmation.Title" xml:space="preserve"><value>注册确认</value></data>
+  <data name="Identity.RegisterConfirmation.UserNotFound" xml:space="preserve"><value>错误：未找到指定邮箱对应的用户。</value></data>
+  <data name="Identity.ResendEmailConfirmation.Submit" xml:space="preserve"><value>重新发送</value></data>
+  <data name="Identity.ResendEmailConfirmation.Title" xml:space="preserve"><value>重新发送邮箱确认</value></data>
+  <data name="Identity.ResetPassword.Description" xml:space="preserve"><value>重置你的密码。</value></data>
+  <data name="Identity.ResetPassword.Submit" xml:space="preserve"><value>重置</value></data>
+  <data name="Identity.ResetPassword.Title" xml:space="preserve"><value>重置密码</value></data>
+  <data name="Identity.ResetPasswordConfirmation.Description" xml:space="preserve"><value>你的密码已重置。请</value></data>
+  <data name="Identity.ResetPasswordConfirmation.LoginLink" xml:space="preserve"><value>点击这里登录</value></data>
+  <data name="Identity.ResetPasswordConfirmation.Title" xml:space="preserve"><value>重置密码确认</value></data>
   <data name="Identity.External.NoneConfigured" xml:space="preserve"><value>当前未配置外部认证服务。请参考</value></data>
   <data name="Identity.External.ProviderTitle" xml:space="preserve"><value>使用 {0} 账号登录</value></data>
   <data name="Identity.External.SetupArticle" xml:space="preserve"><value>外部登录配置文档</value></data>

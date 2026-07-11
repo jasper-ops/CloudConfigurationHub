@@ -7,10 +7,11 @@
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
+@inject IStringLocalizer<AppText> Texts
 
-<PageTitle>Confirm email</PageTitle>
+<PageTitle>@Texts["Identity.ConfirmEmail.Title"]</PageTitle>
 
-<h1>Confirm email</h1>
+<h1>@Texts["Identity.ConfirmEmail.Title"]</h1>
 <StatusMessage Message="@statusMessage" />
 
 @code {
@@ -25,25 +26,23 @@
     [SupplyParameterFromQuery]
     private string? Code { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        if (UserId is null || Code is null)
-        {
+    protected override async Task OnInitializedAsync() {
+        if (UserId is null || Code is null) {
             RedirectManager.RedirectTo("");
             return;
         }
 
         var user = await UserManager.FindByIdAsync(UserId);
-        if (user is null)
-        {
+        if (user is null) {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = $"Error loading user with ID {UserId}";
+            statusMessage = Texts["Identity.UserLoadFailedWithId", UserId];
         }
-        else
-        {
+        else {
             var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(Code));
             var result = await UserManager.ConfirmEmailAsync(user, code);
-            statusMessage = result.Succeeded ? "Thank you for confirming your email." : "Error confirming your email.";
+            statusMessage = result.Succeeded
+                ? Texts["Identity.ConfirmEmail.Success"]
+                : Texts["Identity.ConfirmEmail.Failed"];
         }
     }
 }

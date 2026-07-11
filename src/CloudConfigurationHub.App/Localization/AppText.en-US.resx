@@ -209,8 +209,47 @@
   <data name="Setup.Title" xml:space="preserve"><value>Initialize Cloud Configuration Hub</value></data>
   <data name="Setup.ValidationRequired" xml:space="preserve"><value>Enter administrator email, password, and confirmation password.</value></data>
   <data name="Identity.ConfirmPassword" xml:space="preserve"><value>Confirm password</value></data>
+  <data name="Identity.ConfirmPasswordPlaceholder" xml:space="preserve"><value>Please confirm your password</value></data>
   <data name="Identity.Email" xml:space="preserve"><value>Email</value></data>
+  <data name="Identity.EmailVerificationSent" xml:space="preserve"><value>Verification email sent. Please check your email.</value></data>
+  <data name="Identity.EnterEmail" xml:space="preserve"><value>Enter your email.</value></data>
   <data name="Identity.ErrorWithMessage" xml:space="preserve"><value>Error: {0}</value></data>
+  <data name="Identity.UserLoadFailedWithId" xml:space="preserve"><value>Error loading user with ID {0}.</value></data>
+  <data name="Identity.AccessDenied.Description" xml:space="preserve"><value>You do not have access to this resource.</value></data>
+  <data name="Identity.AccessDenied.Title" xml:space="preserve"><value>Access denied</value></data>
+  <data name="Identity.ConfirmEmail.Failed" xml:space="preserve"><value>Error confirming your email.</value></data>
+  <data name="Identity.ConfirmEmail.Success" xml:space="preserve"><value>Thank you for confirming your email.</value></data>
+  <data name="Identity.ConfirmEmail.Title" xml:space="preserve"><value>Confirm email</value></data>
+  <data name="Identity.ConfirmEmailChange.EmailChangeFailed" xml:space="preserve"><value>Error changing email.</value></data>
+  <data name="Identity.ConfirmEmailChange.InvalidLink" xml:space="preserve"><value>Error: invalid email change confirmation link.</value></data>
+  <data name="Identity.ConfirmEmailChange.Success" xml:space="preserve"><value>Thank you for confirming your email change.</value></data>
+  <data name="Identity.ConfirmEmailChange.Title" xml:space="preserve"><value>Confirm email change</value></data>
+  <data name="Identity.ConfirmEmailChange.UserNameChangeFailed" xml:space="preserve"><value>Error changing user name.</value></data>
+  <data name="Identity.ForgotPassword.Submit" xml:space="preserve"><value>Reset password</value></data>
+  <data name="Identity.ForgotPassword.Title" xml:space="preserve"><value>Forgot your password?</value></data>
+  <data name="Identity.ForgotPasswordConfirmation.Description" xml:space="preserve"><value>Please check your email to reset your password.</value></data>
+  <data name="Identity.ForgotPasswordConfirmation.Title" xml:space="preserve"><value>Forgot password confirmation</value></data>
+  <data name="Identity.InvalidPasswordReset.Description" xml:space="preserve"><value>The password reset link is invalid.</value></data>
+  <data name="Identity.InvalidPasswordReset.Title" xml:space="preserve"><value>Invalid password reset</value></data>
+  <data name="Identity.InvalidUser.Title" xml:space="preserve"><value>Invalid user</value></data>
+  <data name="Identity.Lockout.Description" xml:space="preserve"><value>This account has been locked out. Please try again later.</value></data>
+  <data name="Identity.Lockout.Title" xml:space="preserve"><value>Locked out</value></data>
+  <data name="Identity.PasswordPlaceholder" xml:space="preserve"><value>Please enter your password</value></data>
+  <data name="Identity.RegisterConfirmation.CheckEmail" xml:space="preserve"><value>Please check your email to confirm your account.</value></data>
+  <data name="Identity.RegisterConfirmation.ConfirmationLink" xml:space="preserve"><value>Click here to confirm your account</value></data>
+  <data name="Identity.RegisterConfirmation.ConfirmationLinkPrefix" xml:space="preserve"><value>Normally this would be emailed:</value></data>
+  <data name="Identity.RegisterConfirmation.EmailSenderDocs" xml:space="preserve"><value>email sender setup docs</value></data>
+  <data name="Identity.RegisterConfirmation.NoRealSender" xml:space="preserve"><value>This app does not currently have a real email sender registered. See the</value></data>
+  <data name="Identity.RegisterConfirmation.Title" xml:space="preserve"><value>Register confirmation</value></data>
+  <data name="Identity.RegisterConfirmation.UserNotFound" xml:space="preserve"><value>Error finding user for unspecified email.</value></data>
+  <data name="Identity.ResendEmailConfirmation.Submit" xml:space="preserve"><value>Resend</value></data>
+  <data name="Identity.ResendEmailConfirmation.Title" xml:space="preserve"><value>Resend email confirmation</value></data>
+  <data name="Identity.ResetPassword.Description" xml:space="preserve"><value>Reset your password.</value></data>
+  <data name="Identity.ResetPassword.Submit" xml:space="preserve"><value>Reset</value></data>
+  <data name="Identity.ResetPassword.Title" xml:space="preserve"><value>Reset password</value></data>
+  <data name="Identity.ResetPasswordConfirmation.Description" xml:space="preserve"><value>Your password has been reset. Please</value></data>
+  <data name="Identity.ResetPasswordConfirmation.LoginLink" xml:space="preserve"><value>click here to sign in</value></data>
+  <data name="Identity.ResetPasswordConfirmation.Title" xml:space="preserve"><value>Reset password confirmation</value></data>
   <data name="Identity.External.NoneConfigured" xml:space="preserve"><value>No external authentication services are configured. See the</value></data>
   <data name="Identity.External.ProviderTitle" xml:space="preserve"><value>Sign in using your {0} account</value></data>
   <data name="Identity.External.SetupArticle" xml:space="preserve"><value>external sign-in setup article</value></data>

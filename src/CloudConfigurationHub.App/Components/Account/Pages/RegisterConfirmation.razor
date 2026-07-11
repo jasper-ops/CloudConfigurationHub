@@ -9,23 +9,26 @@
 @inject IEmailSender<ApplicationUser> EmailSender
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IStringLocalizer<AppText> Texts
 
-<PageTitle>Register confirmation</PageTitle>
+<PageTitle>@Texts["Identity.RegisterConfirmation.Title"]</PageTitle>
 
-<h1>Register confirmation</h1>
+<h1>@Texts["Identity.RegisterConfirmation.Title"]</h1>
 
 <StatusMessage Message="@statusMessage" />
 
 @if (emailConfirmationLink is not null)
 {
     <p>
-        This app does not currently have a real email sender registered, see <a href="https://aka.ms/aspaccountconf">these docs</a> for how to configure a real email sender.
-        Normally this would be emailed: <a href="@emailConfirmationLink">Click here to confirm your account</a>
+        @Texts["Identity.RegisterConfirmation.NoRealSender"]
+        <a href="https://aka.ms/aspaccountconf">@Texts["Identity.RegisterConfirmation.EmailSenderDocs"]</a>.
+        @Texts["Identity.RegisterConfirmation.ConfirmationLinkPrefix"]
+        <a href="@emailConfirmationLink">@Texts["Identity.RegisterConfirmation.ConfirmationLink"]</a>
     </p>
 }
 else
 {
-    <p role="alert">Please check your email to confirm your account.</p>
+    <p role="alert">@Texts["Identity.RegisterConfirmation.CheckEmail"]</p>
 }
 
 @code {
@@ -41,22 +44,18 @@ else
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    protected override async Task OnInitializedAsync()
-    {
-        if (Email is null)
-        {
+    protected override async Task OnInitializedAsync() {
+        if (Email is null) {
             RedirectManager.RedirectTo("");
             return;
         }
 
         var user = await UserManager.FindByEmailAsync(Email);
-        if (user is null)
-        {
+        if (user is null) {
             HttpContext.Response.StatusCode = StatusCodes.Status404NotFound;
-            statusMessage = "Error finding user for unspecified email";
+            statusMessage = Texts["Identity.RegisterConfirmation.UserNotFound"];
         }
-        else if (EmailSender is IdentityNoOpEmailSender)
-        {
+        else if (EmailSender is IdentityNoOpEmailSender) {
             // Once you add a real email sender, you should remove this code that lets you confirm the account
             var userId = await UserManager.GetUserIdAsync(user);
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
