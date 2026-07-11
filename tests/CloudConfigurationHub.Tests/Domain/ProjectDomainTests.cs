@@ -2,11 +2,9 @@ using CloudConfigurationHub.Domain.Projects;
 
 namespace CloudConfigurationHub.Tests.Domain;
 
-public sealed class ProjectDomainTests
-{
+public sealed class ProjectDomainTests {
     [Fact]
-    public void AddEnvironment_rejects_duplicate_environment_keys_in_same_project()
-    {
+    public void AddEnvironment_rejects_duplicate_environment_keys_in_same_project() {
         var project = Project.Create("Order Service", "order-service");
 
         project.AddEnvironment("Production", "prod");
@@ -18,8 +16,7 @@ public sealed class ProjectDomainTests
     }
 
     [Fact]
-    public void AddConfiguration_rejects_duplicate_group_and_key_in_same_project()
-    {
+    public void AddConfiguration_rejects_duplicate_group_and_key_in_same_project() {
         var project = Project.Create("Order Service", "order-service");
 
         project.AddConfiguration("Database", "ConnectionString", isSensitive: true);
@@ -31,8 +28,7 @@ public sealed class ProjectDomainTests
     }
 
     [Fact]
-    public void PublishEnvironment_creates_immutable_snapshot_from_current_draft_values()
-    {
+    public void PublishEnvironment_creates_immutable_snapshot_from_current_draft_values() {
         var project = Project.Create("Order Service", "order-service");
         var environment = project.AddEnvironment("Production", "prod");
         var configuration = project.AddConfiguration("Database", "ConnectionString", isSensitive: true);
@@ -48,8 +44,7 @@ public sealed class ProjectDomainTests
     }
 
     [Fact]
-    public void RollbackEnvironment_creates_new_release_from_historical_release()
-    {
+    public void RollbackEnvironment_creates_new_release_from_historical_release() {
         var project = Project.Create("Order Service", "order-service");
         var environment = project.AddEnvironment("Production", "prod");
         var configuration = project.AddConfiguration("Database", "ConnectionString", isSensitive: true);
