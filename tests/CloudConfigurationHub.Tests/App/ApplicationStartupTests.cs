@@ -26,6 +26,7 @@ public sealed class ApplicationStartupTests {
         services.AddScoped<IProjectReadModel, EfProjectReadModel>();
         services.AddScoped<IPublishedConfigurationReader, EfPublishedConfigurationReader>();
         services.AddSingleton<IAccessKeyHasher, Sha256AccessKeyHasher>();
+        services.AddSingleton<IAccessKeyGenerator, RandomAccessKeyGenerator>();
         services.AddSingleton<ISecretProtector, AesGcmSecretProtector>();
         services.Configure<ConfigurationValueProtectionOptions>(options =>
             options.MasterKey = "test-master-key-for-application-startup-validation");

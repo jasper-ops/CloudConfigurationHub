@@ -29,7 +29,10 @@
                 <h1>@project.Name</h1>
                 <p class="page-description text-code">@project.Key</p>
             </div>
-            <a class="secondary-action" href="projects">@Texts["ProjectDetail.BackToProjects"]</a>
+            <div class="hero-actions compact-actions">
+                <a class="secondary-action" href="@($"projects/{ProjectId}/access-key")">@Texts["AccessKey.ManageAccessKey"]</a>
+                <a class="secondary-action" href="projects">@Texts["ProjectDetail.BackToProjects"]</a>
+            </div>
         </div>
 
         <dl class="project-stats detail-stats">

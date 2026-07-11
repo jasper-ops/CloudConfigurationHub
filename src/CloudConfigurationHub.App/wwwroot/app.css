@@ -160,6 +160,11 @@ a:hover, .btn-link:hover {
     margin-top: 2rem;
 }
 
+.hero-actions.compact-actions {
+    justify-content: flex-end;
+    margin-top: 0;
+}
+
 .primary-action, .secondary-action {
     align-items: center;
     border-radius: 999px;
@@ -553,6 +558,43 @@ a:hover, .btn-link:hover {
     color: var(--cch-success);
     margin-bottom: 1rem;
     padding: 0.85rem;
+}
+
+.warning-banner {
+    background: rgba(230, 162, 60, 0.12);
+    border: 1px solid rgba(230, 162, 60, 0.32);
+    border-radius: 14px;
+    color: var(--cch-warning);
+    line-height: 1.65;
+    margin-bottom: 1rem;
+    padding: 0.85rem;
+}
+
+.access-key-panel {
+    overflow: visible;
+}
+
+.generated-secret-block {
+    background:
+        linear-gradient(135deg, rgba(64, 158, 255, 0.12), transparent 45%),
+        var(--cch-surface-subtle);
+    border: 1px solid var(--cch-border-strong);
+    border-radius: 18px;
+    display: grid;
+    gap: 0.55rem;
+    padding: 1rem;
+}
+
+.generated-secret-block > span {
+    color: var(--cch-accent);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.generated-secret-block input {
+    font-weight: 800;
 }
 
 .table-action {

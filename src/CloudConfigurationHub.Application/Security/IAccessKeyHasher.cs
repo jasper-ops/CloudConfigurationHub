@@ -1,4 +1,4 @@
-namespace CloudConfigurationHub.Infrastructure.Persistence;
+namespace CloudConfigurationHub.Application.Security;
 
 /// <summary>
 /// Access Key 哈希器。

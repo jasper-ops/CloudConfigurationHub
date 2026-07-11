@@ -135,6 +135,16 @@
   <data name="ConfigurationDraftEdit.Submit" xml:space="preserve"><value>保存草稿</value></data>
   <data name="ConfigurationDraftEdit.Title" xml:space="preserve"><value>按配置编辑环境值</value></data>
   <data name="ConfigurationDraftEdit.ValueLabel" xml:space="preserve"><value>环境值</value></data>
+  <data name="AccessKey.Description" xml:space="preserve"><value>项目级 Access Key 用于 SDK 只读拉取已发布配置。轮换后旧密钥立即失效。</value></data>
+  <data name="AccessKey.Eyebrow" xml:space="preserve"><value>SDK 访问</value></data>
+  <data name="AccessKey.GeneratedHelp" xml:space="preserve"><value>请立即复制保存。离开页面后将无法再次查看该明文。</value></data>
+  <data name="AccessKey.GeneratedLabel" xml:space="preserve"><value>新 Access Key</value></data>
+  <data name="AccessKey.ManageAccessKey" xml:space="preserve"><value>管理 Access Key</value></data>
+  <data name="AccessKey.PageTitle" xml:space="preserve"><value>管理 Access Key</value></data>
+  <data name="AccessKey.Rotate" xml:space="preserve"><value>轮换 Access Key</value></data>
+  <data name="AccessKey.Rotating" xml:space="preserve"><value>正在轮换...</value></data>
+  <data name="AccessKey.Title" xml:space="preserve"><value>管理项目 Access Key</value></data>
+  <data name="AccessKey.Warning" xml:space="preserve"><value>安全提示：系统只保存密钥哈希。新密钥只会在本次轮换后显示一次，请不要把它写入日志、截图或公开仓库。</value></data>
   <data name="PublishEnvironment.ConfigurationKey" xml:space="preserve"><value>配置 Key</value></data>
   <data name="PublishEnvironment.Description" xml:space="preserve"><value>发布会从当前环境草稿生成不可变快照，SDK 只读取最新已发布版本。</value></data>
   <data name="PublishEnvironment.DraftValue" xml:space="preserve"><value>草稿值</value></data>

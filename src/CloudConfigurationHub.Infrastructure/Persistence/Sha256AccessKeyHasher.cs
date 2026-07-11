@@ -1,5 +1,6 @@
 using System.Security.Cryptography;
 using System.Text;
+using CloudConfigurationHub.Application.Security;
 
 namespace CloudConfigurationHub.Infrastructure.Persistence;
 

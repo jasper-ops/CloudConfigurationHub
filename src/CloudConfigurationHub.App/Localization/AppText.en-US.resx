@@ -135,6 +135,16 @@
   <data name="ConfigurationDraftEdit.Submit" xml:space="preserve"><value>Save drafts</value></data>
   <data name="ConfigurationDraftEdit.Title" xml:space="preserve"><value>Edit environment values by configuration</value></data>
   <data name="ConfigurationDraftEdit.ValueLabel" xml:space="preserve"><value>Environment value</value></data>
+  <data name="AccessKey.Description" xml:space="preserve"><value>The project Access Key lets SDK clients read published configuration snapshots. Rotating it immediately invalidates the previous key.</value></data>
+  <data name="AccessKey.Eyebrow" xml:space="preserve"><value>SDK access</value></data>
+  <data name="AccessKey.GeneratedHelp" xml:space="preserve"><value>Copy it now. This plaintext value cannot be viewed again after leaving the page.</value></data>
+  <data name="AccessKey.GeneratedLabel" xml:space="preserve"><value>New Access Key</value></data>
+  <data name="AccessKey.ManageAccessKey" xml:space="preserve"><value>Manage Access Key</value></data>
+  <data name="AccessKey.PageTitle" xml:space="preserve"><value>Manage Access Key</value></data>
+  <data name="AccessKey.Rotate" xml:space="preserve"><value>Rotate Access Key</value></data>
+  <data name="AccessKey.Rotating" xml:space="preserve"><value>Rotating...</value></data>
+  <data name="AccessKey.Title" xml:space="preserve"><value>Manage project Access Key</value></data>
+  <data name="AccessKey.Warning" xml:space="preserve"><value>Security note: the system stores only the key hash. The new key is shown once after rotation; do not put it in logs, screenshots, or public repositories.</value></data>
   <data name="PublishEnvironment.ConfigurationKey" xml:space="preserve"><value>Configuration key</value></data>
   <data name="PublishEnvironment.Description" xml:space="preserve"><value>Publishing creates an immutable snapshot from the current environment drafts. The SDK reads only the latest published version.</value></data>
   <data name="PublishEnvironment.DraftValue" xml:space="preserve"><value>Draft value</value></data>

@@ -66,6 +66,7 @@ builder.Services.AddScoped<IProjectReadModel, EfProjectReadModel>();
 builder.Services.AddScoped<IPublishedConfigurationReader, EfPublishedConfigurationReader>();
 builder.Services.AddScoped<IConfigurationHubDatabaseInitializer, ConfigurationHubDatabaseInitializer>();
 builder.Services.AddSingleton<IAccessKeyHasher, Sha256AccessKeyHasher>();
+builder.Services.AddSingleton<IAccessKeyGenerator, RandomAccessKeyGenerator>();
 builder.Services.AddSingleton<ISecretProtector, AesGcmSecretProtector>();
 builder.Services.AddSingleton<IConfigurationChangeBroadcaster, ConfigurationChangeBroadcaster>();
 builder.Services.AddSingleton<IClock, SystemClock>();

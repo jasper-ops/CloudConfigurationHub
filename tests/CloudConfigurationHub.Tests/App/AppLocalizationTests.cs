@@ -97,7 +97,17 @@ public sealed class AppLocalizationTests {
             "PublishEnvironment.PublishedByLabel",
             "PublishEnvironment.NoConfigurations",
             "PublishEnvironment.PreviewTitle",
-            "PublishEnvironment.PublishEnvironment"
+            "PublishEnvironment.PublishEnvironment",
+            "AccessKey.PageTitle",
+            "AccessKey.Title",
+            "AccessKey.Description",
+            "AccessKey.Rotate",
+            "AccessKey.GeneratedLabel",
+            "AccessKey.GeneratedHelp",
+            "AccessKey.Eyebrow",
+            "AccessKey.Rotating",
+            "AccessKey.Warning",
+            "AccessKey.ManageAccessKey"
         };
 
         try {
@@ -373,5 +383,47 @@ public sealed class AppLocalizationTests {
         Assert.Contains("@bind:event=\"oninput\"", publishSource, StringComparison.Ordinal);
         Assert.Contains("ReleasePreviewRows", publishSource, StringComparison.Ordinal);
         Assert.Contains("Logger.LogInformation", publishSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Project_detail_access_key_page_declares_route_and_rotate_command() {
+        var projectDetailPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Pages",
+            "ProjectDetail.razor");
+        var accessKeyPagePath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Pages",
+            "ProjectAccessKey.razor");
+
+        var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
+        var accessKeySource = File.ReadAllText(Path.GetFullPath(accessKeyPagePath));
+
+        Assert.Contains("AccessKey.ManageAccessKey", projectDetailSource, StringComparison.Ordinal);
+        Assert.Contains("/access-key", projectDetailSource, StringComparison.Ordinal);
+
+        Assert.Contains("@page \"/projects/{ProjectId:guid}/access-key\"", accessKeySource, StringComparison.Ordinal);
+        Assert.Contains("@rendermode InteractiveServer", accessKeySource, StringComparison.Ordinal);
+        Assert.Contains("new GetProjectDetailQuery", accessKeySource, StringComparison.Ordinal);
+        Assert.Contains("new RotateProjectAccessKeyCommand", accessKeySource, StringComparison.Ordinal);
+        Assert.Contains("@onsubmit:preventDefault=\"true\"", accessKeySource, StringComparison.Ordinal);
+        Assert.Contains("GeneratedAccessKey", accessKeySource, StringComparison.Ordinal);
+        Assert.Contains("Logger.LogInformation", accessKeySource, StringComparison.Ordinal);
     }
 }
