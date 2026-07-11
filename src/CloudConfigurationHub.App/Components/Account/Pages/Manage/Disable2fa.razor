@@ -6,26 +6,26 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<Disable2fa> Logger
+@inject IStringLocalizer<AppText> Texts
 
-<PageTitle>Disable two-factor authentication (2FA)</PageTitle>
+<PageTitle>@Texts["Identity.Manage.Disable2FaTitle"]</PageTitle>
 
 <StatusMessage />
-<h3>Disable two-factor authentication (2FA)</h3>
+<h3>@Texts["Identity.Manage.Disable2FaTitle"]</h3>
 
 <div class="alert alert-warning" role="alert">
     <p>
-        <strong>This action only disables 2FA.</strong>
+        <strong>@Texts["Identity.Manage.Disable2FaOnly"]</strong>
     </p>
     <p>
-        Disabling 2FA does not change the keys used in authenticator apps. If you wish to change the key
-        used in an authenticator app you should <a href="Account/Manage/ResetAuthenticator">reset your authenticator keys.</a>
+        @Texts["Identity.Manage.Disable2FaKeepsKeysPrefix"] <a href="Account/Manage/ResetAuthenticator">@Texts["Identity.Manage.ResetAuthenticatorKeysLink"]</a>
     </p>
 </div>
 
 <div>
     <form @formname="disable-2fa" @onsubmit="OnSubmitAsync" method="post">
         <AntiforgeryToken />
-        <button class="btn btn-danger" type="submit">Disable 2FA</button>
+        <button class="btn btn-danger" type="submit">@Texts["Identity.Manage.Disable2Fa"]</button>
     </form>
 </div>
 
@@ -68,7 +68,7 @@
         Logger.LogInformation("User with ID '{UserId}' has disabled 2fa.", userId);
         RedirectManager.RedirectToWithStatus(
             "Account/Manage/TwoFactorAuthentication",
-            "2fa has been disabled. You can reenable 2fa when you setup an authenticator app",
+            Texts["Identity.Manage.TwoFactorDisabled"],
             HttpContext);
     }
 }

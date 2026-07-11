@@ -11,8 +11,9 @@
 @inject UrlEncoder UrlEncoder
 @inject IdentityRedirectManager RedirectManager
 @inject ILogger<EnableAuthenticator> Logger
+@inject IStringLocalizer<AppText> Texts
 
-<PageTitle>Configure authenticator app</PageTitle>
+<PageTitle>@Texts["Identity.Manage.ConfigureAuthenticatorTitle"]</PageTitle>
 
 @if (recoveryCodes is not null)
 {
@@ -21,13 +22,13 @@
 else
 {
     <StatusMessage Message="@message" />
-    <h3>Configure authenticator app</h3>
+    <h3>@Texts["Identity.Manage.ConfigureAuthenticatorTitle"]</h3>
     <div>
-        <p>To use an authenticator app go through the following steps:</p>
+        <p>@Texts["Identity.Manage.ConfigureAuthenticatorIntro"]</p>
         <ol class="list">
             <li>
                 <p>
-                    Download a two-factor authenticator app like Microsoft Authenticator for
+                    @Texts["Identity.Manage.DownloadAuthenticatorPrefix"]
                     <a href="https://go.microsoft.com/fwlink/?Linkid=825072">Android</a> and
                     <a href="https://go.microsoft.com/fwlink/?Linkid=825073">iOS</a> or
                     Google Authenticator for
@@ -36,26 +37,25 @@ else
                 </p>
             </li>
             <li>
-                <p>Scan the QR Code or enter this key <kbd>@sharedKey</kbd> into your two factor authenticator app. Spaces and casing do not matter.</p>
-                <div class="alert alert-info">Learn how to <a href="https://go.microsoft.com/fwlink/?Linkid=852423">enable QR code generation</a>.</div>
+                <p>@Texts["Identity.Manage.ScanQrOrEnterKeyPrefix"] <kbd>@sharedKey</kbd> @Texts["Identity.Manage.ScanQrOrEnterKeySuffix"]</p>
+                <div class="alert alert-info">@Texts["Identity.Manage.LearnHowTo"] <a href="https://go.microsoft.com/fwlink/?Linkid=852423">@Texts["Identity.Manage.EnableQrCodeGeneration"]</a>.</div>
                 <div></div>
                 <div data-url="@authenticatorUri"></div>
             </li>
             <li>
                 <p>
-                    Once you have scanned the QR code or input the key above, your two factor authentication app will provide you
-                    with a unique code. Enter the code in the confirmation box below.
+                    @Texts["Identity.Manage.EnterAuthenticatorCodeInstruction"]
                 </p>
                 <div class="row">
                     <div class="col-xl-6">
                         <EditForm Model="Input" FormName="send-code" OnValidSubmit="OnValidSubmitAsync" method="post">
                             <DataAnnotationsValidator />
                             <div class="form-floating mb-3">
-                                <InputText @bind-Value="Input.Code" id="Input.Code" class="form-control" autocomplete="off" placeholder="Enter the code" />
-                                <label for="Input.Code" class="control-label form-label">Verification Code</label>
+                                <InputText @bind-Value="Input.Code" id="Input.Code" class="form-control" autocomplete="off" placeholder="@Texts["Identity.Manage.VerificationCodePlaceholder"]" />
+                                <label for="Input.Code" class="control-label form-label">@Texts["Identity.Manage.VerificationCode"]</label>
                                 <ValidationMessage For="() => Input.Code" class="text-danger" />
                             </div>
-                            <button type="submit" class="w-100 btn btn-lg btn-primary">Verify</button>
+                            <button type="submit" class="w-100 btn btn-lg btn-primary">@Texts["Identity.Manage.Verify"]</button>
                             <ValidationSummary class="text-danger" role="alert" />
                         </EditForm>
                     </div>
@@ -110,7 +110,7 @@ else
 
         if (!is2faTokenValid)
         {
-            message = "Error: Verification code is invalid.";
+            message = Texts["Identity.Manage.InvalidVerificationCode"];
             return;
         }
 
@@ -118,7 +118,7 @@ else
         var userId = await UserManager.GetUserIdAsync(user);
         Logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
 
-        message = "Your authenticator app has been verified.";
+        message = Texts["Identity.Manage.AuthenticatorVerified"];
 
         if (await UserManager.CountRecoveryCodesAsync(user) == 0)
         {
