@@ -98,6 +98,14 @@ public sealed class AppLocalizationTests {
             "PublishEnvironment.NoConfigurations",
             "PublishEnvironment.PreviewTitle",
             "PublishEnvironment.PublishEnvironment",
+            "PublishEnvironment.DiffTitle",
+            "PublishEnvironment.DiffStatus",
+            "PublishEnvironment.LatestPublishedValue",
+            "PublishEnvironment.DiffAdded",
+            "PublishEnvironment.DiffModified",
+            "PublishEnvironment.DiffRemoved",
+            "PublishEnvironment.DiffUnchanged",
+            "PublishEnvironment.NoLatestRelease",
             "AccessKey.PageTitle",
             "AccessKey.Title",
             "AccessKey.Description",
@@ -393,6 +401,11 @@ public sealed class AppLocalizationTests {
         Assert.Contains("@onsubmit:preventDefault=\"true\"", publishSource, StringComparison.Ordinal);
         Assert.Contains("@bind:event=\"oninput\"", publishSource, StringComparison.Ordinal);
         Assert.Contains("ReleasePreviewRows", publishSource, StringComparison.Ordinal);
+        Assert.Contains("DiffRows", publishSource, StringComparison.Ordinal);
+        Assert.Contains("LatestReleaseValue", publishSource, StringComparison.Ordinal);
+        Assert.Contains("DiffStatus", publishSource, StringComparison.Ordinal);
+        Assert.Contains("item.ConfigurationKey == configurationKey", publishSource, StringComparison.Ordinal);
+        Assert.Contains("PublishEnvironment.DiffTitle", publishSource, StringComparison.Ordinal);
         Assert.Contains("Logger.LogInformation", publishSource, StringComparison.Ordinal);
     }
 

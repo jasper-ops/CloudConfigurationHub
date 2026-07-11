@@ -148,10 +148,17 @@
   <data name="AccessKey.Warning" xml:space="preserve"><value>Security note: the system stores only the key hash. The new key is shown once after rotation; do not put it in logs, screenshots, or public repositories.</value></data>
   <data name="PublishEnvironment.ConfigurationKey" xml:space="preserve"><value>Configuration key</value></data>
   <data name="PublishEnvironment.Description" xml:space="preserve"><value>Publishing creates an immutable snapshot from the current environment drafts. The SDK reads only the latest published version.</value></data>
+  <data name="PublishEnvironment.DiffAdded" xml:space="preserve"><value>Added</value></data>
+  <data name="PublishEnvironment.DiffModified" xml:space="preserve"><value>Modified</value></data>
+  <data name="PublishEnvironment.DiffRemoved" xml:space="preserve"><value>Removed</value></data>
+  <data name="PublishEnvironment.DiffStatus" xml:space="preserve"><value>Diff</value></data>
+  <data name="PublishEnvironment.DiffTitle" xml:space="preserve"><value>Diff preview</value></data>
+  <data name="PublishEnvironment.DiffUnchanged" xml:space="preserve"><value>Unchanged</value></data>
   <data name="PublishEnvironment.DraftValue" xml:space="preserve"><value>Draft value</value></data>
   <data name="PublishEnvironment.EmptyValue" xml:space="preserve"><value>Not set</value></data>
   <data name="PublishEnvironment.Eyebrow" xml:space="preserve"><value>Environment release</value></data>
   <data name="PublishEnvironment.NoConfigurations" xml:space="preserve"><value>This project has no configuration definitions, so it cannot be published.</value></data>
+  <data name="PublishEnvironment.NoLatestRelease" xml:space="preserve"><value>This environment has no releases yet. This publish will create the first snapshot.</value></data>
   <data name="PublishEnvironment.NoteHelp" xml:space="preserve"><value>Describe this release for audit and rollback context.</value></data>
   <data name="PublishEnvironment.NoteLabel" xml:space="preserve"><value>Release note</value></data>
   <data name="PublishEnvironment.NotFoundDescription" xml:space="preserve"><value>The project or environment does not exist, so configuration cannot be published.</value></data>
@@ -159,6 +166,7 @@
   <data name="PublishEnvironment.PreviewTitle" xml:space="preserve"><value>Release preview</value></data>
   <data name="PublishEnvironment.PublishedByLabel" xml:space="preserve"><value>Published by</value></data>
   <data name="PublishEnvironment.PublishEnvironment" xml:space="preserve"><value>Publish</value></data>
+  <data name="PublishEnvironment.LatestPublishedValue" xml:space="preserve"><value>Latest published value</value></data>
   <data name="PublishEnvironment.Saving" xml:space="preserve"><value>Publishing...</value></data>
   <data name="PublishEnvironment.Submit" xml:space="preserve"><value>Publish configuration</value></data>
   <data name="PublishEnvironment.Title" xml:space="preserve"><value>Publish environment configuration</value></data>

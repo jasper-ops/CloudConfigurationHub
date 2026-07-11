@@ -45,6 +45,51 @@
                 }
 
                 <div class="section-heading">
+                    <h2>@Texts["PublishEnvironment.DiffTitle"]</h2>
+                    <span class="status-pill">@DiffRows.Count</span>
+                </div>
+
+                @if (LatestRelease is null) {
+                    <div class="warning-banner" role="note">@Texts["PublishEnvironment.NoLatestRelease"]</div>
+                }
+
+                @if (DiffRows.Count == 0) {
+                    <div class="mini-empty">
+                        <div class="orb-icon small violet" aria-hidden="true"></div>
+                        <p class="muted-text">@Texts["PublishEnvironment.NoConfigurations"]</p>
+                    </div>
+                }
+                else {
+                    <div class="table-scroll release-preview">
+                        <table class="detail-table diff-preview-table">
+                            <thead>
+                                <tr>
+                                    <th>@Texts["PublishEnvironment.ConfigurationKey"]</th>
+                                    <th>@Texts["PublishEnvironment.DiffStatus"]</th>
+                                    <th>@Texts["PublishEnvironment.LatestPublishedValue"]</th>
+                                    <th>@Texts["PublishEnvironment.DraftValue"]</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var row in DiffRows) {
+                                    <tr>
+                                        <td>
+                                            <code>@row.ConfigurationKey</code>
+                                            @if (row.IsSensitive) {
+                                                <span class="status-pill sensitive">@Texts["ProjectDetail.Sensitive"]</span>
+                                            }
+                                        </td>
+                                        <td><span class="status-pill @row.StatusCssClass">@row.StatusText</span></td>
+                                        <td>@(row.HasLatestReleaseValue ? row.LatestReleaseValue : Texts["PublishEnvironment.EmptyValue"])</td>
+                                        <td>@(row.HasDraftValue ? row.DraftValue : Texts["PublishEnvironment.EmptyValue"])</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+
+                <div class="section-heading release-preview-heading">
                     <h2>@Texts["PublishEnvironment.PreviewTitle"]</h2>
                     <span class="status-pill">@ReleasePreviewRows.Count</span>
                 </div>
@@ -134,6 +179,16 @@
     private List<ReleasePreviewRow> ReleasePreviewRows { get; } = [];
 
     /// <summary>
+    /// 当前环境草稿与最新发布版本之间的差异预览行集合。
+    /// </summary>
+    private List<DiffPreviewRow> DiffRows { get; } = [];
+
+    /// <summary>
+    /// 当前环境最新发布版本摘要，不存在发布版本时为空。
+    /// </summary>
+    private ConfigurationReleaseSummary? LatestRelease { get; set; }
+
+    /// <summary>
     /// 发布表单模型。
     /// </summary>
     private PublishEnvironmentFormModel FormModel { get; } = new();
@@ -164,24 +219,72 @@
         project = await Sender.Send(new GetProjectDetailQuery(ProjectId), CancellationToken.None);
         environment = project?.Environments.SingleOrDefault(item => item.Id == EnvironmentId);
         if (project is not null && environment is not null) {
+            LatestRelease = project.Releases
+                .Where(item => item.EnvironmentId == EnvironmentId)
+                .OrderByDescending(item => item.Version)
+                .FirstOrDefault();
             foreach (var configuration in project.Configurations) {
+                var configurationKey = $"{configuration.Group}:{configuration.Key}";
                 var draftValue = configuration.Values.SingleOrDefault(item => item.EnvironmentId == EnvironmentId);
+                var latestReleaseValue = LatestRelease?.Values.SingleOrDefault(item => item.ConfigurationKey == configurationKey);
+                var diffStatus = ResolveDiffStatus(draftValue, latestReleaseValue);
                 ReleasePreviewRows.Add(new ReleasePreviewRow {
-                    ConfigurationKey = $"{configuration.Group}:{configuration.Key}",
+                    ConfigurationKey = configurationKey,
                     IsSensitive = configuration.IsSensitive,
                     HasValue = draftValue?.HasValue == true,
                     DisplayValue = draftValue?.DisplayValue ?? string.Empty
+                });
+                DiffRows.Add(new DiffPreviewRow {
+                    ConfigurationKey = configurationKey,
+                    IsSensitive = configuration.IsSensitive,
+                    HasDraftValue = draftValue?.HasValue == true,
+                    DraftValue = draftValue?.DisplayValue ?? string.Empty,
+                    HasLatestReleaseValue = latestReleaseValue is not null,
+                    LatestReleaseValue = latestReleaseValue?.DisplayValue ?? string.Empty,
+                    Status = diffStatus,
+                    StatusText = Texts[$"PublishEnvironment.Diff{diffStatus}"],
+                    StatusCssClass = $"diff-{diffStatus.ToLowerInvariant()}"
                 });
             }
         }
 
         isLoading = false;
         Logger.LogInformation(
-            "管理端环境发布页面读取完成。ProjectId={ProjectId}, EnvironmentId={EnvironmentId}, Found={Found}, PreviewCount={PreviewCount}",
+            "管理端环境发布页面读取完成。ProjectId={ProjectId}, EnvironmentId={EnvironmentId}, Found={Found}, PreviewCount={PreviewCount}, DiffCount={DiffCount}, LatestVersion={LatestVersion}",
             ProjectId,
             EnvironmentId,
             project is not null && environment is not null,
-            ReleasePreviewRows.Count);
+            ReleasePreviewRows.Count,
+            DiffRows.Count,
+            LatestRelease?.Version);
+    }
+
+    /// <summary>
+    /// 计算当前草稿值相对最新发布值的差异状态。
+    /// </summary>
+    /// <param name="draftValue">当前环境草稿值。</param>
+    /// <param name="latestReleaseValue">最新发布版本中的对应值。</param>
+    /// <returns>差异状态名称。</returns>
+    private static string ResolveDiffStatus(
+        EnvironmentDraftValue? draftValue,
+        ConfigurationReleaseValueSummary? latestReleaseValue) {
+        var hasDraft = draftValue?.HasValue == true;
+        var hasLatest = latestReleaseValue is not null;
+        if (hasDraft && !hasLatest) {
+            return "Added";
+        }
+
+        if (!hasDraft && hasLatest) {
+            return "Removed";
+        }
+
+        if (!hasDraft && !hasLatest) {
+            return "Unchanged";
+        }
+
+        return string.Equals(draftValue!.DisplayValue, latestReleaseValue!.DisplayValue, StringComparison.Ordinal)
+            ? "Unchanged"
+            : "Modified";
     }
 
     /// <summary>
@@ -257,5 +360,55 @@
         /// 页面展示的草稿值，敏感配置由读取模型负责脱敏。
         /// </summary>
         public string DisplayValue { get; set; } = string.Empty;
+    }
+
+    /// <summary>
+    /// 发布前差异预览行。
+    /// </summary>
+    public sealed class DiffPreviewRow {
+        /// <summary>
+        /// 配置完整 Key，格式为分组与 Key 的组合。
+        /// </summary>
+        public string ConfigurationKey { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 指示配置项是否为敏感配置。
+        /// </summary>
+        public bool IsSensitive { get; set; }
+
+        /// <summary>
+        /// 指示最新发布版本中是否存在该配置值。
+        /// </summary>
+        public bool HasLatestReleaseValue { get; set; }
+
+        /// <summary>
+        /// 最新发布版本中的展示值。
+        /// </summary>
+        public string LatestReleaseValue { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 指示当前草稿中是否存在该配置值。
+        /// </summary>
+        public bool HasDraftValue { get; set; }
+
+        /// <summary>
+        /// 当前草稿展示值。
+        /// </summary>
+        public string DraftValue { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 差异状态名称。
+        /// </summary>
+        public string Status { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 本地化后的差异状态文本。
+        /// </summary>
+        public string StatusText { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 差异状态对应的 CSS 类。
+        /// </summary>
+        public string StatusCssClass { get; set; } = string.Empty;
     }
 }

@@ -58,6 +58,13 @@ public sealed class RollbackEnvironmentCommandHandler(
             release.Version,
             release.Note,
             release.PublishedBy,
-            release.PublishedAt);
+            release.PublishedAt,
+            release.Values
+                .Select(item => new ConfigurationReleaseValueSummary(
+                    item.ConfigurationId,
+                    item.ConfigurationKey,
+                    item.IsSensitive ? "******" : item.Value,
+                    item.IsSensitive))
+                .ToArray());
     }
 }

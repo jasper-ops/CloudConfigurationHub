@@ -148,10 +148,17 @@
   <data name="AccessKey.Warning" xml:space="preserve"><value>安全提示：系统只保存密钥哈希。新密钥只会在本次轮换后显示一次，请不要把它写入日志、截图或公开仓库。</value></data>
   <data name="PublishEnvironment.ConfigurationKey" xml:space="preserve"><value>配置 Key</value></data>
   <data name="PublishEnvironment.Description" xml:space="preserve"><value>发布会从当前环境草稿生成不可变快照，SDK 只读取最新已发布版本。</value></data>
+  <data name="PublishEnvironment.DiffAdded" xml:space="preserve"><value>新增</value></data>
+  <data name="PublishEnvironment.DiffModified" xml:space="preserve"><value>修改</value></data>
+  <data name="PublishEnvironment.DiffRemoved" xml:space="preserve"><value>删除</value></data>
+  <data name="PublishEnvironment.DiffStatus" xml:space="preserve"><value>差异</value></data>
+  <data name="PublishEnvironment.DiffTitle" xml:space="preserve"><value>差异预览</value></data>
+  <data name="PublishEnvironment.DiffUnchanged" xml:space="preserve"><value>未变</value></data>
   <data name="PublishEnvironment.DraftValue" xml:space="preserve"><value>草稿值</value></data>
   <data name="PublishEnvironment.EmptyValue" xml:space="preserve"><value>未设置</value></data>
   <data name="PublishEnvironment.Eyebrow" xml:space="preserve"><value>环境发布</value></data>
   <data name="PublishEnvironment.NoConfigurations" xml:space="preserve"><value>当前项目还没有配置项，无法发布。</value></data>
+  <data name="PublishEnvironment.NoLatestRelease" xml:space="preserve"><value>当前环境还没有发布版本，本次发布将创建首个快照。</value></data>
   <data name="PublishEnvironment.NoteHelp" xml:space="preserve"><value>记录本次发布的变更说明，便于后续审计和回滚。</value></data>
   <data name="PublishEnvironment.NoteLabel" xml:space="preserve"><value>发布备注</value></data>
   <data name="PublishEnvironment.NotFoundDescription" xml:space="preserve"><value>项目或环境不存在，无法发布配置。</value></data>
@@ -159,6 +166,7 @@
   <data name="PublishEnvironment.PreviewTitle" xml:space="preserve"><value>发布预览</value></data>
   <data name="PublishEnvironment.PublishedByLabel" xml:space="preserve"><value>发布人</value></data>
   <data name="PublishEnvironment.PublishEnvironment" xml:space="preserve"><value>发布</value></data>
+  <data name="PublishEnvironment.LatestPublishedValue" xml:space="preserve"><value>最新发布值</value></data>
   <data name="PublishEnvironment.Saving" xml:space="preserve"><value>正在发布...</value></data>
   <data name="PublishEnvironment.Submit" xml:space="preserve"><value>发布配置</value></data>
   <data name="PublishEnvironment.Title" xml:space="preserve"><value>发布环境配置</value></data>

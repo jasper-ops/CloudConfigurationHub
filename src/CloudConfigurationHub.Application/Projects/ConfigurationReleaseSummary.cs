@@ -9,10 +9,12 @@ namespace CloudConfigurationHub.Application.Projects;
 /// <param name="Note">发布备注。</param>
 /// <param name="PublishedBy">发布人标识。</param>
 /// <param name="PublishedAt">发布时间。</param>
+/// <param name="Values">该发布版本冻结的配置值摘要集合。</param>
 public sealed record ConfigurationReleaseSummary(
     Guid Id,
     Guid EnvironmentId,
     int Version,
     string Note,
     string PublishedBy,
-    DateTimeOffset PublishedAt);
+    DateTimeOffset PublishedAt,
+    IReadOnlyList<ConfigurationReleaseValueSummary> Values);

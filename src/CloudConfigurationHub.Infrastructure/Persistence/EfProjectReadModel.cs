@@ -55,6 +55,7 @@ public sealed class EfProjectReadModel(
             .Include(item => item.Environments)
             .Include(item => item.Configurations)
             .Include(item => item.Releases)
+            .ThenInclude(item => item.Values)
             .Include("_draftValues")
             .SingleOrDefaultAsync(item => item.Id == projectId, cancellationToken);
         if (project is null) {
@@ -90,7 +91,15 @@ public sealed class EfProjectReadModel(
                 item.Version,
                 item.Note,
                 item.PublishedBy,
-                item.PublishedAt))
+                item.PublishedAt,
+                item.Values
+                    .OrderBy(value => value.ConfigurationKey)
+                    .Select(value => new ConfigurationReleaseValueSummary(
+                        value.ConfigurationId,
+                        value.ConfigurationKey,
+                        value.IsSensitive ? SensitiveMask : value.Value,
+                        value.IsSensitive))
+                    .ToArray()))
             .ToArray();
 
         logger.LogInformation(

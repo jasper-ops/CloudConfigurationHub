@@ -607,6 +607,33 @@ a:hover, .btn-link:hover {
     font-weight: 800;
 }
 
+.release-preview-heading {
+    margin-top: 1.25rem;
+}
+
+.diff-preview-table .status-pill {
+    font-weight: 800;
+}
+
+.diff-added {
+    border-color: rgba(103, 194, 58, 0.42);
+    color: var(--cch-success);
+}
+
+.diff-modified {
+    border-color: rgba(230, 162, 60, 0.42);
+    color: var(--cch-warning);
+}
+
+.diff-removed {
+    border-color: rgba(245, 108, 108, 0.42);
+    color: var(--cch-danger);
+}
+
+.diff-unchanged {
+    color: var(--cch-muted);
+}
+
 .table-action {
     display: inline-flex;
     font-size: 0.82rem;
