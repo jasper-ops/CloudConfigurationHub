@@ -12,6 +12,11 @@ public sealed class Project {
     private readonly List<ConfigDraftValue> _draftValues = [];
     private readonly List<ConfigRelease> _releases = [];
 
+    private Project() {
+        Name = string.Empty;
+        Key = string.Empty;
+    }
+
     private Project(Guid id, string name, string key) {
         Id = id;
         Name = name;

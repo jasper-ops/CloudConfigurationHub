@@ -4,6 +4,11 @@ namespace CloudConfigurationHub.Domain.Projects;
 /// 发布版本中的单个配置值快照。
 /// </summary>
 public sealed class ConfigReleaseValue {
+    private ConfigReleaseValue() {
+        ConfigurationKey = string.Empty;
+        Value = string.Empty;
+    }
+
     internal ConfigReleaseValue(Guid configurationId, string configurationKey, string value, bool isSensitive) {
         ConfigurationId = configurationId;
         ConfigurationKey = configurationKey;

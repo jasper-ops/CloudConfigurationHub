@@ -4,6 +4,12 @@ namespace CloudConfigurationHub.Domain.Projects;
 /// 某个项目环境的一次不可变配置发布版本。
 /// </summary>
 public sealed class ConfigRelease {
+    private ConfigRelease() {
+        Note = string.Empty;
+        PublishedBy = string.Empty;
+        Values = [];
+    }
+
     internal ConfigRelease(
         Guid id,
         Guid environmentId,

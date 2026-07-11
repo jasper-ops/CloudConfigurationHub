@@ -4,6 +4,10 @@ namespace CloudConfigurationHub.Domain.Projects;
 /// 某个环境下的配置草稿值。
 /// </summary>
 public sealed class ConfigDraftValue {
+    private ConfigDraftValue() {
+        Value = string.Empty;
+    }
+
     internal ConfigDraftValue(Guid environmentId, Guid configurationId, string value) {
         EnvironmentId = environmentId;
         ConfigurationId = configurationId;

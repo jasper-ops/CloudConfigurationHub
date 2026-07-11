@@ -4,6 +4,11 @@ namespace CloudConfigurationHub.Domain.Projects;
 /// 项目内统一的配置定义。
 /// </summary>
 public sealed class ConfigDefinition {
+    private ConfigDefinition() {
+        Group = string.Empty;
+        Key = string.Empty;
+    }
+
     internal ConfigDefinition(Guid id, string group, string key, bool isSensitive) {
         Id = id;
         Group = group;

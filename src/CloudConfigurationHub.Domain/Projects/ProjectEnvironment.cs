@@ -4,6 +4,11 @@ namespace CloudConfigurationHub.Domain.Projects;
 /// 项目下的一个运行环境。
 /// </summary>
 public sealed class ProjectEnvironment {
+    private ProjectEnvironment() {
+        Name = string.Empty;
+        Key = string.Empty;
+    }
+
     internal ProjectEnvironment(Guid id, string name, string key) {
         Id = id;
         Name = name;
