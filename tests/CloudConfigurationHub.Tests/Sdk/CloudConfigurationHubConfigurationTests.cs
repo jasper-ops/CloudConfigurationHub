@@ -54,6 +54,26 @@ public sealed class CloudConfigurationHubConfigurationTests {
     }
 
     [Fact]
+    public void AddCloudConfigurationHub_throws_when_remote_is_unavailable_and_local_cache_is_missing() {
+        using var handler = new StubHttpMessageHandler("service unavailable", HttpStatusCode.ServiceUnavailable);
+        var missingCachePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.json");
+
+        var exception = Assert.Throws<InvalidOperationException>(() => new ConfigurationBuilder()
+            .AddCloudConfigurationHub(options => {
+                options.Endpoint = new Uri("https://config.local");
+                options.ProjectId = "order-service";
+                options.EnvironmentKey = "prod";
+                options.AccessKey = "secret";
+                options.LocalCachePath = missingCachePath;
+                options.EnableSse = false;
+                options.HttpMessageHandler = handler;
+            })
+            .Build());
+
+        Assert.Contains("远程配置读取失败，且没有可用的本地缓存。", exception.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task AddCloudConfigurationHub_refreshes_configuration_when_sse_version_changed_event_arrives() {
         using var handler = new SseRefreshHttpMessageHandler();
         using var cacheFile = new TemporaryFile();

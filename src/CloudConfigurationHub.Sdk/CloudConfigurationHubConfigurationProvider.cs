@@ -129,6 +129,9 @@ public sealed class CloudConfigurationHubConfigurationProvider : ConfigurationPr
         catch (Exception) when (TryLoadLocalCache(out var snapshot)) {
             return snapshot;
         }
+        catch (Exception exception) {
+            throw new InvalidOperationException("远程配置读取失败，且没有可用的本地缓存。", exception);
+        }
     }
 
     private ConfigurationSnapshot LoadRemoteSnapshot() {
