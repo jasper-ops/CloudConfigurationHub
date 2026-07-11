@@ -111,6 +111,30 @@
   <data name="ConfigurationCreate.Submit" xml:space="preserve"><value>Add configuration</value></data>
   <data name="ConfigurationCreate.Title" xml:space="preserve"><value>Add configuration</value></data>
   <data name="ConfigurationCreate.ValidationRequired" xml:space="preserve"><value>Enter both configuration group and configuration key.</value></data>
+  <data name="DraftEdit.EditConfiguration" xml:space="preserve"><value>Edit draft</value></data>
+  <data name="DraftEdit.EditEnvironment" xml:space="preserve"><value>Edit draft</value></data>
+  <data name="EnvironmentDraftEdit.Eyebrow" xml:space="preserve"><value>Edit by environment</value></data>
+  <data name="EnvironmentDraftEdit.NoConfigurations" xml:space="preserve"><value>This project has no configuration definitions yet. Add a configuration first.</value></data>
+  <data name="EnvironmentDraftEdit.NotFoundDescription" xml:space="preserve"><value>The project or environment does not exist, so draft values cannot be edited.</value></data>
+  <data name="EnvironmentDraftEdit.PageTitle" xml:space="preserve"><value>Edit environment drafts</value></data>
+  <data name="EnvironmentDraftEdit.Saved" xml:space="preserve"><value>Draft values saved.</value></data>
+  <data name="EnvironmentDraftEdit.Saving" xml:space="preserve"><value>Saving...</value></data>
+  <data name="EnvironmentDraftEdit.SensitiveHint" xml:space="preserve"><value>Sensitive configuration. Leave blank to keep the existing value.</value></data>
+  <data name="EnvironmentDraftEdit.SensitivePlaceholder" xml:space="preserve"><value>Leave blank to keep the saved sensitive value</value></data>
+  <data name="EnvironmentDraftEdit.Submit" xml:space="preserve"><value>Save drafts</value></data>
+  <data name="EnvironmentDraftEdit.Title" xml:space="preserve"><value>Edit configuration values by environment</value></data>
+  <data name="EnvironmentDraftEdit.ValueLabel" xml:space="preserve"><value>Configuration value</value></data>
+  <data name="ConfigurationDraftEdit.Eyebrow" xml:space="preserve"><value>Edit by configuration</value></data>
+  <data name="ConfigurationDraftEdit.NoEnvironments" xml:space="preserve"><value>This project has no environments yet. Add an environment first.</value></data>
+  <data name="ConfigurationDraftEdit.NotFoundDescription" xml:space="preserve"><value>The project or configuration does not exist, so draft values cannot be edited.</value></data>
+  <data name="ConfigurationDraftEdit.PageTitle" xml:space="preserve"><value>Edit configuration drafts</value></data>
+  <data name="ConfigurationDraftEdit.Saved" xml:space="preserve"><value>Draft values saved.</value></data>
+  <data name="ConfigurationDraftEdit.Saving" xml:space="preserve"><value>Saving...</value></data>
+  <data name="ConfigurationDraftEdit.SensitiveHint" xml:space="preserve"><value>Sensitive configuration. Leave blank to keep the existing value.</value></data>
+  <data name="ConfigurationDraftEdit.SensitivePlaceholder" xml:space="preserve"><value>Leave blank to keep the saved sensitive value</value></data>
+  <data name="ConfigurationDraftEdit.Submit" xml:space="preserve"><value>Save drafts</value></data>
+  <data name="ConfigurationDraftEdit.Title" xml:space="preserve"><value>Edit environment values by configuration</value></data>
+  <data name="ConfigurationDraftEdit.ValueLabel" xml:space="preserve"><value>Environment value</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>About</value></data>
   <data name="Theme.Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Theme.Light" xml:space="preserve"><value>Light</value></data>

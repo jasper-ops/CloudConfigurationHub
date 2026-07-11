@@ -1,0 +1,246 @@
+@page "/projects/{ProjectId:guid}/environments/{EnvironmentId:guid}/drafts"
+@rendermode InteractiveServer
+@using CloudConfigurationHub.Application.Projects
+@using ProjectDetailModel = CloudConfigurationHub.Application.Projects.ProjectDetail
+@using Mediator
+@inject ISender Sender
+@inject NavigationManager NavigationManager
+@inject ILogger<EnvironmentDraftEdit> Logger
+@inject IStringLocalizer<AppText> Texts
+
+<PageTitle>@Texts["EnvironmentDraftEdit.PageTitle"]</PageTitle>
+
+<section class="admin-page control-surface">
+    @if (isLoading) {
+        <FluentCard Class="state-card">
+            <FluentProgressRing />
+            <p>@Texts["ProjectDetail.Loading"]</p>
+        </FluentCard>
+    }
+    else if (project is null || environment is null) {
+        <FluentCard Class="state-card">
+            <h2>@Texts["ProjectDetail.NotFoundTitle"]</h2>
+            <p>@Texts["EnvironmentDraftEdit.NotFoundDescription"]</p>
+            <a class="primary-action" href="projects">@Texts["ProjectDetail.BackToProjects"]</a>
+        </FluentCard>
+    }
+    else {
+        <div class="admin-page-header command-hero">
+            <div>
+                <p class="eyebrow">@Texts["EnvironmentDraftEdit.Eyebrow"]</p>
+                <h1>@Texts["EnvironmentDraftEdit.Title"]</h1>
+                <p class="page-description">@project.Name / <span class="text-code">@environment.Key</span></p>
+            </div>
+            <a class="secondary-action" href="@($"projects/{ProjectId}")">@Texts["ProjectDetail.BackToProject"]</a>
+        </div>
+
+        <FluentCard Class="form-card command-card">
+            <form class="interactive-form" @onsubmit:preventDefault="true">
+                @if (!string.IsNullOrWhiteSpace(statusMessage)) {
+                    <div class="success-banner" role="status">@statusMessage</div>
+                }
+                @if (!string.IsNullOrWhiteSpace(errorMessage)) {
+                    <div class="error-banner" role="alert">@errorMessage</div>
+                }
+
+                @if (DraftValues.Count == 0) {
+                    <div class="mini-empty">
+                        <div class="orb-icon small violet" aria-hidden="true"></div>
+                        <p class="muted-text">@Texts["EnvironmentDraftEdit.NoConfigurations"]</p>
+                    </div>
+                }
+                else {
+                    <div class="draft-editor-grid">
+                        @foreach (var item in DraftValues) {
+                            <label class="draft-editor-row">
+                                <span>
+                                    <strong>@item.ConfigurationKey</strong>
+                                    @if (item.IsSensitive) {
+                                        <small>@Texts["EnvironmentDraftEdit.SensitiveHint"]</small>
+                                    }
+                                </span>
+                                <textarea class="text-input draft-textarea" name="@($"draft-{item.ConfigurationId}")" @bind="item.Value" @bind:event="oninput" placeholder="@item.Placeholder"></textarea>
+                            </label>
+                        }
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="primary-action button-reset" type="button" disabled="@isSaving" @onclick="SaveDraftsAsync">
+                            @(isSaving ? Texts["EnvironmentDraftEdit.Saving"] : Texts["EnvironmentDraftEdit.Submit"])
+                        </button>
+                    </div>
+                }
+            </form>
+        </FluentCard>
+    }
+</section>
+
+@code {
+    /// <summary>
+    /// 当前项目 ID。
+    /// </summary>
+    [Parameter]
+    public Guid ProjectId { get; set; }
+
+    /// <summary>
+    /// 当前正在编辑草稿值的环境 ID。
+    /// </summary>
+    [Parameter]
+    public Guid EnvironmentId { get; set; }
+
+    /// <summary>
+    /// 项目详情读取模型。
+    /// </summary>
+    private ProjectDetailModel? project;
+
+    /// <summary>
+    /// 当前编辑环境摘要。
+    /// </summary>
+    private EnvironmentSummary? environment;
+
+    /// <summary>
+    /// 页面草稿值表单行。
+    /// </summary>
+    private List<EnvironmentDraftValueFormModel> DraftValues { get; } = [];
+
+    /// <summary>
+    /// 指示页面是否正在加载项目详情。
+    /// </summary>
+    private bool isLoading = true;
+
+    /// <summary>
+    /// 指示保存命令是否正在执行。
+    /// </summary>
+    private bool isSaving;
+
+    /// <summary>
+    /// 保存成功后展示的状态消息。
+    /// </summary>
+    private string? statusMessage;
+
+    /// <summary>
+    /// 保存失败或读取失败时展示的错误消息。
+    /// </summary>
+    private string? errorMessage;
+
+    /// <summary>
+    /// 读取项目详情并构建按环境编辑的草稿表单。
+    /// </summary>
+    protected override async Task OnInitializedAsync() {
+        Logger.LogInformation(
+            "管理端开始读取按环境编辑草稿页面。ProjectId={ProjectId}, EnvironmentId={EnvironmentId}",
+            ProjectId,
+            EnvironmentId);
+        project = await Sender.Send(new GetProjectDetailQuery(ProjectId), CancellationToken.None);
+        environment = project?.Environments.SingleOrDefault(item => item.Id == EnvironmentId);
+        if (project is not null && environment is not null) {
+            foreach (var configuration in project.Configurations) {
+                var existingValue = configuration.Values.SingleOrDefault(item => item.EnvironmentId == EnvironmentId);
+                DraftValues.Add(new EnvironmentDraftValueFormModel {
+                    ConfigurationId = configuration.Id,
+                    ConfigurationKey = $"{configuration.Group}:{configuration.Key}",
+                    IsSensitive = configuration.IsSensitive,
+                    HasExistingValue = existingValue?.HasValue == true,
+                    Value = configuration.IsSensitive ? string.Empty : existingValue?.DisplayValue ?? string.Empty,
+                    Placeholder = configuration.IsSensitive && existingValue?.HasValue == true
+                        ? Texts["EnvironmentDraftEdit.SensitivePlaceholder"]
+                        : string.Empty
+                });
+            }
+        }
+
+        isLoading = false;
+        Logger.LogInformation(
+            "管理端按环境编辑草稿页面读取完成。ProjectId={ProjectId}, EnvironmentId={EnvironmentId}, Found={Found}, DraftValueCount={DraftValueCount}",
+            ProjectId,
+            EnvironmentId,
+            project is not null && environment is not null,
+            DraftValues.Count);
+    }
+
+    /// <summary>
+    /// 保存当前环境下所有配置草稿值。
+    /// </summary>
+    private async Task SaveDraftsAsync() {
+        if (environment is null) {
+            return;
+        }
+
+        isSaving = true;
+        errorMessage = null;
+        statusMessage = null;
+        try {
+            var savedCount = 0;
+            foreach (var item in DraftValues) {
+                if (item.IsSensitive && item.HasExistingValue && string.IsNullOrEmpty(item.Value)) {
+                    continue;
+                }
+
+                await Sender.Send(
+                    new SetDraftValueCommand(ProjectId, EnvironmentId, item.ConfigurationId, item.Value),
+                    CancellationToken.None);
+                item.HasExistingValue = true;
+                if (item.IsSensitive) {
+                    item.Value = string.Empty;
+                    item.Placeholder = Texts["EnvironmentDraftEdit.SensitivePlaceholder"];
+                }
+
+                savedCount++;
+            }
+
+            statusMessage = Texts["EnvironmentDraftEdit.Saved"];
+            Logger.LogInformation(
+                "管理端已按环境保存配置草稿。ProjectId={ProjectId}, EnvironmentId={EnvironmentId}, SavedCount={SavedCount}",
+                ProjectId,
+                EnvironmentId,
+                savedCount);
+            NavigationManager.NavigateTo($"projects/{ProjectId}");
+        }
+        catch (Exception exception) {
+            errorMessage = exception.Message;
+            Logger.LogWarning(
+                exception,
+                "管理端按环境保存配置草稿失败。ProjectId={ProjectId}, EnvironmentId={EnvironmentId}",
+                ProjectId,
+                EnvironmentId);
+        }
+        finally {
+            isSaving = false;
+        }
+    }
+
+    /// <summary>
+    /// 按环境编辑时单个配置草稿值的表单模型。
+    /// </summary>
+    public sealed class EnvironmentDraftValueFormModel {
+        /// <summary>
+        /// 配置定义 ID。
+        /// </summary>
+        public Guid ConfigurationId { get; set; }
+
+        /// <summary>
+        /// 管理端展示的配置完整 Key。
+        /// </summary>
+        public string ConfigurationKey { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 当前配置是否为敏感配置。
+        /// </summary>
+        public bool IsSensitive { get; set; }
+
+        /// <summary>
+        /// 当前环境是否已有该配置草稿值。
+        /// </summary>
+        public bool HasExistingValue { get; set; }
+
+        /// <summary>
+        /// 管理员输入的新草稿值。
+        /// </summary>
+        public string Value { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 输入框占位提示，敏感配置已有值时用于提示留空保留。
+        /// </summary>
+        public string Placeholder { get; set; } = string.Empty;
+    }
+}

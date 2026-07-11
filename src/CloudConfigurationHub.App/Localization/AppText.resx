@@ -111,6 +111,30 @@
   <data name="ConfigurationCreate.Submit" xml:space="preserve"><value>添加配置</value></data>
   <data name="ConfigurationCreate.Title" xml:space="preserve"><value>添加配置</value></data>
   <data name="ConfigurationCreate.ValidationRequired" xml:space="preserve"><value>请填写配置分组和配置 Key。</value></data>
+  <data name="DraftEdit.EditConfiguration" xml:space="preserve"><value>编辑草稿</value></data>
+  <data name="DraftEdit.EditEnvironment" xml:space="preserve"><value>编辑草稿</value></data>
+  <data name="EnvironmentDraftEdit.Eyebrow" xml:space="preserve"><value>按环境编辑</value></data>
+  <data name="EnvironmentDraftEdit.NoConfigurations" xml:space="preserve"><value>当前项目还没有配置项，请先添加配置定义。</value></data>
+  <data name="EnvironmentDraftEdit.NotFoundDescription" xml:space="preserve"><value>项目或环境不存在，无法编辑草稿值。</value></data>
+  <data name="EnvironmentDraftEdit.PageTitle" xml:space="preserve"><value>按环境编辑草稿</value></data>
+  <data name="EnvironmentDraftEdit.Saved" xml:space="preserve"><value>草稿值已保存。</value></data>
+  <data name="EnvironmentDraftEdit.Saving" xml:space="preserve"><value>正在保存...</value></data>
+  <data name="EnvironmentDraftEdit.SensitiveHint" xml:space="preserve"><value>敏感配置，留空表示保留原值。</value></data>
+  <data name="EnvironmentDraftEdit.SensitivePlaceholder" xml:space="preserve"><value>留空保留已保存的敏感值</value></data>
+  <data name="EnvironmentDraftEdit.Submit" xml:space="preserve"><value>保存草稿</value></data>
+  <data name="EnvironmentDraftEdit.Title" xml:space="preserve"><value>按环境编辑配置值</value></data>
+  <data name="EnvironmentDraftEdit.ValueLabel" xml:space="preserve"><value>配置值</value></data>
+  <data name="ConfigurationDraftEdit.Eyebrow" xml:space="preserve"><value>按配置编辑</value></data>
+  <data name="ConfigurationDraftEdit.NoEnvironments" xml:space="preserve"><value>当前项目还没有环境，请先添加环境。</value></data>
+  <data name="ConfigurationDraftEdit.NotFoundDescription" xml:space="preserve"><value>项目或配置不存在，无法编辑草稿值。</value></data>
+  <data name="ConfigurationDraftEdit.PageTitle" xml:space="preserve"><value>按配置编辑草稿</value></data>
+  <data name="ConfigurationDraftEdit.Saved" xml:space="preserve"><value>草稿值已保存。</value></data>
+  <data name="ConfigurationDraftEdit.Saving" xml:space="preserve"><value>正在保存...</value></data>
+  <data name="ConfigurationDraftEdit.SensitiveHint" xml:space="preserve"><value>敏感配置，留空表示保留原值。</value></data>
+  <data name="ConfigurationDraftEdit.SensitivePlaceholder" xml:space="preserve"><value>留空保留已保存的敏感值</value></data>
+  <data name="ConfigurationDraftEdit.Submit" xml:space="preserve"><value>保存草稿</value></data>
+  <data name="ConfigurationDraftEdit.Title" xml:space="preserve"><value>按配置编辑环境值</value></data>
+  <data name="ConfigurationDraftEdit.ValueLabel" xml:space="preserve"><value>环境值</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>关于</value></data>
   <data name="Theme.Dark" xml:space="preserve"><value>深色</value></data>
   <data name="Theme.Light" xml:space="preserve"><value>浅色</value></data>

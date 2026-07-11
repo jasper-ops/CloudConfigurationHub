@@ -77,7 +77,19 @@ public sealed class AppLocalizationTests {
             "ConfigurationCreate.KeyLabel",
             "ConfigurationCreate.IsSensitiveLabel",
             "ConfigurationCreate.Submit",
-            "ConfigurationCreate.ValidationRequired"
+            "ConfigurationCreate.ValidationRequired",
+            "DraftEdit.EditEnvironment",
+            "DraftEdit.EditConfiguration",
+            "EnvironmentDraftEdit.PageTitle",
+            "EnvironmentDraftEdit.Title",
+            "EnvironmentDraftEdit.ValueLabel",
+            "EnvironmentDraftEdit.Submit",
+            "EnvironmentDraftEdit.NoConfigurations",
+            "ConfigurationDraftEdit.PageTitle",
+            "ConfigurationDraftEdit.Title",
+            "ConfigurationDraftEdit.ValueLabel",
+            "ConfigurationDraftEdit.Submit",
+            "ConfigurationDraftEdit.NoEnvironments"
         };
 
         try {
@@ -246,5 +258,69 @@ public sealed class AppLocalizationTests {
         Assert.Contains("@bind:event=\"oninput\"", configurationSource, StringComparison.Ordinal);
         Assert.Contains("@bind=\"FormModel.IsSensitive\"", configurationSource, StringComparison.Ordinal);
         Assert.Contains("Logger.LogInformation", configurationSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Project_detail_draft_edit_pages_declare_routes_and_save_commands() {
+        var projectDetailPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Pages",
+            "ProjectDetail.razor");
+        var environmentDraftPagePath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Pages",
+            "EnvironmentDraftEdit.razor");
+        var configurationDraftPagePath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Pages",
+            "ConfigurationDraftEdit.razor");
+
+        var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
+        var environmentDraftSource = File.ReadAllText(Path.GetFullPath(environmentDraftPagePath));
+        var configurationDraftSource = File.ReadAllText(Path.GetFullPath(configurationDraftPagePath));
+
+        Assert.Contains("DraftEdit.EditEnvironment", projectDetailSource, StringComparison.Ordinal);
+        Assert.Contains("DraftEdit.EditConfiguration", projectDetailSource, StringComparison.Ordinal);
+        Assert.Contains("/drafts", projectDetailSource, StringComparison.Ordinal);
+
+        Assert.Contains("@page \"/projects/{ProjectId:guid}/environments/{EnvironmentId:guid}/drafts\"", environmentDraftSource, StringComparison.Ordinal);
+        Assert.Contains("@rendermode InteractiveServer", environmentDraftSource, StringComparison.Ordinal);
+        Assert.Contains("new GetProjectDetailQuery", environmentDraftSource, StringComparison.Ordinal);
+        Assert.Contains("new SetDraftValueCommand", environmentDraftSource, StringComparison.Ordinal);
+        Assert.Contains("@onsubmit:preventDefault=\"true\"", environmentDraftSource, StringComparison.Ordinal);
+        Assert.Contains("@bind:event=\"oninput\"", environmentDraftSource, StringComparison.Ordinal);
+        Assert.Contains("Logger.LogInformation", environmentDraftSource, StringComparison.Ordinal);
+
+        Assert.Contains("@page \"/projects/{ProjectId:guid}/configurations/{ConfigurationId:guid}/drafts\"", configurationDraftSource, StringComparison.Ordinal);
+        Assert.Contains("@rendermode InteractiveServer", configurationDraftSource, StringComparison.Ordinal);
+        Assert.Contains("new GetProjectDetailQuery", configurationDraftSource, StringComparison.Ordinal);
+        Assert.Contains("new SetDraftValueCommand", configurationDraftSource, StringComparison.Ordinal);
+        Assert.Contains("@onsubmit:preventDefault=\"true\"", configurationDraftSource, StringComparison.Ordinal);
+        Assert.Contains("@bind:event=\"oninput\"", configurationDraftSource, StringComparison.Ordinal);
+        Assert.Contains("Logger.LogInformation", configurationDraftSource, StringComparison.Ordinal);
     }
 }

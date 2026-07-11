@@ -516,6 +516,53 @@ a:hover, .btn-link:hover {
     grid-column: 2;
 }
 
+.draft-editor-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.draft-editor-row {
+    background: var(--cch-surface-subtle);
+    border: 1px solid var(--cch-border);
+    border-radius: 18px;
+    display: grid;
+    gap: 0.85rem;
+    padding: 1rem;
+}
+
+.draft-editor-row > span {
+    align-items: center;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.draft-editor-row small {
+    color: var(--cch-muted);
+}
+
+.draft-textarea {
+    min-height: 96px;
+    resize: vertical;
+}
+
+.success-banner {
+    background: rgba(103, 194, 58, 0.12);
+    border: 1px solid rgba(103, 194, 58, 0.32);
+    border-radius: 14px;
+    color: var(--cch-success);
+    margin-bottom: 1rem;
+    padding: 0.85rem;
+}
+
+.table-action {
+    display: inline-flex;
+    font-size: 0.82rem;
+    font-weight: 700;
+    margin-left: 0.75rem;
+    text-decoration: none;
+}
+
 .form-actions {
     display: flex;
     justify-content: flex-end;

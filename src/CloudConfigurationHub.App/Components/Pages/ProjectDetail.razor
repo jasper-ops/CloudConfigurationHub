@@ -62,7 +62,10 @@
                 else {
                     <div class="pill-list">
                         @foreach (var environment in project.Environments) {
-                            <span class="info-pill">@environment.Name <code>@environment.Key</code></span>
+                            <span class="info-pill">
+                                @environment.Name <code>@environment.Key</code>
+                                <a href="@($"projects/{ProjectId}/environments/{environment.Id}/drafts")">@Texts["DraftEdit.EditEnvironment"]</a>
+                            </span>
                         }
                     </div>
                 }
@@ -94,7 +97,10 @@
                             <tbody>
                                 @foreach (var configuration in project.Configurations) {
                                     <tr>
-                                        <td><code>@configuration.Group:@configuration.Key</code></td>
+                                        <td>
+                                            <code>@configuration.Group:@configuration.Key</code>
+                                            <a class="table-action" href="@($"projects/{ProjectId}/configurations/{configuration.Id}/drafts")">@Texts["DraftEdit.EditConfiguration"]</a>
+                                        </td>
                                         <td>
                                             <span class="status-pill @(configuration.IsSensitive ? "sensitive" : string.Empty)">
                                                 @(configuration.IsSensitive ? Texts["Common.Yes"] : Texts["Common.No"])
