@@ -597,6 +597,16 @@ a:hover, .btn-link:hover {
     font-weight: 800;
 }
 
+.release-history-panel {
+    overflow: hidden;
+}
+
+.release-history-table code {
+    color: var(--cch-accent);
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
 .table-action {
     display: inline-flex;
     font-size: 0.82rem;

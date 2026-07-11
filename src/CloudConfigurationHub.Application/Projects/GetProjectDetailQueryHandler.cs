@@ -20,10 +20,11 @@ public sealed class GetProjectDetailQueryHandler(
     public async ValueTask<ProjectDetail?> Handle(GetProjectDetailQuery query, CancellationToken cancellationToken) {
         var detail = await readModel.GetProjectDetailAsync(query.ProjectId, cancellationToken);
         logger.LogInformation(
-            "已读取项目详情。ProjectId={ProjectId}, Found={Found}, ConfigurationCount={ConfigurationCount}",
+            "已读取项目详情。ProjectId={ProjectId}, Found={Found}, ConfigurationCount={ConfigurationCount}, ReleaseCount={ReleaseCount}",
             query.ProjectId,
             detail is not null,
-            detail?.Configurations.Count ?? 0);
+            detail?.Configurations.Count ?? 0,
+            detail?.Releases.Count ?? 0);
         return detail;
     }
 }

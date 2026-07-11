@@ -107,7 +107,18 @@ public sealed class AppLocalizationTests {
             "AccessKey.Eyebrow",
             "AccessKey.Rotating",
             "AccessKey.Warning",
-            "AccessKey.ManageAccessKey"
+            "AccessKey.ManageAccessKey",
+            "ReleaseHistory.PageTitle",
+            "ReleaseHistory.Title",
+            "ReleaseHistory.History",
+            "ReleaseHistory.NoReleases",
+            "ReleaseHistory.Rollback",
+            "ReleaseHistory.RollingBack",
+            "ReleaseHistory.ManageHistory",
+            "ReleaseHistory.Version",
+            "ReleaseHistory.Note",
+            "ReleaseHistory.PublishedBy",
+            "ReleaseHistory.PublishedAt"
         };
 
         try {
@@ -425,5 +436,49 @@ public sealed class AppLocalizationTests {
         Assert.Contains("@onsubmit:preventDefault=\"true\"", accessKeySource, StringComparison.Ordinal);
         Assert.Contains("GeneratedAccessKey", accessKeySource, StringComparison.Ordinal);
         Assert.Contains("Logger.LogInformation", accessKeySource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Project_detail_release_history_page_declares_route_history_and_rollback_command() {
+        var projectDetailPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Pages",
+            "ProjectDetail.razor");
+        var releaseHistoryPagePath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Pages",
+            "EnvironmentReleaseHistory.razor");
+
+        var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
+        var releaseHistorySource = File.ReadAllText(Path.GetFullPath(releaseHistoryPagePath));
+
+        Assert.Contains("ReleaseHistory.ManageHistory", projectDetailSource, StringComparison.Ordinal);
+        Assert.Contains("/releases", projectDetailSource, StringComparison.Ordinal);
+
+        Assert.Contains("@page \"/projects/{ProjectId:guid}/environments/{EnvironmentId:guid}/releases\"", releaseHistorySource, StringComparison.Ordinal);
+        Assert.Contains("@rendermode InteractiveServer", releaseHistorySource, StringComparison.Ordinal);
+        Assert.Contains("new GetProjectDetailQuery", releaseHistorySource, StringComparison.Ordinal);
+        Assert.Contains("new RollbackEnvironmentCommand", releaseHistorySource, StringComparison.Ordinal);
+        Assert.Contains("ReleaseRows", releaseHistorySource, StringComparison.Ordinal);
+        Assert.Contains("@onsubmit:preventDefault=\"true\"", releaseHistorySource, StringComparison.Ordinal);
+        Assert.Contains("@($\"v{release.Version}\")", releaseHistorySource, StringComparison.Ordinal);
+        Assert.DoesNotContain("v@release.Version", releaseHistorySource, StringComparison.Ordinal);
+        Assert.Contains("Logger.LogInformation", releaseHistorySource, StringComparison.Ordinal);
     }
 }

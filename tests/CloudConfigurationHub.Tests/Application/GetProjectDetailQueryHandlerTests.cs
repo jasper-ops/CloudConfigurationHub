@@ -17,7 +17,8 @@ public sealed class GetProjectDetailQueryHandlerTests {
                 "database",
                 "password",
                 IsSensitive: true,
-                [new EnvironmentDraftValue(Guid.NewGuid(), "prod", "******", HasValue: true)])]));
+                [new EnvironmentDraftValue(Guid.NewGuid(), "prod", "******", HasValue: true)])],
+            []));
         var logger = new FakeLogger<GetProjectDetailQueryHandler>();
         var handler = new GetProjectDetailQueryHandler(readModel, logger);
 

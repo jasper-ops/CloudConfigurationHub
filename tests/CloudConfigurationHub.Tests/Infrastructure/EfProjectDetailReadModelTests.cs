@@ -43,4 +43,37 @@ public sealed class EfProjectDetailReadModelTests {
         Assert.True(passwordValue.HasValue);
         Assert.True(featureValue.HasValue);
     }
+
+    [Fact]
+    public async Task GetProjectDetailAsync_returns_release_history_ordered_by_environment_and_version_descending() {
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        var options = new DbContextOptionsBuilder<ConfigurationHubDbContext>()
+            .UseSqlite(connection)
+            .Options;
+        await using var arrangeContext = new ConfigurationHubDbContext(options);
+        await arrangeContext.Database.EnsureCreatedAsync();
+        var project = Project.Create("Order Service", "order-service");
+        var production = project.AddEnvironment("Production", "prod");
+        var staging = project.AddEnvironment("Staging", "staging");
+        var configuration = project.AddConfiguration("Database", "ConnectionString", isSensitive: false);
+        project.SetDraftValue(production.Id, configuration.Id, "server=prod-a");
+        project.PublishEnvironment(production.Id, "首次发布", "alice", DateTimeOffset.Parse("2026-07-11T12:00:00Z"));
+        project.SetDraftValue(production.Id, configuration.Id, "server=prod-b");
+        project.PublishEnvironment(production.Id, "第二次发布", "bob", DateTimeOffset.Parse("2026-07-11T12:10:00Z"));
+        project.SetDraftValue(staging.Id, configuration.Id, "server=staging");
+        project.PublishEnvironment(staging.Id, "预发发布", "carol", DateTimeOffset.Parse("2026-07-11T12:20:00Z"));
+        var repository = new EfProjectRepository(arrangeContext, NullLogger<EfProjectRepository>.Instance);
+        await repository.AddAsync(project, CancellationToken.None);
+        await using var assertContext = new ConfigurationHubDbContext(options);
+        var readModel = new EfProjectReadModel(assertContext, NullLogger<EfProjectReadModel>.Instance);
+
+        var detail = await readModel.GetProjectDetailAsync(project.Id, CancellationToken.None);
+
+        Assert.NotNull(detail);
+        Assert.Equal(3, detail.Releases.Count);
+        Assert.Equal([staging.Id, production.Id, production.Id], detail.Releases.Select(item => item.EnvironmentId).ToArray());
+        Assert.Equal([1, 2, 1], detail.Releases.Select(item => item.Version).ToArray());
+        Assert.Equal("第二次发布", detail.Releases.Single(item => item.EnvironmentId == production.Id && item.Version == 2).Note);
+    }
 }

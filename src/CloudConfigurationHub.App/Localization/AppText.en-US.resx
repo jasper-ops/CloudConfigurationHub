@@ -32,6 +32,7 @@
   <data name="Nav.Toggle" xml:space="preserve"><value>Navigation menu</value></data>
   <data name="Product.Name" xml:space="preserve"><value>Cloud Configuration Hub</value></data>
   <data name="Common.No" xml:space="preserve"><value>No</value></data>
+  <data name="Common.Actions" xml:space="preserve"><value>Actions</value></data>
   <data name="Common.Yes" xml:space="preserve"><value>Yes</value></data>
   <data name="ProjectCreate.Description" xml:space="preserve"><value>A project is the boundary for configuration management and SDK reads. After creating it, add environments, configuration keys, and releases.</value></data>
   <data name="ProjectCreate.GuideEnvironment" xml:space="preserve"><value>Environment isolation</value></data>
@@ -161,6 +162,22 @@
   <data name="PublishEnvironment.Saving" xml:space="preserve"><value>Publishing...</value></data>
   <data name="PublishEnvironment.Submit" xml:space="preserve"><value>Publish configuration</value></data>
   <data name="PublishEnvironment.Title" xml:space="preserve"><value>Publish environment configuration</value></data>
+  <data name="ReleaseHistory.Description" xml:space="preserve"><value>Release history contains immutable snapshots. Rolling back creates a new release from the selected historical version and notifies SDK clients to refresh.</value></data>
+  <data name="ReleaseHistory.Eyebrow" xml:space="preserve"><value>Release history</value></data>
+  <data name="ReleaseHistory.History" xml:space="preserve"><value>Historical releases</value></data>
+  <data name="ReleaseHistory.ManageHistory" xml:space="preserve"><value>History</value></data>
+  <data name="ReleaseHistory.NoReleases" xml:space="preserve"><value>This environment has no releases yet.</value></data>
+  <data name="ReleaseHistory.NotFoundDescription" xml:space="preserve"><value>The project or environment does not exist, so release history cannot be viewed.</value></data>
+  <data name="ReleaseHistory.Note" xml:space="preserve"><value>Note</value></data>
+  <data name="ReleaseHistory.PageTitle" xml:space="preserve"><value>Environment release history</value></data>
+  <data name="ReleaseHistory.PublishedAt" xml:space="preserve"><value>Published at</value></data>
+  <data name="ReleaseHistory.PublishedBy" xml:space="preserve"><value>Published by</value></data>
+  <data name="ReleaseHistory.Rollback" xml:space="preserve"><value>Rollback to this version</value></data>
+  <data name="ReleaseHistory.RollbackNote" xml:space="preserve"><value>Rollback to v{0}</value></data>
+  <data name="ReleaseHistory.RollbackSucceeded" xml:space="preserve"><value>Rollback release v{0} has been created.</value></data>
+  <data name="ReleaseHistory.RollingBack" xml:space="preserve"><value>Rolling back...</value></data>
+  <data name="ReleaseHistory.Title" xml:space="preserve"><value>Environment release history</value></data>
+  <data name="ReleaseHistory.Version" xml:space="preserve"><value>Version</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>About</value></data>
   <data name="Theme.Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Theme.Light" xml:space="preserve"><value>Light</value></data>

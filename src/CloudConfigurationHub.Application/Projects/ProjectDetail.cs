@@ -8,9 +8,11 @@ namespace CloudConfigurationHub.Application.Projects;
 /// <param name="Key">项目 Key。</param>
 /// <param name="Environments">项目环境集合。</param>
 /// <param name="Configurations">项目配置定义与环境草稿值集合。</param>
+/// <param name="Releases">项目所有环境的发布历史摘要集合。</param>
 public sealed record ProjectDetail(
     Guid Id,
     string Name,
     string Key,
     IReadOnlyList<EnvironmentSummary> Environments,
-    IReadOnlyList<ConfigurationDetail> Configurations);
+    IReadOnlyList<ConfigurationDetail> Configurations,
+    IReadOnlyList<ConfigurationReleaseSummary> Releases);

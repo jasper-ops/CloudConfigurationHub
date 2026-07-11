@@ -32,6 +32,7 @@
   <data name="Nav.Toggle" xml:space="preserve"><value>导航菜单</value></data>
   <data name="Product.Name" xml:space="preserve"><value>Cloud Configuration Hub</value></data>
   <data name="Common.No" xml:space="preserve"><value>否</value></data>
+  <data name="Common.Actions" xml:space="preserve"><value>操作</value></data>
   <data name="Common.Yes" xml:space="preserve"><value>是</value></data>
   <data name="ProjectCreate.Description" xml:space="preserve"><value>项目是配置管理和 SDK 读取的边界。创建后可以继续添加环境、配置项和发布版本。</value></data>
   <data name="ProjectCreate.GuideEnvironment" xml:space="preserve"><value>环境隔离</value></data>
@@ -161,6 +162,22 @@
   <data name="PublishEnvironment.Saving" xml:space="preserve"><value>正在发布...</value></data>
   <data name="PublishEnvironment.Submit" xml:space="preserve"><value>发布配置</value></data>
   <data name="PublishEnvironment.Title" xml:space="preserve"><value>发布环境配置</value></data>
+  <data name="ReleaseHistory.Description" xml:space="preserve"><value>历史版本是不可变快照。回滚会基于所选历史版本创建一个新的发布版本，并通知 SDK 刷新。</value></data>
+  <data name="ReleaseHistory.Eyebrow" xml:space="preserve"><value>发布历史</value></data>
+  <data name="ReleaseHistory.History" xml:space="preserve"><value>历史版本</value></data>
+  <data name="ReleaseHistory.ManageHistory" xml:space="preserve"><value>历史</value></data>
+  <data name="ReleaseHistory.NoReleases" xml:space="preserve"><value>当前环境还没有发布版本。</value></data>
+  <data name="ReleaseHistory.NotFoundDescription" xml:space="preserve"><value>项目或环境不存在，无法查看发布历史。</value></data>
+  <data name="ReleaseHistory.Note" xml:space="preserve"><value>备注</value></data>
+  <data name="ReleaseHistory.PageTitle" xml:space="preserve"><value>环境发布历史</value></data>
+  <data name="ReleaseHistory.PublishedAt" xml:space="preserve"><value>发布时间</value></data>
+  <data name="ReleaseHistory.PublishedBy" xml:space="preserve"><value>发布人</value></data>
+  <data name="ReleaseHistory.Rollback" xml:space="preserve"><value>回滚到此版本</value></data>
+  <data name="ReleaseHistory.RollbackNote" xml:space="preserve"><value>回滚到 v{0}</value></data>
+  <data name="ReleaseHistory.RollbackSucceeded" xml:space="preserve"><value>已生成回滚发布 v{0}。</value></data>
+  <data name="ReleaseHistory.RollingBack" xml:space="preserve"><value>正在回滚...</value></data>
+  <data name="ReleaseHistory.Title" xml:space="preserve"><value>环境发布历史</value></data>
+  <data name="ReleaseHistory.Version" xml:space="preserve"><value>版本</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>关于</value></data>
   <data name="Theme.Dark" xml:space="preserve"><value>深色</value></data>
   <data name="Theme.Light" xml:space="preserve"><value>浅色</value></data>

@@ -54,6 +54,7 @@ public sealed class EfProjectReadModel(
             .AsSplitQuery()
             .Include(item => item.Environments)
             .Include(item => item.Configurations)
+            .Include(item => item.Releases)
             .Include("_draftValues")
             .SingleOrDefaultAsync(item => item.Id == projectId, cancellationToken);
         if (project is null) {
@@ -80,13 +81,25 @@ public sealed class EfProjectReadModel(
                     .Select(environment => BuildEnvironmentDraftValue(project, configuration, environment))
                     .ToArray()))
             .ToArray();
+        var releases = project.Releases
+            .OrderByDescending(item => item.PublishedAt)
+            .ThenByDescending(item => item.Version)
+            .Select(item => new ConfigurationReleaseSummary(
+                item.Id,
+                item.EnvironmentId,
+                item.Version,
+                item.Note,
+                item.PublishedBy,
+                item.PublishedAt))
+            .ToArray();
 
         logger.LogInformation(
-            "已从数据库读取项目详情。ProjectId={ProjectId}, EnvironmentCount={EnvironmentCount}, ConfigurationCount={ConfigurationCount}",
+            "已从数据库读取项目详情。ProjectId={ProjectId}, EnvironmentCount={EnvironmentCount}, ConfigurationCount={ConfigurationCount}, ReleaseCount={ReleaseCount}",
             project.Id,
             environments.Length,
-            configurations.Length);
-        return new ProjectDetail(project.Id, project.Name, project.Key, environments, configurations);
+            configurations.Length,
+            releases.Length);
+        return new ProjectDetail(project.Id, project.Name, project.Key, environments, configurations, releases);
     }
 
     private static EnvironmentDraftValue BuildEnvironmentDraftValue(
