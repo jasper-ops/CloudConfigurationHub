@@ -23,7 +23,9 @@
 
 .top-row {
     align-items: center;
-    background: var(--cch-sidebar-logo-bg);
+    background:
+        radial-gradient(circle at 14% 18%, rgba(103, 194, 58, 0.16), transparent 32px),
+        var(--cch-sidebar-logo-bg);
     display: flex;
     min-height: var(--cch-topbar-height);
     padding: 0 18px;
@@ -41,8 +43,11 @@
 }
 
 .navbar-brand::before {
-    background: var(--cch-accent);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.08)),
+        linear-gradient(135deg, var(--cch-success), var(--cch-accent));
     border-radius: 7px;
+    box-shadow: 0 8px 18px rgba(64, 158, 255, 0.18);
     content: "";
     display: inline-block;
     height: 22px;
@@ -110,8 +115,11 @@
 }
 
 .nav-item ::deep a.active {
-    background: var(--cch-accent-soft);
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.02)),
+        var(--cch-accent-soft);
     border-color: color-mix(in srgb, var(--cch-accent) 16%, transparent);
+    box-shadow: inset 3px 0 0 var(--cch-accent), 0 10px 22px rgba(64, 158, 255, 0.10);
     color: var(--cch-text);
 }
 

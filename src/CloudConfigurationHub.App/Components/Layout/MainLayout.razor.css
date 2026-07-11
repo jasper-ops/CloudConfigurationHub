@@ -27,7 +27,7 @@ main {
     display: flex;
     gap: 0.5rem;
     height: var(--cch-topbar-height);
-    justify-content: flex-end;
+    justify-content: space-between;
 }
 
 .top-row ::deep a, .top-row ::deep .btn-link {

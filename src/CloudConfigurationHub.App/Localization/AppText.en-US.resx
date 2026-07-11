@@ -187,6 +187,9 @@
   <data name="ReleaseHistory.Title" xml:space="preserve"><value>Environment release history</value></data>
   <data name="ReleaseHistory.Version" xml:space="preserve"><value>Version</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>About</value></data>
+  <data name="TopNav.OperationalStatus" xml:space="preserve"><value>Operational status</value></data>
+  <data name="TopNav.Connected" xml:space="preserve"><value>Connected</value></data>
+  <data name="TopNav.SdkBoundary" xml:space="preserve"><value>SDK read-only boundary</value></data>
   <data name="Theme.Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Theme.Light" xml:space="preserve"><value>Light</value></data>
   <data name="Theme.Switcher" xml:space="preserve"><value>Theme switcher</value></data>

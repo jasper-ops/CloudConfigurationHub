@@ -8,9 +8,17 @@
 
     <main>
         <div class="top-row px-4">
-            <ThemeSwitcher />
-            <LanguageSwitcher AriaLabel="@Texts["Language.Switcher"]" />
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">@Texts["TopNav.About"]</a>
+            <div class="cpa-topbar-status" aria-label="@Texts["TopNav.OperationalStatus"]">
+                <span class="cpa-status-dot" aria-hidden="true"></span>
+                <span>@Texts["TopNav.Connected"]</span>
+                <span class="cpa-topbar-divider" aria-hidden="true"></span>
+                <code>@Texts["TopNav.SdkBoundary"]</code>
+            </div>
+            <div class="top-row-actions">
+                <ThemeSwitcher />
+                <LanguageSwitcher AriaLabel="@Texts["Language.Switcher"]" />
+                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">@Texts["TopNav.About"]</a>
+            </div>
         </div>
 
         <article class="content px-4">
