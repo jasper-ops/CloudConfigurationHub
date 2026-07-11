@@ -52,6 +52,7 @@
   <data name="ProjectDetail.AddConfiguration" xml:space="preserve"><value>添加配置</value></data>
   <data name="ProjectDetail.AddEnvironment" xml:space="preserve"><value>添加环境</value></data>
   <data name="ProjectDetail.BackToProjects" xml:space="preserve"><value>返回项目列表</value></data>
+  <data name="ProjectDetail.BackToProject" xml:space="preserve"><value>返回项目详情</value></data>
   <data name="ProjectDetail.ConfigurationKey" xml:space="preserve"><value>配置 Key</value></data>
   <data name="ProjectDetail.Configurations" xml:space="preserve"><value>配置项</value></data>
   <data name="ProjectDetail.Environments" xml:space="preserve"><value>环境</value></data>
@@ -79,6 +80,37 @@
   <data name="Projects.ProjectCount" xml:space="preserve"><value>项目</value></data>
   <data name="Projects.ReleaseCount" xml:space="preserve"><value>发布</value></data>
   <data name="Projects.Title" xml:space="preserve"><value>项目配置中心</value></data>
+  <data name="EnvironmentCreate.Description" xml:space="preserve"><value>环境用于隔离 dev、test、prod 等配置草稿和发布快照。SDK 读取时会按环境 Key 获取对应版本。</value></data>
+  <data name="EnvironmentCreate.GuideIsolation" xml:space="preserve"><value>隔离草稿</value></data>
+  <data name="EnvironmentCreate.GuideIsolationDescription" xml:space="preserve"><value>每个环境拥有独立草稿值，编辑测试环境不会影响生产环境。</value></data>
+  <data name="EnvironmentCreate.GuideRelease" xml:space="preserve"><value>按环境发布</value></data>
+  <data name="EnvironmentCreate.GuideReleaseDescription" xml:space="preserve"><value>发布粒度固定为项目加环境，SDK 只读取该环境最新发布版本。</value></data>
+  <data name="EnvironmentCreate.GuideTitle" xml:space="preserve"><value>环境创建说明</value></data>
+  <data name="EnvironmentCreate.KeyHelp" xml:space="preserve"><value>建议使用 dev、test、prod 等稳定小写标识。</value></data>
+  <data name="EnvironmentCreate.KeyLabel" xml:space="preserve"><value>环境 Key</value></data>
+  <data name="EnvironmentCreate.NameLabel" xml:space="preserve"><value>环境名称</value></data>
+  <data name="EnvironmentCreate.PageTitle" xml:space="preserve"><value>添加环境</value></data>
+  <data name="EnvironmentCreate.Saving" xml:space="preserve"><value>正在添加...</value></data>
+  <data name="EnvironmentCreate.Submit" xml:space="preserve"><value>添加环境</value></data>
+  <data name="EnvironmentCreate.Title" xml:space="preserve"><value>添加环境</value></data>
+  <data name="EnvironmentCreate.ValidationRequired" xml:space="preserve"><value>请填写环境名称和环境 Key。</value></data>
+  <data name="ConfigurationCreate.Description" xml:space="preserve"><value>配置定义由分组和 Key 组成，同一项目内保持唯一。不同环境会为同一配置定义维护不同草稿值。</value></data>
+  <data name="ConfigurationCreate.GroupHelp" xml:space="preserve"><value>例如 Database、FeatureFlags、Logging。</value></data>
+  <data name="ConfigurationCreate.GroupLabel" xml:space="preserve"><value>配置分组</value></data>
+  <data name="ConfigurationCreate.GuideKey" xml:space="preserve"><value>统一 Key</value></data>
+  <data name="ConfigurationCreate.GuideKeyDescription" xml:space="preserve"><value>SDK 输出格式为 Group:Key，便于直接接入 .NET IConfiguration。</value></data>
+  <data name="ConfigurationCreate.GuideSensitive" xml:space="preserve"><value>敏感保护</value></data>
+  <data name="ConfigurationCreate.GuideSensitiveDescription" xml:space="preserve"><value>敏感配置草稿值会加密存储，并在管理端详情页脱敏显示。</value></data>
+  <data name="ConfigurationCreate.GuideTitle" xml:space="preserve"><value>配置创建说明</value></data>
+  <data name="ConfigurationCreate.IsSensitiveHelp" xml:space="preserve"><value>用于连接串、Token、密钥等不应明文展示的配置。</value></data>
+  <data name="ConfigurationCreate.IsSensitiveLabel" xml:space="preserve"><value>敏感配置</value></data>
+  <data name="ConfigurationCreate.KeyHelp" xml:space="preserve"><value>例如 ConnectionString、Enabled、MinimumLevel。</value></data>
+  <data name="ConfigurationCreate.KeyLabel" xml:space="preserve"><value>配置 Key</value></data>
+  <data name="ConfigurationCreate.PageTitle" xml:space="preserve"><value>添加配置</value></data>
+  <data name="ConfigurationCreate.Saving" xml:space="preserve"><value>正在添加...</value></data>
+  <data name="ConfigurationCreate.Submit" xml:space="preserve"><value>添加配置</value></data>
+  <data name="ConfigurationCreate.Title" xml:space="preserve"><value>添加配置</value></data>
+  <data name="ConfigurationCreate.ValidationRequired" xml:space="preserve"><value>请填写配置分组和配置 Key。</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>关于</value></data>
   <data name="Theme.Dark" xml:space="preserve"><value>深色</value></data>
   <data name="Theme.Light" xml:space="preserve"><value>浅色</value></data>

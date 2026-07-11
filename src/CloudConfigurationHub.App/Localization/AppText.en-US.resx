@@ -52,6 +52,7 @@
   <data name="ProjectDetail.AddConfiguration" xml:space="preserve"><value>Add configuration</value></data>
   <data name="ProjectDetail.AddEnvironment" xml:space="preserve"><value>Add environment</value></data>
   <data name="ProjectDetail.BackToProjects" xml:space="preserve"><value>Back to projects</value></data>
+  <data name="ProjectDetail.BackToProject" xml:space="preserve"><value>Back to project details</value></data>
   <data name="ProjectDetail.ConfigurationKey" xml:space="preserve"><value>Configuration key</value></data>
   <data name="ProjectDetail.Configurations" xml:space="preserve"><value>Configurations</value></data>
   <data name="ProjectDetail.Environments" xml:space="preserve"><value>Environments</value></data>
@@ -79,6 +80,37 @@
   <data name="Projects.ProjectCount" xml:space="preserve"><value>Projects</value></data>
   <data name="Projects.ReleaseCount" xml:space="preserve"><value>Releases</value></data>
   <data name="Projects.Title" xml:space="preserve"><value>Project configuration center</value></data>
+  <data name="EnvironmentCreate.Description" xml:space="preserve"><value>Environments isolate dev, test, prod, and other configuration drafts and release snapshots. SDK clients read by environment key.</value></data>
+  <data name="EnvironmentCreate.GuideIsolation" xml:space="preserve"><value>Draft isolation</value></data>
+  <data name="EnvironmentCreate.GuideIsolationDescription" xml:space="preserve"><value>Each environment owns independent draft values, so testing edits never affect production values.</value></data>
+  <data name="EnvironmentCreate.GuideRelease" xml:space="preserve"><value>Environment releases</value></data>
+  <data name="EnvironmentCreate.GuideReleaseDescription" xml:space="preserve"><value>Release scope is fixed to project plus environment. The SDK reads only the latest release for that environment.</value></data>
+  <data name="EnvironmentCreate.GuideTitle" xml:space="preserve"><value>Environment creation guide</value></data>
+  <data name="EnvironmentCreate.KeyHelp" xml:space="preserve"><value>Use stable lowercase identifiers such as dev, test, or prod.</value></data>
+  <data name="EnvironmentCreate.KeyLabel" xml:space="preserve"><value>Environment key</value></data>
+  <data name="EnvironmentCreate.NameLabel" xml:space="preserve"><value>Environment name</value></data>
+  <data name="EnvironmentCreate.PageTitle" xml:space="preserve"><value>Add environment</value></data>
+  <data name="EnvironmentCreate.Saving" xml:space="preserve"><value>Adding...</value></data>
+  <data name="EnvironmentCreate.Submit" xml:space="preserve"><value>Add environment</value></data>
+  <data name="EnvironmentCreate.Title" xml:space="preserve"><value>Add environment</value></data>
+  <data name="EnvironmentCreate.ValidationRequired" xml:space="preserve"><value>Enter both environment name and environment key.</value></data>
+  <data name="ConfigurationCreate.Description" xml:space="preserve"><value>A configuration definition combines a group and key and is unique inside the project. Each environment stores its own draft value.</value></data>
+  <data name="ConfigurationCreate.GroupHelp" xml:space="preserve"><value>For example Database, FeatureFlags, or Logging.</value></data>
+  <data name="ConfigurationCreate.GroupLabel" xml:space="preserve"><value>Configuration group</value></data>
+  <data name="ConfigurationCreate.GuideKey" xml:space="preserve"><value>Unified key</value></data>
+  <data name="ConfigurationCreate.GuideKeyDescription" xml:space="preserve"><value>The SDK outputs keys as Group:Key so they plug directly into .NET IConfiguration.</value></data>
+  <data name="ConfigurationCreate.GuideSensitive" xml:space="preserve"><value>Sensitive protection</value></data>
+  <data name="ConfigurationCreate.GuideSensitiveDescription" xml:space="preserve"><value>Sensitive draft values are encrypted at rest and masked on management detail pages.</value></data>
+  <data name="ConfigurationCreate.GuideTitle" xml:space="preserve"><value>Configuration creation guide</value></data>
+  <data name="ConfigurationCreate.IsSensitiveHelp" xml:space="preserve"><value>Use this for connection strings, tokens, secrets, and values that must not be shown in plain text.</value></data>
+  <data name="ConfigurationCreate.IsSensitiveLabel" xml:space="preserve"><value>Sensitive configuration</value></data>
+  <data name="ConfigurationCreate.KeyHelp" xml:space="preserve"><value>For example ConnectionString, Enabled, or MinimumLevel.</value></data>
+  <data name="ConfigurationCreate.KeyLabel" xml:space="preserve"><value>Configuration key</value></data>
+  <data name="ConfigurationCreate.PageTitle" xml:space="preserve"><value>Add configuration</value></data>
+  <data name="ConfigurationCreate.Saving" xml:space="preserve"><value>Adding...</value></data>
+  <data name="ConfigurationCreate.Submit" xml:space="preserve"><value>Add configuration</value></data>
+  <data name="ConfigurationCreate.Title" xml:space="preserve"><value>Add configuration</value></data>
+  <data name="ConfigurationCreate.ValidationRequired" xml:space="preserve"><value>Enter both configuration group and configuration key.</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>About</value></data>
   <data name="Theme.Dark" xml:space="preserve"><value>Dark</value></data>
   <data name="Theme.Light" xml:space="preserve"><value>Light</value></data>

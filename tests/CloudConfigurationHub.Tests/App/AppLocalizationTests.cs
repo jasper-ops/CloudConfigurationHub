@@ -64,7 +64,20 @@ public sealed class AppLocalizationTests {
             "Theme.Switcher",
             "Theme.System",
             "Theme.Light",
-            "Theme.Dark"
+            "Theme.Dark",
+            "EnvironmentCreate.PageTitle",
+            "EnvironmentCreate.Title",
+            "EnvironmentCreate.NameLabel",
+            "EnvironmentCreate.KeyLabel",
+            "EnvironmentCreate.Submit",
+            "EnvironmentCreate.ValidationRequired",
+            "ConfigurationCreate.PageTitle",
+            "ConfigurationCreate.Title",
+            "ConfigurationCreate.GroupLabel",
+            "ConfigurationCreate.KeyLabel",
+            "ConfigurationCreate.IsSensitiveLabel",
+            "ConfigurationCreate.Submit",
+            "ConfigurationCreate.ValidationRequired"
         };
 
         try {
@@ -187,5 +200,51 @@ public sealed class AppLocalizationTests {
         Assert.Contains("enhancedload", scriptSource, StringComparison.Ordinal);
         Assert.Contains("pageshow", scriptSource, StringComparison.Ordinal);
         Assert.Contains("Blazor.addEventListener(\"enhancedload\"", enhancedScriptSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Project_detail_create_child_pages_declare_routes_and_interactive_commands() {
+        var environmentPagePath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Pages",
+            "EnvironmentCreate.razor");
+        var configurationPagePath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Pages",
+            "ConfigurationCreate.razor");
+
+        var environmentSource = File.ReadAllText(Path.GetFullPath(environmentPagePath));
+        var configurationSource = File.ReadAllText(Path.GetFullPath(configurationPagePath));
+
+        Assert.Contains("@page \"/projects/{ProjectId:guid}/environments/new\"", environmentSource, StringComparison.Ordinal);
+        Assert.Contains("@rendermode InteractiveServer", environmentSource, StringComparison.Ordinal);
+        Assert.Contains("new AddEnvironmentCommand", environmentSource, StringComparison.Ordinal);
+        Assert.Contains("@onsubmit:preventDefault=\"true\"", environmentSource, StringComparison.Ordinal);
+        Assert.Contains("@bind:event=\"oninput\"", environmentSource, StringComparison.Ordinal);
+        Assert.Contains("Logger.LogInformation", environmentSource, StringComparison.Ordinal);
+
+        Assert.Contains("@page \"/projects/{ProjectId:guid}/configurations/new\"", configurationSource, StringComparison.Ordinal);
+        Assert.Contains("@rendermode InteractiveServer", configurationSource, StringComparison.Ordinal);
+        Assert.Contains("new AddConfigurationCommand", configurationSource, StringComparison.Ordinal);
+        Assert.Contains("@onsubmit:preventDefault=\"true\"", configurationSource, StringComparison.Ordinal);
+        Assert.Contains("@bind:event=\"oninput\"", configurationSource, StringComparison.Ordinal);
+        Assert.Contains("@bind=\"FormModel.IsSensitive\"", configurationSource, StringComparison.Ordinal);
+        Assert.Contains("Logger.LogInformation", configurationSource, StringComparison.Ordinal);
     }
 }

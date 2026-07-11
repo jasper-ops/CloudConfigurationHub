@@ -1,0 +1,141 @@
+@page "/projects/{ProjectId:guid}/environments/new"
+@rendermode InteractiveServer
+@using CloudConfigurationHub.Application.Projects
+@using Mediator
+@inject ISender Sender
+@inject NavigationManager NavigationManager
+@inject ILogger<EnvironmentCreate> Logger
+@inject IStringLocalizer<AppText> Texts
+
+<PageTitle>@Texts["EnvironmentCreate.PageTitle"]</PageTitle>
+
+<section class="admin-page control-surface">
+    <div class="admin-page-header command-hero">
+        <div>
+            <p class="eyebrow">@Texts["ProjectDetail.Environments"]</p>
+            <h1>@Texts["EnvironmentCreate.Title"]</h1>
+            <p class="page-description">@Texts["EnvironmentCreate.Description"]</p>
+        </div>
+        <a class="secondary-action" href="@($"projects/{ProjectId}")">@Texts["ProjectDetail.BackToProject"]</a>
+    </div>
+
+    <div class="create-layout">
+        <FluentCard Class="form-card command-card">
+            <form class="interactive-form" @onsubmit:preventDefault="true">
+                @if (!string.IsNullOrWhiteSpace(errorMessage)) {
+                    <div class="error-banner" role="alert">@errorMessage</div>
+                }
+
+                <div class="form-grid">
+                    <label>
+                        <span>@Texts["EnvironmentCreate.NameLabel"]</span>
+                        <input class="text-input" name="FormModel.Name" @bind="FormModel.Name" @bind:event="oninput" />
+                    </label>
+                    <label>
+                        <span>@Texts["EnvironmentCreate.KeyLabel"]</span>
+                        <input class="text-input code-input" name="FormModel.Key" @bind="FormModel.Key" @bind:event="oninput" />
+                        <small>@Texts["EnvironmentCreate.KeyHelp"]</small>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button class="primary-action button-reset" type="button" disabled="@isSaving" @onclick="CreateEnvironmentAsync">
+                        @(isSaving ? Texts["EnvironmentCreate.Saving"] : Texts["EnvironmentCreate.Submit"])
+                    </button>
+                </div>
+            </form>
+        </FluentCard>
+
+        <aside class="insight-panel" aria-label="@Texts["EnvironmentCreate.GuideTitle"]">
+            <div class="insight-card">
+                <span>01</span>
+                <strong>@Texts["EnvironmentCreate.GuideIsolation"]</strong>
+                <p>@Texts["EnvironmentCreate.GuideIsolationDescription"]</p>
+            </div>
+            <div class="insight-card">
+                <span>02</span>
+                <strong>@Texts["EnvironmentCreate.GuideRelease"]</strong>
+                <p>@Texts["EnvironmentCreate.GuideReleaseDescription"]</p>
+            </div>
+        </aside>
+    </div>
+</section>
+
+@code {
+    /// <summary>
+    /// 当前项目 ID，环境会被添加到此项目聚合下。
+    /// </summary>
+    [Parameter]
+    public Guid ProjectId { get; set; }
+
+    /// <summary>
+    /// 添加环境表单模型。
+    /// </summary>
+    private EnvironmentCreateFormModel FormModel { get; } = new();
+
+    /// <summary>
+    /// 指示添加环境命令是否正在提交，用于避免重复点击。
+    /// </summary>
+    private bool isSaving;
+
+    /// <summary>
+    /// 添加失败或表单校验失败时展示给管理员的错误消息。
+    /// </summary>
+    private string? errorMessage;
+
+    /// <summary>
+    /// 校验并提交添加环境命令，成功后回到项目详情页。
+    /// </summary>
+    private async Task CreateEnvironmentAsync() {
+        if (string.IsNullOrWhiteSpace(FormModel.Name) || string.IsNullOrWhiteSpace(FormModel.Key)) {
+            errorMessage = Texts["EnvironmentCreate.ValidationRequired"];
+            Logger.LogWarning(
+                "管理端添加环境表单校验失败。ProjectId={ProjectId}, HasName={HasName}, HasKey={HasKey}",
+                ProjectId,
+                !string.IsNullOrWhiteSpace(FormModel.Name),
+                !string.IsNullOrWhiteSpace(FormModel.Key));
+            return;
+        }
+
+        isSaving = true;
+        errorMessage = null;
+        try {
+            var environment = await Sender.Send(
+                new AddEnvironmentCommand(ProjectId, FormModel.Name, FormModel.Key),
+                CancellationToken.None);
+            Logger.LogInformation(
+                "管理端已添加环境并准备返回项目详情页。ProjectId={ProjectId}, EnvironmentId={EnvironmentId}, EnvironmentKey={EnvironmentKey}",
+                ProjectId,
+                environment.Id,
+                environment.Key);
+            NavigationManager.NavigateTo($"projects/{ProjectId}");
+        }
+        catch (Exception exception) {
+            errorMessage = exception.Message;
+            Logger.LogWarning(
+                exception,
+                "管理端添加环境失败。ProjectId={ProjectId}, EnvironmentName={EnvironmentName}, EnvironmentKey={EnvironmentKey}",
+                ProjectId,
+                FormModel.Name,
+                FormModel.Key);
+        }
+        finally {
+            isSaving = false;
+        }
+    }
+
+    /// <summary>
+    /// 添加环境页面的表单字段集合。
+    /// </summary>
+    public sealed class EnvironmentCreateFormModel {
+        /// <summary>
+        /// 环境显示名称，例如 Development、Testing 或 Production。
+        /// </summary>
+        public string Name { get; set; } = string.Empty;
+
+        /// <summary>
+        /// 环境唯一 Key，用于 SDK 读取配置时选择发布快照。
+        /// </summary>
+        public string Key { get; set; } = string.Empty;
+    }
+}

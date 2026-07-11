@@ -494,6 +494,28 @@ a:hover, .btn-link:hover {
     font-family: "Fira Code", Consolas, monospace;
 }
 
+.toggle-field {
+    align-items: flex-start;
+    background: var(--cch-surface-subtle);
+    border: 1px solid var(--cch-border);
+    border-radius: 16px;
+    display: grid;
+    gap: 0.25rem 0.75rem;
+    grid-template-columns: auto 1fr;
+    padding: 0.95rem;
+}
+
+.toggle-field input {
+    accent-color: var(--cch-accent);
+    height: 1.15rem;
+    margin-top: 0.2rem;
+    width: 1.15rem;
+}
+
+.toggle-field small {
+    grid-column: 2;
+}
+
 .form-actions {
     display: flex;
     justify-content: flex-end;
