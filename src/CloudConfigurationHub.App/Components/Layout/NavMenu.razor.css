@@ -1,50 +1,58 @@
 .navbar-toggler {
     appearance: none;
-    background: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28226, 232, 240, 0.76%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") no-repeat center/1.55rem rgba(15, 23, 42, 0.78);
-    border: 1px solid rgba(148, 163, 184, 0.24);
-    border-radius: 14px;
-    color: white;
+    background: transparent;
+    border: 1px solid var(--cch-border);
+    border-radius: var(--cch-radius-sm);
+    color: var(--cch-text);
     cursor: pointer;
-    height: 2.65rem;
+    height: 34px;
     position: absolute;
     right: 1rem;
-    top: 0.55rem;
-    width: 3.2rem;
+    top: 0.5rem;
+    width: 42px;
+}
+
+.navbar-toggler::before {
+    content: "☰";
 }
 
 .navbar-toggler:checked {
-    background-color: rgba(34, 211, 238, 0.18);
-    border-color: rgba(34, 211, 238, 0.42);
+    background: var(--cch-accent-soft);
+    border-color: var(--cch-border-strong);
 }
 
 .top-row {
     align-items: center;
+    background: var(--cch-sidebar-logo-bg);
     display: flex;
-    min-height: 3.75rem;
-    padding: 0 1rem;
+    min-height: var(--cch-topbar-height);
+    padding: 0 18px;
 }
 
 .navbar-brand {
-    color: #f8fafc;
-    font-size: 1rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
+    color: var(--cch-text);
+    font-size: 0.98rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    overflow: hidden;
     text-decoration: none;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .navbar-brand::before {
-    background: linear-gradient(135deg, #22d3ee, #8b5cf6);
-    border-radius: 999px;
-    box-shadow: 0 0 32px rgba(34, 211, 238, 0.42);
+    background: var(--cch-accent);
+    border-radius: 7px;
     content: "";
     display: inline-block;
-    height: 0.75rem;
+    height: 22px;
     margin-right: 0.55rem;
-    width: 0.75rem;
+    vertical-align: -6px;
+    width: 22px;
 }
 
 .bi {
-    background-color: rgba(226, 232, 240, 0.78);
+    background-color: currentColor;
     display: inline-block;
     height: 1rem;
     margin-right: 0.75rem;
@@ -73,53 +81,48 @@
 }
 
 .nav-section-label {
-    color: rgba(148, 163, 184, 0.82);
-    font-family: "Fira Code", Consolas, monospace;
+    color: var(--cch-muted-strong);
     font-size: 0.72rem;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    margin: 1.15rem 0 0.45rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    margin: 1rem 0 0.35rem;
     text-transform: uppercase;
 }
 
 .nav-item {
-    font-size: 0.92rem;
-    padding-bottom: 0.35rem;
+    font-size: 0.94rem;
+    padding-bottom: 0.2rem;
 }
 
 .nav-item ::deep .nav-link {
     align-items: center;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: 14px;
-    color: rgba(226, 232, 240, 0.72);
+    border-radius: var(--cch-radius-sm);
+    color: var(--cch-muted);
     display: flex;
-    min-height: 2.85rem;
-    padding: 0 0.85rem;
+    font-weight: 600;
+    min-height: 44px;
+    padding: 0 0.9rem;
     text-decoration: none;
     transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
     width: 100%;
 }
 
 .nav-item ::deep a.active {
-    background: rgba(34, 211, 238, 0.12);
-    border-color: rgba(34, 211, 238, 0.32);
-    color: #f8fafc;
-}
-
-.nav-item ::deep a.active .bi {
-    background-color: #22d3ee;
+    background: var(--cch-accent-soft);
+    border-color: color-mix(in srgb, var(--cch-accent) 16%, transparent);
+    color: var(--cch-text);
 }
 
 .nav-item ::deep .nav-link:hover {
-    background: rgba(148, 163, 184, 0.08);
-    border-color: rgba(148, 163, 184, 0.18);
-    color: #ffffff;
+    background: var(--cch-accent-soft);
+    color: var(--cch-accent);
 }
 
 .nav-scrollable {
     display: none;
-    padding: 0 0.75rem 1rem;
+    padding: 0.75rem;
 }
 
 .navbar-toggler:checked ~ .nav-scrollable {
@@ -133,7 +136,7 @@
 
     .nav-scrollable {
         display: block;
-        height: calc(100vh - 3.75rem);
+        height: calc(100vh - var(--cch-topbar-height));
         overflow-y: auto;
     }
 }

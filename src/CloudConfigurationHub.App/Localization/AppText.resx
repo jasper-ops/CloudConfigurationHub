@@ -80,4 +80,8 @@
   <data name="Projects.ReleaseCount" xml:space="preserve"><value>发布</value></data>
   <data name="Projects.Title" xml:space="preserve"><value>项目配置中心</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>关于</value></data>
+  <data name="Theme.Dark" xml:space="preserve"><value>深色</value></data>
+  <data name="Theme.Light" xml:space="preserve"><value>浅色</value></data>
+  <data name="Theme.Switcher" xml:space="preserve"><value>主题切换</value></data>
+  <data name="Theme.System" xml:space="preserve"><value>跟随系统</value></data>
 </root>

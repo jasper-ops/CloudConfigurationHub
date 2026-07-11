@@ -60,7 +60,11 @@ public sealed class AppLocalizationTests {
             "ProjectDetail.NoConfigurations",
             "ProjectDetail.BackToProjects",
             "ProjectDetail.Sensitive",
-            "Projects.ProjectCount"
+            "Projects.ProjectCount",
+            "Theme.Switcher",
+            "Theme.System",
+            "Theme.Light",
+            "Theme.Dark"
         };
 
         try {
@@ -102,5 +106,86 @@ public sealed class AppLocalizationTests {
         Assert.Contains("type=\"button\"", pageSource, StringComparison.Ordinal);
         Assert.Contains("@onclick=\"CreateProjectAsync\"", pageSource, StringComparison.Ordinal);
         Assert.Contains("@bind:event=\"oninput\"", pageSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void App_shell_declares_theme_script_and_three_mode_theme_switcher() {
+        var appPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "App.razor");
+        var layoutPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Layout",
+            "MainLayout.razor");
+        var switcherPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ThemeSwitcher.razor");
+        var scriptPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "wwwroot",
+            "theme.js");
+        var enhancedScriptPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "wwwroot",
+            "theme-enhanced.js");
+
+        var appSource = File.ReadAllText(Path.GetFullPath(appPath));
+        var layoutSource = File.ReadAllText(Path.GetFullPath(layoutPath));
+        var switcherSource = File.ReadAllText(Path.GetFullPath(switcherPath));
+        var scriptSource = File.ReadAllText(Path.GetFullPath(scriptPath));
+        var enhancedScriptSource = File.ReadAllText(Path.GetFullPath(enhancedScriptPath));
+
+        Assert.Contains("theme.js", appSource, StringComparison.Ordinal);
+        Assert.Contains("theme-enhanced.js", appSource, StringComparison.Ordinal);
+        Assert.Contains("<ThemeSwitcher", layoutSource, StringComparison.Ordinal);
+        Assert.Contains("data-theme-switcher", switcherSource, StringComparison.Ordinal);
+        Assert.Contains("data-theme-option=\"system\"", switcherSource, StringComparison.Ordinal);
+        Assert.Contains("data-theme-option=\"light\"", switcherSource, StringComparison.Ordinal);
+        Assert.Contains("data-theme-option=\"dark\"", switcherSource, StringComparison.Ordinal);
+        Assert.Contains("<svg", switcherSource, StringComparison.Ordinal);
+        Assert.Contains("prefers-color-scheme: dark", scriptSource, StringComparison.Ordinal);
+        Assert.Contains("localStorage", scriptSource, StringComparison.Ordinal);
+        Assert.Contains("data-theme", scriptSource, StringComparison.Ordinal);
+        Assert.Contains("enhancedload", scriptSource, StringComparison.Ordinal);
+        Assert.Contains("pageshow", scriptSource, StringComparison.Ordinal);
+        Assert.Contains("Blazor.addEventListener(\"enhancedload\"", enhancedScriptSource, StringComparison.Ordinal);
     }
 }

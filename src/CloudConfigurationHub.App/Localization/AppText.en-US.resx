@@ -80,4 +80,8 @@
   <data name="Projects.ReleaseCount" xml:space="preserve"><value>Releases</value></data>
   <data name="Projects.Title" xml:space="preserve"><value>Project configuration center</value></data>
   <data name="TopNav.About" xml:space="preserve"><value>About</value></data>
+  <data name="Theme.Dark" xml:space="preserve"><value>Dark</value></data>
+  <data name="Theme.Light" xml:space="preserve"><value>Light</value></data>
+  <data name="Theme.Switcher" xml:space="preserve"><value>Theme switcher</value></data>
+  <data name="Theme.System" xml:space="preserve"><value>Follow system</value></data>
 </root>
