@@ -108,9 +108,13 @@
     display: flex;
     font-weight: 600;
     min-height: 44px;
+    min-width: 0;
+    overflow: hidden;
     padding: 0 0.9rem;
     text-decoration: none;
+    text-overflow: ellipsis;
     transition: background-color 160ms ease, border-color 160ms ease, color 160ms ease;
+    white-space: nowrap;
     width: 100%;
 }
 
@@ -130,7 +134,13 @@
 
 .nav-scrollable {
     display: none;
+    overflow-x: hidden;
     padding: 0.75rem;
+}
+
+.nav-scrollable form {
+    margin: 0;
+    min-width: 0;
 }
 
 .navbar-toggler:checked ~ .nav-scrollable {

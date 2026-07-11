@@ -60,4 +60,25 @@ public sealed class RepositoryQualityTests {
 
         Assert.Empty(violations);
     }
+
+    [Fact]
+    public void Management_navigation_css_prevents_horizontal_sidebar_scroll() {
+        var repositoryRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            ".."));
+        var navMenuCss = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Layout",
+            "NavMenu.razor.css"));
+
+        Assert.Contains("overflow-x: hidden;", navMenuCss, StringComparison.Ordinal);
+        Assert.Contains("text-overflow: ellipsis;", navMenuCss, StringComparison.Ordinal);
+    }
 }
