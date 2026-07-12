@@ -77,6 +77,26 @@ public sealed class RepositoryQualityTests {
     }
 
     [Fact]
+    public void Management_app_launch_profile_uses_a_non_reserved_development_port() {
+        var repositoryRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            ".."));
+        var launchSettings = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Properties",
+            "launchSettings.json"));
+
+        Assert.DoesNotContain("localhost:5252", launchSettings, StringComparison.OrdinalIgnoreCase);
+        Assert.Contains("localhost:15137", launchSettings, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public void Management_navigation_css_prevents_horizontal_sidebar_scroll() {
         var repositoryRoot = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,
