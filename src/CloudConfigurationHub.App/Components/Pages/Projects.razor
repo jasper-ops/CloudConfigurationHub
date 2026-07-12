@@ -1,8 +1,5 @@
 @page "/projects"
-@inject NavigationManager NavigationManager
 
-@code {
-    protected override void OnInitialized() {
-        NavigationManager.NavigateTo("", replace: true);
-    }
-}
+<PageTitle>项目管理</PageTitle>
+
+<ManagementWorkbench InitialView="projects" />

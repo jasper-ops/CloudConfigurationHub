@@ -15,43 +15,43 @@
 
 <PageTitle>@Texts["Identity.Login.PageTitle"]</PageTitle>
 
-<section class="demo-login-shell">
-    <header class="demo-login-header">
-        <div class="demo-setup-brand">
-            <span class="demo-brand-mark" aria-hidden="true"></span>
+<section class="cch-login-shell">
+    <header class="cch-login-header">
+        <div class="cch-setup-brand">
+            <span class="cch-brand-mark" aria-hidden="true"></span>
             <strong>配置中心</strong>
         </div>
         <ThemeSwitcher />
     </header>
 
-    <main class="demo-login-main">
-        <section class="demo-login-card">
-            <div class="demo-login-title">
+    <main class="cch-login-main">
+        <section class="cch-login-card">
+            <div class="cch-login-title">
                 <h1>登录</h1>
                 <p>请使用管理员账号登录</p>
             </div>
             <StatusMessage Message="@errorMessage" />
-            <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login" class="demo-form-stack">
+            <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login" class="cch-form-stack">
                 <DataAnnotationsValidator />
                 <ValidationSummary class="text-danger" role="alert" />
-                <div class="demo-field">
+                <div class="cch-field">
                     <label for="Input.Email">@Texts["Identity.Email"]</label>
-                    <InputText @bind-Value="Input.Email" id="Input.Email" class="demo-input" autocomplete="username webauthn" aria-required="true" placeholder="name@example.com" />
+                    <InputText @bind-Value="Input.Email" id="Input.Email" class="cch-input" autocomplete="username webauthn" aria-required="true" placeholder="name@example.com" />
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
-                <div class="demo-field">
+                <div class="cch-field">
                     <label for="Input.Password">@Texts["Identity.Password"]</label>
-                    <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="demo-input" autocomplete="current-password" aria-required="true" />
+                    <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="cch-input" autocomplete="current-password" aria-required="true" />
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>
-                <div class="demo-check">
+                <div class="cch-check">
                     <label>
                         <InputCheckbox @bind-Value="Input.RememberMe" />
                         @Texts["Identity.Login.RememberMe"]
                     </label>
                 </div>
-                <button type="submit" class="demo-button large full">@Texts["Identity.Login.Submit"]</button>
-                <div class="demo-login-links">
+                <button type="submit" class="cch-button large full">@Texts["Identity.Login.Submit"]</button>
+                <div class="cch-login-links">
                     <a href="Account/ForgotPassword">@Texts["Identity.Login.ForgotPassword"]</a>
                     <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">@Texts["Identity.Login.RegisterLink"]</a>
                     <a href="Account/ResendEmailConfirmation">@Texts["Identity.Login.ResendEmailConfirmation"]</a>

@@ -1,4 +1,4 @@
-﻿@page "/Account/Manage/PersonalData"
+@page "/Account/Manage/PersonalData"
 
 @using Microsoft.AspNetCore.Identity
 @using CloudConfigurationHub.App.Data
@@ -11,18 +11,18 @@
 
 <StatusMessage />
 
-<div class="demo-account-section">
-    <div class="demo-account-section-head">
+<div class="cch-account-section">
+    <div class="cch-account-section-head">
         <h2>@Texts["Identity.Manage.PersonalDataTitle"]</h2>
         <p>@Texts["Identity.Manage.PersonalDataDescription"]</p>
     </div>
-    <p class="demo-account-warning">@Texts["Identity.Manage.PersonalDataDeleteWarning"]</p>
-    <div class="demo-account-actions">
+    <p class="cch-account-warning">@Texts["Identity.Manage.PersonalDataDeleteWarning"]</p>
+    <div class="cch-account-actions">
         <form action="Account/Manage/DownloadPersonalData" method="post">
             <AntiforgeryToken />
-            <button class="demo-button" type="submit">@Texts["Identity.Download"]</button>
+            <button class="cch-button" type="submit">@Texts["Identity.Download"]</button>
         </form>
-        <a href="Account/Manage/DeletePersonalData" class="demo-button danger">@Texts["Identity.Delete"]</a>
+        <a href="Account/Manage/DeletePersonalData" class="cch-button danger">@Texts["Identity.Delete"]</a>
     </div>
 </div>
 

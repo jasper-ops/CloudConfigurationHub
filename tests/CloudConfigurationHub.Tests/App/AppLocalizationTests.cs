@@ -173,13 +173,26 @@ public sealed class AppLocalizationTests {
             "Components",
             "Pages",
             "ProjectCreate.razor");
+        var workbenchPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor");
 
         var pageSource = File.ReadAllText(Path.GetFullPath(pagePath));
+        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
 
-        Assert.Contains("@onsubmit:preventDefault=\"true\"", pageSource, StringComparison.Ordinal);
-        Assert.Contains("type=\"button\"", pageSource, StringComparison.Ordinal);
-        Assert.Contains("@onclick=\"CreateProjectAsync\"", pageSource, StringComparison.Ordinal);
-        Assert.Contains("@bind:event=\"oninput\"", pageSource, StringComparison.Ordinal);
+        Assert.Contains("@page \"/projects/new\"", pageSource, StringComparison.Ordinal);
+        Assert.Contains("RoutePanel=\"project-new\"", pageSource, StringComparison.Ordinal);
+        Assert.Contains("type=\"button\"", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("SaveProjectAsync", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("@bind=\"projectForm.Name\"", workbenchSource, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -329,24 +342,30 @@ public sealed class AppLocalizationTests {
             "Components",
             "Pages",
             "ConfigurationCreate.razor");
+        var workbenchPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor");
 
         var environmentSource = File.ReadAllText(Path.GetFullPath(environmentPagePath));
         var configurationSource = File.ReadAllText(Path.GetFullPath(configurationPagePath));
+        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
 
         Assert.Contains("@page \"/projects/{ProjectId:guid}/environments/new\"", environmentSource, StringComparison.Ordinal);
-        Assert.Contains("@rendermode InteractiveServer", environmentSource, StringComparison.Ordinal);
-        Assert.Contains("new AddEnvironmentCommand", environmentSource, StringComparison.Ordinal);
-        Assert.Contains("@onsubmit:preventDefault=\"true\"", environmentSource, StringComparison.Ordinal);
-        Assert.Contains("@bind:event=\"oninput\"", environmentSource, StringComparison.Ordinal);
-        Assert.Contains("Logger.LogInformation", environmentSource, StringComparison.Ordinal);
+        Assert.Contains("RoutePanel=\"environment-new\"", environmentSource, StringComparison.Ordinal);
 
         Assert.Contains("@page \"/projects/{ProjectId:guid}/configurations/new\"", configurationSource, StringComparison.Ordinal);
-        Assert.Contains("@rendermode InteractiveServer", configurationSource, StringComparison.Ordinal);
-        Assert.Contains("new AddConfigurationCommand", configurationSource, StringComparison.Ordinal);
-        Assert.Contains("@onsubmit:preventDefault=\"true\"", configurationSource, StringComparison.Ordinal);
-        Assert.Contains("@bind:event=\"oninput\"", configurationSource, StringComparison.Ordinal);
-        Assert.Contains("@bind=\"FormModel.IsSensitive\"", configurationSource, StringComparison.Ordinal);
-        Assert.Contains("Logger.LogInformation", configurationSource, StringComparison.Ordinal);
+        Assert.Contains("RoutePanel=\"configuration-new\"", configurationSource, StringComparison.Ordinal);
+        Assert.Contains("new AddEnvironmentCommand", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("new AddConfigurationCommand", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("@bind=\"configForm.IsSensitive\"", workbenchSource, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -388,29 +407,31 @@ public sealed class AppLocalizationTests {
             "Pages",
             "ConfigurationDraftEdit.razor");
 
+        var workbenchPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor");
         var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
         var environmentDraftSource = File.ReadAllText(Path.GetFullPath(environmentDraftPagePath));
         var configurationDraftSource = File.ReadAllText(Path.GetFullPath(configurationDraftPagePath));
+        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
 
-        Assert.Contains("DraftEdit.EditEnvironment", projectDetailSource, StringComparison.Ordinal);
-        Assert.Contains("DraftEdit.EditConfiguration", projectDetailSource, StringComparison.Ordinal);
-        Assert.Contains("/drafts", projectDetailSource, StringComparison.Ordinal);
+        Assert.Contains("ProjectId=\"ProjectId\"", projectDetailSource, StringComparison.Ordinal);
 
         Assert.Contains("@page \"/projects/{ProjectId:guid}/environments/{EnvironmentId:guid}/drafts\"", environmentDraftSource, StringComparison.Ordinal);
-        Assert.Contains("@rendermode InteractiveServer", environmentDraftSource, StringComparison.Ordinal);
-        Assert.Contains("new GetProjectDetailQuery", environmentDraftSource, StringComparison.Ordinal);
-        Assert.Contains("new SetDraftValueCommand", environmentDraftSource, StringComparison.Ordinal);
-        Assert.Contains("@onsubmit:preventDefault=\"true\"", environmentDraftSource, StringComparison.Ordinal);
-        Assert.Contains("@bind:event=\"oninput\"", environmentDraftSource, StringComparison.Ordinal);
-        Assert.Contains("Logger.LogInformation", environmentDraftSource, StringComparison.Ordinal);
+        Assert.Contains("EnvironmentId=\"EnvironmentId\"", environmentDraftSource, StringComparison.Ordinal);
 
         Assert.Contains("@page \"/projects/{ProjectId:guid}/configurations/{ConfigurationId:guid}/drafts\"", configurationDraftSource, StringComparison.Ordinal);
-        Assert.Contains("@rendermode InteractiveServer", configurationDraftSource, StringComparison.Ordinal);
-        Assert.Contains("new GetProjectDetailQuery", configurationDraftSource, StringComparison.Ordinal);
-        Assert.Contains("new SetDraftValueCommand", configurationDraftSource, StringComparison.Ordinal);
-        Assert.Contains("@onsubmit:preventDefault=\"true\"", configurationDraftSource, StringComparison.Ordinal);
-        Assert.Contains("@bind:event=\"oninput\"", configurationDraftSource, StringComparison.Ordinal);
-        Assert.Contains("Logger.LogInformation", configurationDraftSource, StringComparison.Ordinal);
+        Assert.Contains("ConfigurationId=\"ConfigurationId\"", configurationDraftSource, StringComparison.Ordinal);
+        Assert.Contains("new GetProjectDetailQuery", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("new SetDraftValueCommand", workbenchSource, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -440,25 +461,29 @@ public sealed class AppLocalizationTests {
             "Pages",
             "EnvironmentPublish.razor");
 
+        var workbenchPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor");
         var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
         var publishSource = File.ReadAllText(Path.GetFullPath(publishPagePath));
+        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
 
-        Assert.Contains("PublishEnvironment.PublishEnvironment", projectDetailSource, StringComparison.Ordinal);
-        Assert.Contains("/publish", projectDetailSource, StringComparison.Ordinal);
+        Assert.Contains("ProjectId=\"ProjectId\"", projectDetailSource, StringComparison.Ordinal);
 
         Assert.Contains("@page \"/projects/{ProjectId:guid}/environments/{EnvironmentId:guid}/publish\"", publishSource, StringComparison.Ordinal);
-        Assert.Contains("@rendermode InteractiveServer", publishSource, StringComparison.Ordinal);
-        Assert.Contains("new GetProjectDetailQuery", publishSource, StringComparison.Ordinal);
-        Assert.Contains("new PublishEnvironmentCommand", publishSource, StringComparison.Ordinal);
-        Assert.Contains("@onsubmit:preventDefault=\"true\"", publishSource, StringComparison.Ordinal);
-        Assert.Contains("@bind:event=\"oninput\"", publishSource, StringComparison.Ordinal);
-        Assert.Contains("ReleasePreviewRows", publishSource, StringComparison.Ordinal);
-        Assert.Contains("DiffRows", publishSource, StringComparison.Ordinal);
-        Assert.Contains("LatestReleaseValue", publishSource, StringComparison.Ordinal);
-        Assert.Contains("DiffStatus", publishSource, StringComparison.Ordinal);
-        Assert.Contains("item.ConfigurationKey == configurationKey", publishSource, StringComparison.Ordinal);
-        Assert.Contains("PublishEnvironment.DiffTitle", publishSource, StringComparison.Ordinal);
-        Assert.Contains("Logger.LogInformation", publishSource, StringComparison.Ordinal);
+        Assert.Contains("RoutePanel=\"publish\"", publishSource, StringComparison.Ordinal);
+        Assert.Contains("new PublishEnvironmentCommand", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("DiffRows", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("LatestReleaseValue", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("item.ConfigurationKey == configurationKey", workbenchSource, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -488,19 +513,27 @@ public sealed class AppLocalizationTests {
             "Pages",
             "ProjectAccessKey.razor");
 
+        var workbenchPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor");
         var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
         var accessKeySource = File.ReadAllText(Path.GetFullPath(accessKeyPagePath));
+        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
 
-        Assert.Contains("AccessKey.ManageAccessKey", projectDetailSource, StringComparison.Ordinal);
-        Assert.Contains("/access-key", projectDetailSource, StringComparison.Ordinal);
+        Assert.Contains("ProjectId=\"ProjectId\"", projectDetailSource, StringComparison.Ordinal);
 
         Assert.Contains("@page \"/projects/{ProjectId:guid}/access-key\"", accessKeySource, StringComparison.Ordinal);
-        Assert.Contains("@rendermode InteractiveServer", accessKeySource, StringComparison.Ordinal);
-        Assert.Contains("new GetProjectDetailQuery", accessKeySource, StringComparison.Ordinal);
-        Assert.Contains("new RotateProjectAccessKeyCommand", accessKeySource, StringComparison.Ordinal);
-        Assert.Contains("@onsubmit:preventDefault=\"true\"", accessKeySource, StringComparison.Ordinal);
-        Assert.Contains("GeneratedAccessKey", accessKeySource, StringComparison.Ordinal);
-        Assert.Contains("Logger.LogInformation", accessKeySource, StringComparison.Ordinal);
+        Assert.Contains("RoutePanel=\"access-key\"", accessKeySource, StringComparison.Ordinal);
+        Assert.Contains("new RotateProjectAccessKeyCommand", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("generatedAccessKey", workbenchSource, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -530,20 +563,28 @@ public sealed class AppLocalizationTests {
             "Pages",
             "EnvironmentReleaseHistory.razor");
 
+        var workbenchPath = Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            "..",
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor");
         var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
         var releaseHistorySource = File.ReadAllText(Path.GetFullPath(releaseHistoryPagePath));
+        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
 
-        Assert.Contains("ReleaseHistory.ManageHistory", projectDetailSource, StringComparison.Ordinal);
-        Assert.Contains("/releases", projectDetailSource, StringComparison.Ordinal);
+        Assert.Contains("ProjectId=\"ProjectId\"", projectDetailSource, StringComparison.Ordinal);
 
         Assert.Contains("@page \"/projects/{ProjectId:guid}/environments/{EnvironmentId:guid}/releases\"", releaseHistorySource, StringComparison.Ordinal);
-        Assert.Contains("@rendermode InteractiveServer", releaseHistorySource, StringComparison.Ordinal);
-        Assert.Contains("new GetProjectDetailQuery", releaseHistorySource, StringComparison.Ordinal);
-        Assert.Contains("new RollbackEnvironmentCommand", releaseHistorySource, StringComparison.Ordinal);
-        Assert.Contains("ReleaseRows", releaseHistorySource, StringComparison.Ordinal);
-        Assert.Contains("@onsubmit:preventDefault=\"true\"", releaseHistorySource, StringComparison.Ordinal);
-        Assert.Contains("@($\"v{release.Version}\")", releaseHistorySource, StringComparison.Ordinal);
-        Assert.DoesNotContain("v@release.Version", releaseHistorySource, StringComparison.Ordinal);
-        Assert.Contains("Logger.LogInformation", releaseHistorySource, StringComparison.Ordinal);
+        Assert.Contains("RoutePanel=\"releases\"", releaseHistorySource, StringComparison.Ordinal);
+        Assert.Contains("new RollbackEnvironmentCommand", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("ReleaseRows", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("@($\"v{release.Version}\")", workbenchSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("v@release.Version", workbenchSource, StringComparison.Ordinal);
     }
 }

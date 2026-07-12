@@ -5,37 +5,37 @@
 @inject IStringLocalizer<AppText> Texts
 @inject NavigationManager NavigationManager
 
-<div class="demo-shell">
-    <input id="demo-sidebar-toggle" class="demo-sidebar-toggle" type="checkbox" aria-hidden="true" />
-    <label class="demo-sidebar-scrim" for="demo-sidebar-toggle" aria-hidden="true"></label>
-    <aside class="demo-sidebar">
-        <div class="demo-sidebar-brand">
-            <span class="demo-brand-mark" aria-hidden="true"></span>
-            <div class="demo-brand-copy">
+<div class="cch-shell">
+    <input id="cch-sidebar-toggle" class="cch-sidebar-toggle" type="checkbox" aria-hidden="true" />
+    <label class="cch-sidebar-scrim" for="cch-sidebar-toggle" aria-hidden="true"></label>
+    <aside class="cch-sidebar">
+        <div class="cch-sidebar-brand">
+            <span class="cch-brand-mark" aria-hidden="true"></span>
+            <div class="cch-brand-copy">
                 <strong>@L("配置中心", "Config Center")</strong>
                 <span>config-center</span>
             </div>
-            <label class="demo-collapse-button" for="demo-sidebar-toggle" title="@L("折叠导航", "Toggle navigation")" aria-label="@L("折叠导航", "Toggle navigation")">
+            <label class="cch-collapse-button" for="cch-sidebar-toggle" title="@L("折叠导航", "Toggle navigation")" aria-label="@L("折叠导航", "Toggle navigation")">
                 <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
             </label>
         </div>
 
-        <nav class="demo-sidebar-nav" aria-label="主导航">
-            <NavLink class="demo-nav-button" href="" Match="NavLinkMatch.All">
+        <nav class="cch-sidebar-nav" aria-label="主导航">
+            <NavLink class="cch-nav-button" href="" Match="NavLinkMatch.All">
                 <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M2 6a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Z"/><path d="M8 11v4"/><path d="M12 11v2"/><path d="M16 11v6"/></svg>
                 <span>@L("项目管理", "Projects")</span>
             </NavLink>
-            <NavLink class="demo-nav-button" href="configs">
+            <NavLink class="cch-nav-button" href="configs">
                 <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M2 14h4"/><path d="M10 8h4"/><path d="M18 16h4"/></svg>
                 <span>@L("配置管理", "Configs")</span>
             </NavLink>
         </nav>
 
-        <div class="demo-sidebar-footer">
+        <div class="cch-sidebar-footer">
             <form action="Account/Logout" method="post">
                 <AntiforgeryToken />
                 <input type="hidden" name="ReturnUrl" value="" />
-                <button class="demo-nav-button demo-logout" type="submit">
+                <button class="cch-nav-button cch-logout" type="submit">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
                     <span>@L("退出登录", "Sign out")</span>
                 </button>
@@ -43,28 +43,28 @@
         </div>
     </aside>
 
-    <div class="demo-main">
-        <header class="demo-topbar">
-            <div class="demo-topbar-left">
-                <label class="demo-mobile-menu" for="demo-sidebar-toggle" aria-label="@L("打开导航", "Open navigation")">
+    <div class="cch-main">
+        <header class="cch-topbar">
+            <div class="cch-topbar-left">
+                <label class="cch-mobile-menu" for="cch-sidebar-toggle" aria-label="@L("打开导航", "Open navigation")">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
                 </label>
-                <span class="demo-brand-mark" aria-hidden="true"></span>
-                <span class="demo-topbar-title">@CurrentTitle</span>
-                <div class="demo-service-status" aria-label="@L("服务连接状态", "Service connection status")">
-                    <span class="demo-status-dot" aria-hidden="true"></span>
+                <span class="cch-brand-mark" aria-hidden="true"></span>
+                <span class="cch-topbar-title">@CurrentTitle</span>
+                <div class="cch-service-status" aria-label="@L("服务连接状态", "Service connection status")">
+                    <span class="cch-status-dot" aria-hidden="true"></span>
                     <span>@L("服务已连接", "Connected")</span>
                 </div>
             </div>
-            <div class="demo-topbar-actions">
+            <div class="cch-topbar-actions">
                 <LanguageSwitcher AriaLabel="@Texts["Language.Switcher"]" />
                 <ThemeSwitcher />
-                <details class="demo-user-menu">
+                <details class="cch-user-menu">
                     <summary>
-                        <span class="demo-avatar">AD</span>
-                        <span class="demo-user">admin</span>
+                        <span class="cch-avatar">AD</span>
+                        <span class="cch-user">admin</span>
                     </summary>
-                    <div class="demo-user-popover">
+                    <div class="cch-user-popover">
                         <a href="Account/Manage">@L("账号设置", "Account settings")</a>
                         <form action="Account/Logout" method="post">
                             <AntiforgeryToken />
@@ -76,7 +76,7 @@
             </div>
         </header>
 
-        <main class="demo-content">
+        <main class="cch-content">
             @Body
         </main>
     </div>

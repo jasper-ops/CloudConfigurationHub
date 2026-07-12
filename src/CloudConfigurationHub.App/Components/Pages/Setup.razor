@@ -10,13 +10,13 @@
 
 <PageTitle>@Texts["Setup.PageTitle"]</PageTitle>
 
-<section class="demo-setup-shell">
-    <aside class="demo-setup-aside">
-        <div class="demo-setup-brand">
-            <span class="demo-brand-mark light" aria-hidden="true"></span>
+<section class="cch-setup-shell">
+    <aside class="cch-setup-aside">
+        <div class="cch-setup-brand">
+            <span class="cch-brand-mark light" aria-hidden="true"></span>
             <strong>配置中心</strong>
         </div>
-        <div class="demo-setup-copy">
+        <div class="cch-setup-copy">
             <h1>欢迎使用配置中心</h1>
             <p>一个简约、易用的多环境应用配置管理平台。</p>
             <ul>
@@ -25,42 +25,42 @@
                 <li>双视角管理配置值</li>
             </ul>
         </div>
-        <p class="demo-version">config-center · v1.0</p>
+        <p class="cch-version">config-center · v1.0</p>
     </aside>
 
-    <main class="demo-setup-main">
-        <div class="demo-setup-pref"><ThemeSwitcher /></div>
-        <div class="demo-setup-form">
-            <div class="demo-step"><span>01</span>账号信息</div>
+    <main class="cch-setup-main">
+        <div class="cch-setup-pref"><ThemeSwitcher /></div>
+        <div class="cch-setup-form">
+            <div class="cch-step"><span>01</span>账号信息</div>
             <h2>创建管理员账号</h2>
             <p>这是系统首次启动，请先创建一个管理员账号以继续。</p>
 
         @if (!string.IsNullOrWhiteSpace(errorMessage)) {
-            <div class="demo-error" role="alert">@errorMessage</div>
+            <div class="cch-error" role="alert">@errorMessage</div>
         }
 
         @if (isLoading) {
             <FluentProgressRing />
         }
         else {
-            <form class="demo-form-stack" @onsubmit:preventDefault="true">
-                <label class="demo-field">
+            <form class="cch-form-stack" @onsubmit:preventDefault="true">
+                <label class="cch-field">
                     <span>@Texts["Setup.EmailLabel"]</span>
-                    <input class="demo-input" autocomplete="username" name="setup-email" type="email" @bind="FormModel.Email" @bind:event="oninput" />
+                    <input class="cch-input" autocomplete="username" name="setup-email" type="email" @bind="FormModel.Email" @bind:event="oninput" />
                 </label>
 
-                <label class="demo-field">
+                <label class="cch-field">
                     <span>@Texts["Setup.PasswordLabel"]</span>
-                    <input class="demo-input" autocomplete="new-password" name="setup-password" type="password" @bind="FormModel.Password" @bind:event="oninput" />
+                    <input class="cch-input" autocomplete="new-password" name="setup-password" type="password" @bind="FormModel.Password" @bind:event="oninput" />
                 </label>
 
-                <label class="demo-field">
+                <label class="cch-field">
                     <span>@Texts["Setup.ConfirmPasswordLabel"]</span>
-                    <input class="demo-input" autocomplete="new-password" name="setup-confirm-password" type="password" @bind="FormModel.ConfirmPassword" @bind:event="oninput" />
+                    <input class="cch-input" autocomplete="new-password" name="setup-confirm-password" type="password" @bind="FormModel.ConfirmPassword" @bind:event="oninput" />
                 </label>
 
                 <div>
-                    <button class="demo-button large full" type="button" disabled="@isSubmitting" @onclick="CreateAdministratorAsync">
+                    <button class="cch-button large full" type="button" disabled="@isSubmitting" @onclick="CreateAdministratorAsync">
                         @(isSubmitting ? Texts["Setup.Creating"] : Texts["Setup.Submit"])
                     </button>
                 </div>

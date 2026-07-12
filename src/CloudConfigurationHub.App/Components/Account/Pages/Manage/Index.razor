@@ -1,4 +1,4 @@
-﻿@page "/Account/Manage"
+@page "/Account/Manage"
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Identity
@@ -13,23 +13,23 @@
 
 <StatusMessage />
 
-<div class="demo-account-section">
-    <div class="demo-account-section-head">
+<div class="cch-account-section">
+    <div class="cch-account-section-head">
         <h2>@Texts["Identity.Manage.Profile"]</h2>
     </div>
-    <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post" class="demo-account-form">
+    <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post" class="cch-account-form">
         <DataAnnotationsValidator />
-        <ValidationSummary class="demo-error" role="alert" />
-        <label class="demo-field">
+        <ValidationSummary class="cch-error" role="alert" />
+        <label class="cch-field">
             <span>@Texts["Identity.Manage.Username"]</span>
-            <input type="text" value="@username" id="username" class="demo-input" placeholder="@Texts["Identity.Manage.UsernamePlaceholder"]" disabled />
+            <input type="text" value="@username" id="username" class="cch-input" placeholder="@Texts["Identity.Manage.UsernamePlaceholder"]" disabled />
         </label>
-        <label class="demo-field">
+        <label class="cch-field">
             <span>@Texts["Identity.Manage.Phone"]</span>
-            <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="demo-input" placeholder="@Texts["Identity.Manage.PhonePlaceholder"]" />
-            <ValidationMessage For="() => Input.PhoneNumber" class="demo-error" />
+            <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="cch-input" placeholder="@Texts["Identity.Manage.PhonePlaceholder"]" />
+            <ValidationMessage For="() => Input.PhoneNumber" class="cch-error" />
         </label>
-        <button type="submit" class="demo-button">@Texts["Identity.Save"]</button>
+        <button type="submit" class="cch-button">@Texts["Identity.Save"]</button>
     </EditForm>
 </div>
 

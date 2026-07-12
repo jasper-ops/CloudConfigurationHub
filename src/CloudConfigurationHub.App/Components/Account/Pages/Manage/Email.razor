@@ -1,4 +1,4 @@
-﻿@page "/Account/Manage/Email"
+@page "/Account/Manage/Email"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
@@ -15,30 +15,30 @@
 
 <PageTitle>@Texts["Identity.Manage.EmailTitle"]</PageTitle>
 
-<div class="demo-account-section">
-    <div class="demo-account-section-head">
+<div class="cch-account-section">
+    <div class="cch-account-section-head">
         <h2>@Texts["Identity.Manage.EmailTitle"]</h2>
     </div>
     <StatusMessage Message="@message" />
     <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
         <AntiforgeryToken />
     </form>
-    <EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post" class="demo-account-form">
+    <EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post" class="cch-account-form">
         <DataAnnotationsValidator />
-        <ValidationSummary class="demo-error" role="alert" />
-        <label class="demo-field">
+        <ValidationSummary class="cch-error" role="alert" />
+        <label class="cch-field">
             <span>@Texts["Identity.Email"]</span>
-            <input type="text" value="@email" id="email" class="demo-input" placeholder="@Texts["Identity.Manage.EmailPlaceholder"]" disabled />
+            <input type="text" value="@email" id="email" class="cch-input" placeholder="@Texts["Identity.Manage.EmailPlaceholder"]" disabled />
         </label>
         @if (!isEmailConfirmed) {
-            <button type="submit" class="demo-button outline" form="send-verification-form">@Texts["Identity.Manage.SendVerificationEmail"]</button>
+            <button type="submit" class="cch-button outline" form="send-verification-form">@Texts["Identity.Manage.SendVerificationEmail"]</button>
         }
-        <label class="demo-field">
+        <label class="cch-field">
             <span>@Texts["Identity.Manage.NewEmail"]</span>
-            <InputText @bind-Value="Input.NewEmail" id="Input.NewEmail" class="demo-input" autocomplete="email" aria-required="true" placeholder="@Texts["Identity.Manage.NewEmailPlaceholder"]" />
-            <ValidationMessage For="() => Input.NewEmail" class="demo-error" />
+            <InputText @bind-Value="Input.NewEmail" id="Input.NewEmail" class="cch-input" autocomplete="email" aria-required="true" placeholder="@Texts["Identity.Manage.NewEmailPlaceholder"]" />
+            <ValidationMessage For="() => Input.NewEmail" class="cch-error" />
         </label>
-        <button type="submit" class="demo-button">@Texts["Identity.Manage.ChangeEmail"]</button>
+        <button type="submit" class="cch-button">@Texts["Identity.Manage.ChangeEmail"]</button>
     </EditForm>
 </div>
 

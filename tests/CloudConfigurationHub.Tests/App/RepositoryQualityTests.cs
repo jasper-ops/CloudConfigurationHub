@@ -118,6 +118,149 @@ public sealed class RepositoryQualityTests {
     }
 
     [Fact]
+    public void Management_ui_uses_formal_workbench_naming() {
+        var probe = new DirectoryInfo(AppContext.BaseDirectory);
+        while (probe is not null && !File.Exists(Path.Combine(probe.FullName, "CloudConfigurationHub.slnx"))) {
+            probe = probe.Parent;
+        }
+
+        Assert.NotNull(probe);
+        var repositoryRoot = probe.FullName;
+        var appRoot = Path.Combine(repositoryRoot, "src", "CloudConfigurationHub.App");
+        var checkedFiles = Directory
+            .EnumerateFiles(appRoot, "*.*", SearchOption.AllDirectories)
+            .Where(path => path.EndsWith(".razor", StringComparison.OrdinalIgnoreCase)
+                || path.EndsWith(".css", StringComparison.OrdinalIgnoreCase)
+                || path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase)
+                && !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+        var violations = checkedFiles
+            .SelectMany(path => new[] { "DemoWorkbench", "demo-" }
+                .Where(token => File.ReadAllText(path).Contains(token, StringComparison.Ordinal))
+                .Select(token => $"{Path.GetRelativePath(repositoryRoot, path)} contains {token}"))
+            .ToArray();
+
+        Assert.Empty(violations);
+        Assert.True(File.Exists(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor")));
+    }
+
+    [Fact]
+    public void Config_management_table_keeps_mobile_scroll_and_sticky_row_numbers() {
+        var probe = new DirectoryInfo(AppContext.BaseDirectory);
+        while (probe is not null && !File.Exists(Path.Combine(probe.FullName, "CloudConfigurationHub.slnx"))) {
+            probe = probe.Parent;
+        }
+
+        Assert.NotNull(probe);
+        var repositoryRoot = probe.FullName;
+        var managementWorkbench = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor"));
+        var appCss = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "wwwroot",
+            "app.css"));
+
+        Assert.Contains("<th class=\"cch-row-number\">#</th>", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("<td class=\"cch-row-number\">@(configIndex + 1)</td>", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains(".cch-table-card {", appCss, StringComparison.Ordinal);
+        Assert.Contains("overflow-x: auto;", appCss, StringComparison.Ordinal);
+        Assert.Contains(".cch-table-card th.cch-row-number", appCss, StringComparison.Ordinal);
+        Assert.Contains("position: sticky;", appCss, StringComparison.Ordinal);
+        Assert.DoesNotContain(".cch-table-card {\r\n        overflow-x: visible;", appCss, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Formal_workbench_exposes_release_rollback_and_access_key_actions() {
+        var probe = new DirectoryInfo(AppContext.BaseDirectory);
+        while (probe is not null && !File.Exists(Path.Combine(probe.FullName, "CloudConfigurationHub.slnx"))) {
+            probe = probe.Parent;
+        }
+
+        Assert.NotNull(probe);
+        var repositoryRoot = probe.FullName;
+        var managementWorkbench = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor"));
+
+        Assert.Contains("PublishEnvironmentCommand", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("RollbackEnvironmentCommand", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("RotateProjectAccessKeyCommand", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("OpenPublishPanel", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("OpenReleaseHistoryPanel", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("OpenAccessKeyPanel", managementWorkbench, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Config_management_exposes_release_actions_outside_environment_only_mode() {
+        var probe = new DirectoryInfo(AppContext.BaseDirectory);
+        while (probe is not null && !File.Exists(Path.Combine(probe.FullName, "CloudConfigurationHub.slnx"))) {
+            probe = probe.Parent;
+        }
+
+        Assert.NotNull(probe);
+        var repositoryRoot = probe.FullName;
+        var managementWorkbench = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor"));
+        var modeBranchIndex = managementWorkbench.IndexOf("@if (configMode == \"env\")", StringComparison.Ordinal);
+        var publishActionIndex = managementWorkbench.IndexOf("@onclick=\"OpenPublishPanel\"", StringComparison.Ordinal);
+        var historyActionIndex = managementWorkbench.IndexOf("@onclick=\"OpenReleaseHistoryPanel\"", StringComparison.Ordinal);
+
+        Assert.True(publishActionIndex > 0 && publishActionIndex < modeBranchIndex);
+        Assert.True(historyActionIndex > 0 && historyActionIndex < modeBranchIndex);
+    }
+
+    [Fact]
+    public void Config_management_uses_mobile_sheet_for_config_values() {
+        var probe = new DirectoryInfo(AppContext.BaseDirectory);
+        while (probe is not null && !File.Exists(Path.Combine(probe.FullName, "CloudConfigurationHub.slnx"))) {
+            probe = probe.Parent;
+        }
+
+        Assert.NotNull(probe);
+        var repositoryRoot = probe.FullName;
+        var managementWorkbench = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor"));
+        var appCss = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "wwwroot",
+            "app.css"));
+
+        Assert.Contains("cch-config-list-item desktop-inline", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("cch-config-list-item mobile-sheet-trigger", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("OpenConfigValueSheet(config)", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("CloseConfigValueSheet", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("cch-config-value-sheet", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains(".mobile-sheet-trigger", appCss, StringComparison.Ordinal);
+        Assert.Contains(".cch-config-detail.desktop-inline", appCss, StringComparison.Ordinal);
+        Assert.Contains(".cch-config-value-sheet", appCss, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Key_identity_management_pages_do_not_ship_template_english_copy() {
         var repositoryRoot = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,
