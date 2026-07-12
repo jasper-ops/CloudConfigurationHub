@@ -62,6 +62,21 @@ public sealed class RepositoryQualityTests {
     }
 
     [Fact]
+    public void Build_props_keeps_nuget_audit_connectivity_failure_out_of_warnings_as_errors() {
+        var repositoryRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            ".."));
+        var buildProps = File.ReadAllText(Path.Combine(repositoryRoot, "Directory.Build.props"));
+
+        Assert.Contains("<TreatWarningsAsErrors>true</TreatWarningsAsErrors>", buildProps, StringComparison.Ordinal);
+        Assert.Contains("NU1900", buildProps, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Management_navigation_css_prevents_horizontal_sidebar_scroll() {
         var repositoryRoot = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,
