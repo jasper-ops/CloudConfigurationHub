@@ -8,9 +8,11 @@ namespace CloudConfigurationHub.Application.Projects;
 /// <param name="Key">配置 Key。</param>
 /// <param name="IsSensitive">是否为敏感配置。</param>
 /// <param name="Values">该配置在各环境下的草稿显示值。</param>
+/// <param name="Description">配置说明。</param>
 public sealed record ConfigurationDetail(
     Guid Id,
     string Group,
     string Key,
     bool IsSensitive,
-    IReadOnlyList<EnvironmentDraftValue> Values);
+    IReadOnlyList<EnvironmentDraftValue> Values,
+    string Description = "");

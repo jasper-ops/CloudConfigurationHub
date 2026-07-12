@@ -25,7 +25,11 @@ public sealed class AddConfigurationCommandHandler(
         CancellationToken cancellationToken) {
         var project = await repository.GetByIdAsync(command.ProjectId, cancellationToken)
             ?? throw new DomainException("项目不存在。");
-        var configuration = project.AddConfiguration(command.Group, command.Key, command.IsSensitive);
+        var configuration = project.AddConfiguration(
+            command.Group,
+            command.Key,
+            command.IsSensitive,
+            command.Description);
         await repository.SaveChangesAsync(project, cancellationToken);
         logger.LogInformation(
             "已添加配置定义。ProjectId={ProjectId}, ConfigurationId={ConfigurationId}, Group={Group}, Key={Key}, IsSensitive={IsSensitive}",
@@ -38,6 +42,7 @@ public sealed class AddConfigurationCommandHandler(
             configuration.Id,
             configuration.Group,
             configuration.Key,
-            configuration.IsSensitive);
+            configuration.IsSensitive,
+            configuration.Description);
     }
 }

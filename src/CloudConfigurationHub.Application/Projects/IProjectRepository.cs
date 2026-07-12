@@ -26,6 +26,16 @@ public interface IProjectRepository {
     ValueTask<Project?> GetByIdAsync(Guid projectId, CancellationToken cancellationToken);
 
     /// <summary>
+    /// 删除项目聚合。
+    /// </summary>
+    /// <param name="project">待删除的项目聚合。</param>
+    /// <param name="cancellationToken">取消令牌，用于终止持久化操作。</param>
+    /// <returns>表示异步删除操作的值任务。</returns>
+    ValueTask DeleteAsync(Project project, CancellationToken cancellationToken) {
+        throw new NotSupportedException("当前仓储未实现项目删除。");
+    }
+
+    /// <summary>
     /// 保存项目聚合上的变更。
     /// </summary>
     /// <param name="project">已发生领域行为的项目聚合。</param>

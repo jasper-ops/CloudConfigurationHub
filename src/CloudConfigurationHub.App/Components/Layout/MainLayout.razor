@@ -1,30 +1,85 @@
 @inherits LayoutComponentBase
+@implements IDisposable
+@using System.Globalization
+@using Microsoft.AspNetCore.WebUtilities
 @inject IStringLocalizer<AppText> Texts
+@inject NavigationManager NavigationManager
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <div class="cpa-topbar-status" aria-label="@Texts["TopNav.OperationalStatus"]">
-                <span class="cpa-status-dot" aria-hidden="true"></span>
-                <span>@Texts["TopNav.Connected"]</span>
-                <span class="cpa-topbar-divider" aria-hidden="true"></span>
-                <code>@Texts["TopNav.SdkBoundary"]</code>
+<div class="demo-shell">
+    <input id="demo-sidebar-toggle" class="demo-sidebar-toggle" type="checkbox" aria-hidden="true" />
+    <label class="demo-sidebar-scrim" for="demo-sidebar-toggle" aria-hidden="true"></label>
+    <aside class="demo-sidebar">
+        <div class="demo-sidebar-brand">
+            <span class="demo-brand-mark" aria-hidden="true"></span>
+            <div class="demo-brand-copy">
+                <strong>@L("配置中心", "Config Center")</strong>
+                <span>config-center</span>
             </div>
-            <div class="top-row-actions">
-                <ThemeSwitcher />
-                <LanguageSwitcher AriaLabel="@Texts["Language.Switcher"]" />
-                <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">@Texts["TopNav.About"]</a>
-            </div>
+            <label class="demo-collapse-button" for="demo-sidebar-toggle" title="@L("折叠导航", "Toggle navigation")" aria-label="@L("折叠导航", "Toggle navigation")">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6"/></svg>
+            </label>
         </div>
 
-        <article class="content px-4">
+        <nav class="demo-sidebar-nav" aria-label="主导航">
+            <NavLink class="demo-nav-button" href="" Match="NavLinkMatch.All">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M2 6a2 2 0 0 1 2-2h5l2 2h9a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2Z"/><path d="M8 11v4"/><path d="M12 11v2"/><path d="M16 11v6"/></svg>
+                <span>@L("项目管理", "Projects")</span>
+            </NavLink>
+            <NavLink class="demo-nav-button" href="configs">
+                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 21v-7"/><path d="M4 10V3"/><path d="M12 21v-9"/><path d="M12 8V3"/><path d="M20 21v-5"/><path d="M20 12V3"/><path d="M2 14h4"/><path d="M10 8h4"/><path d="M18 16h4"/></svg>
+                <span>@L("配置管理", "Configs")</span>
+            </NavLink>
+        </nav>
+
+        <div class="demo-sidebar-footer">
+            <form action="Account/Logout" method="post">
+                <AntiforgeryToken />
+                <input type="hidden" name="ReturnUrl" value="" />
+                <button class="demo-nav-button demo-logout" type="submit">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
+                    <span>@L("退出登录", "Sign out")</span>
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <div class="demo-main">
+        <header class="demo-topbar">
+            <div class="demo-topbar-left">
+                <label class="demo-mobile-menu" for="demo-sidebar-toggle" aria-label="@L("打开导航", "Open navigation")">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                </label>
+                <span class="demo-brand-mark" aria-hidden="true"></span>
+                <span class="demo-topbar-title">@CurrentTitle</span>
+                <div class="demo-service-status" aria-label="@L("服务连接状态", "Service connection status")">
+                    <span class="demo-status-dot" aria-hidden="true"></span>
+                    <span>@L("服务已连接", "Connected")</span>
+                </div>
+            </div>
+            <div class="demo-topbar-actions">
+                <LanguageSwitcher AriaLabel="@Texts["Language.Switcher"]" />
+                <ThemeSwitcher />
+                <details class="demo-user-menu">
+                    <summary>
+                        <span class="demo-avatar">AD</span>
+                        <span class="demo-user">admin</span>
+                    </summary>
+                    <div class="demo-user-popover">
+                        <a href="Account/Manage">@L("账号设置", "Account settings")</a>
+                        <form action="Account/Logout" method="post">
+                            <AntiforgeryToken />
+                            <input type="hidden" name="ReturnUrl" value="" />
+                            <button type="submit">@L("退出登录", "Sign out")</button>
+                        </form>
+                    </div>
+                </details>
+            </div>
+        </header>
+
+        <main class="demo-content">
             @Body
-        </article>
-    </main>
+        </main>
+    </div>
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
@@ -38,3 +93,84 @@
 <FluentTooltipProvider />
 <FluentMessageBarProvider />
 <FluentMenuProvider />
+
+@code {
+    private string currentUrl = string.Empty;
+
+    private string CurrentTitle => currentUrl.StartsWith("configs", StringComparison.OrdinalIgnoreCase)
+        ? L("配置管理", "Configs")
+        : currentUrl.StartsWith("Account/Manage", StringComparison.OrdinalIgnoreCase)
+            ? L("账号设置", "Account settings")
+            : L("项目管理", "Projects");
+
+    private string L(string zh, string en) {
+        return CurrentLanguage switch {
+            "en" => en,
+            "ja" => zh switch {
+                "配置中心" => "設定センター",
+                "项目管理" => "プロジェクト管理",
+                "配置管理" => "設定管理",
+                "退出登录" => "ログアウト",
+                "账号设置" => "アカウント設定",
+                "服务连接状态" => "サービス接続状態",
+                "服务已连接" => "接続済み",
+                "打开导航" => "ナビゲーションを開く",
+                "折叠导航" => "ナビゲーション切替",
+                _ => zh
+            },
+            "ko" => zh switch {
+                "配置中心" => "구성 센터",
+                "项目管理" => "프로젝트 관리",
+                "配置管理" => "구성 관리",
+                "退出登录" => "로그아웃",
+                "账号设置" => "계정 설정",
+                "服务连接状态" => "서비스 연결 상태",
+                "服务已连接" => "연결됨",
+                "打开导航" => "내비게이션 열기",
+                "折叠导航" => "내비게이션 전환",
+                _ => zh
+            },
+            "es" => zh switch {
+                "配置中心" => "Centro de configuración",
+                "项目管理" => "Proyectos",
+                "配置管理" => "Configuración",
+                "退出登录" => "Cerrar sesión",
+                "账号设置" => "Cuenta",
+                "服务连接状态" => "Estado del servicio",
+                "服务已连接" => "Conectado",
+                "打开导航" => "Abrir navegación",
+                "折叠导航" => "Alternar navegación",
+                _ => zh
+            },
+            _ => zh
+        };
+    }
+
+    private string CurrentLanguage => ResolveLanguage();
+
+    private string ResolveLanguage() {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+        var culture = query.TryGetValue("ui-culture", out var uiCulture)
+            ? uiCulture.ToString()
+            : query.TryGetValue("culture", out var routeCulture)
+                ? routeCulture.ToString()
+                : CultureInfo.CurrentUICulture.Name;
+        return culture.Split('-', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault()?.ToLowerInvariant()
+            ?? CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+    }
+
+    protected override void OnInitialized() {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e) {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose() {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}

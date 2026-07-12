@@ -29,6 +29,7 @@ public sealed class ConfigurationHubDatabaseInitializer(
         }
 
         if (await ProjectsTableExistsAsync(cancellationToken)) {
+            await EnsureCompatibilityColumnsAsync(cancellationToken);
             logger.LogInformation("配置中心数据库表已存在，跳过初始化。");
             return;
         }
@@ -69,6 +70,56 @@ public sealed class ConfigurationHubDatabaseInitializer(
             "已检查 SQLite 配置中心表状态。ProjectsTableExists={ProjectsTableExists}",
             exists);
         return exists;
+    }
+
+    private async Task EnsureCompatibilityColumnsAsync(CancellationToken cancellationToken) {
+        if (dbContext.Database.ProviderName != "Microsoft.EntityFrameworkCore.Sqlite") {
+            return;
+        }
+
+        var connection = dbContext.Database.GetDbConnection();
+        await OpenConnectionIfNeededAsync(connection, cancellationToken);
+        await EnsureSqliteColumnAsync(
+            connection,
+            "Projects",
+            "Description",
+            "ALTER TABLE Projects ADD COLUMN Description TEXT NOT NULL DEFAULT '';",
+            cancellationToken);
+        await EnsureSqliteColumnAsync(
+            connection,
+            "Projects",
+            "CreatedAt",
+            "ALTER TABLE Projects ADD COLUMN CreatedAt TEXT NOT NULL DEFAULT '2026-07-12 00:00:00+08:00';",
+            cancellationToken);
+        await EnsureSqliteColumnAsync(
+            connection,
+            "ConfigDefinitions",
+            "Description",
+            "ALTER TABLE ConfigDefinitions ADD COLUMN Description TEXT NOT NULL DEFAULT '';",
+            cancellationToken);
+        await using var updateCommand = connection.CreateCommand();
+        updateCommand.CommandText = "UPDATE Projects SET CreatedAt = '2026-07-12 00:00:00+08:00' WHERE CreatedAt LIKE '1970-01-01%';";
+        await updateCommand.ExecuteNonQueryAsync(cancellationToken);
+    }
+
+    private static async Task EnsureSqliteColumnAsync(
+        DbConnection connection,
+        string tableName,
+        string columnName,
+        string alterSql,
+        CancellationToken cancellationToken) {
+        await using var checkCommand = connection.CreateCommand();
+        checkCommand.CommandText = $"PRAGMA table_info({tableName});";
+        await using var reader = await checkCommand.ExecuteReaderAsync(cancellationToken);
+        while (await reader.ReadAsync(cancellationToken)) {
+            if (string.Equals(reader.GetString(1), columnName, StringComparison.OrdinalIgnoreCase)) {
+                return;
+            }
+        }
+
+        await using var alterCommand = connection.CreateCommand();
+        alterCommand.CommandText = alterSql;
+        await alterCommand.ExecuteNonQueryAsync(cancellationToken);
     }
 
     private static async Task OpenConnectionIfNeededAsync(DbConnection connection, CancellationToken cancellationToken) {

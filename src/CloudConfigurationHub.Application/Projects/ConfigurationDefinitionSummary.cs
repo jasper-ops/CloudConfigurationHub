@@ -7,4 +7,10 @@ namespace CloudConfigurationHub.Application.Projects;
 /// <param name="Group">配置分组。</param>
 /// <param name="Key">配置 Key。</param>
 /// <param name="IsSensitive">是否为敏感配置。</param>
-public sealed record ConfigurationDefinitionSummary(Guid Id, string Group, string Key, bool IsSensitive);
+/// <param name="Description">配置说明。</param>
+public sealed record ConfigurationDefinitionSummary(
+    Guid Id,
+    string Group,
+    string Key,
+    bool IsSensitive,
+    string Description = "");

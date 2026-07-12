@@ -28,6 +28,50 @@ public sealed class ProjectDomainTests {
     }
 
     [Fact]
+    public void UpdateDetails_changes_project_display_fields_and_normalizes_key() {
+        var project = Project.Create("Order Service", "order-service", "Old description", DateTimeOffset.Parse("2026-07-12T08:00:00Z"));
+
+        project.UpdateDetails("Billing Service", "Billing-Service", "New description");
+
+        Assert.Equal("Billing Service", project.Name);
+        Assert.Equal("billing-service", project.Key);
+        Assert.Equal("New description", project.Description);
+        Assert.Equal(DateTimeOffset.Parse("2026-07-12T08:00:00Z"), project.CreatedAt);
+    }
+
+    [Fact]
+    public void UpdateConfiguration_changes_definition_and_rejects_duplicate_key() {
+        var project = Project.Create("Order Service", "order-service");
+        var first = project.AddConfiguration("database", "host", isSensitive: false, description: "Host");
+        var second = project.AddConfiguration("database", "port", isSensitive: false, description: "Port");
+
+        project.UpdateConfiguration(first.Id, "redis", "url", isSensitive: true, description: "Redis URL");
+
+        Assert.Equal("redis", first.Group);
+        Assert.Equal("url", first.Key);
+        Assert.True(first.IsSensitive);
+        Assert.Equal("Redis URL", first.Description);
+        var exception = Assert.Throws<DomainException>(() =>
+            project.UpdateConfiguration(second.Id, "redis", "url", isSensitive: false, description: "Duplicate"));
+        Assert.Equal("项目内配置分组和 Key 组合必须唯一。", exception.Message);
+    }
+
+    [Fact]
+    public void RemoveConfiguration_deletes_definition_and_its_draft_values_without_mutating_releases() {
+        var project = Project.Create("Order Service", "order-service");
+        var environment = project.AddEnvironment("Development", "dev");
+        var configuration = project.AddConfiguration("database", "host", isSensitive: false, description: "Host");
+        project.SetDraftValue(environment.Id, configuration.Id, "localhost");
+        var release = project.PublishEnvironment(environment.Id, "发布前", "admin", DateTimeOffset.Parse("2026-07-12T08:00:00Z"));
+
+        project.RemoveConfiguration(configuration.Id);
+
+        Assert.Empty(project.Configurations);
+        Assert.Empty(project.DraftValues);
+        Assert.Equal("localhost", Assert.Single(release.Values).Value);
+    }
+
+    [Fact]
     public void PublishEnvironment_creates_immutable_snapshot_from_current_draft_values() {
         var project = Project.Create("Order Service", "order-service");
         var environment = project.AddEnvironment("Production", "prod");

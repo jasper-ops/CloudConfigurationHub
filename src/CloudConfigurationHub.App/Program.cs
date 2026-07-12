@@ -80,7 +80,10 @@ await InitializeConfigurationHubDatabaseAsync(app);
 
 var supportedCultures = new[] {
     new CultureInfo("zh-CN"),
-    new CultureInfo("en-US")
+    new CultureInfo("en-US"),
+    new CultureInfo("ja-JP"),
+    new CultureInfo("ko-KR"),
+    new CultureInfo("es-ES")
 };
 app.UseRequestLocalization(new RequestLocalizationOptions {
     DefaultRequestCulture = new RequestCulture("zh-CN"),

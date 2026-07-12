@@ -15,43 +15,31 @@
 
 <PageTitle>@Texts["Identity.Manage.EmailTitle"]</PageTitle>
 
-<h3>@Texts["Identity.Manage.EmailTitle"]</h3>
-
-<StatusMessage Message="@message"/>
-<div class="row">
-    <div class="col-xl-6">
-        <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
-            <AntiforgeryToken />
-        </form>
-        <EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
-            @if (isEmailConfirmed)
-            {
-                <div class="form-floating mb-3 input-group">
-                    <input type="text" value="@email" id="email" class="form-control" placeholder="@Texts["Identity.Manage.EmailPlaceholder"]" disabled />
-                    <div class="input-group-append">
-                        <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
-                    </div>
-                    <label for="email" class="form-label">@Texts["Identity.Email"]</label>
-                </div>
-            }
-            else
-            {
-                <div class="form-floating mb-3">
-                    <input type="text" value="@email" id="email" class="form-control" placeholder="@Texts["Identity.Manage.EmailPlaceholder"]" disabled />
-                    <label for="email" class="form-label">@Texts["Identity.Email"]</label>
-                    <button type="submit" class="btn btn-link" form="send-verification-form">@Texts["Identity.Manage.SendVerificationEmail"]</button>
-                </div>
-            }
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.NewEmail" id="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="@Texts["Identity.Manage.NewEmailPlaceholder"]" />
-                <label for="Input.NewEmail" class="form-label">@Texts["Identity.Manage.NewEmail"]</label>
-                <ValidationMessage For="() => Input.NewEmail" class="text-danger" />
-            </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">@Texts["Identity.Manage.ChangeEmail"]</button>
-        </EditForm>
+<div class="demo-account-section">
+    <div class="demo-account-section-head">
+        <h2>@Texts["Identity.Manage.EmailTitle"]</h2>
     </div>
+    <StatusMessage Message="@message" />
+    <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
+        <AntiforgeryToken />
+    </form>
+    <EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post" class="demo-account-form">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="demo-error" role="alert" />
+        <label class="demo-field">
+            <span>@Texts["Identity.Email"]</span>
+            <input type="text" value="@email" id="email" class="demo-input" placeholder="@Texts["Identity.Manage.EmailPlaceholder"]" disabled />
+        </label>
+        @if (!isEmailConfirmed) {
+            <button type="submit" class="demo-button outline" form="send-verification-form">@Texts["Identity.Manage.SendVerificationEmail"]</button>
+        }
+        <label class="demo-field">
+            <span>@Texts["Identity.Manage.NewEmail"]</span>
+            <InputText @bind-Value="Input.NewEmail" id="Input.NewEmail" class="demo-input" autocomplete="email" aria-required="true" placeholder="@Texts["Identity.Manage.NewEmailPlaceholder"]" />
+            <ValidationMessage For="() => Input.NewEmail" class="demo-error" />
+        </label>
+        <button type="submit" class="demo-button">@Texts["Identity.Manage.ChangeEmail"]</button>
+    </EditForm>
 </div>
 
 @code {

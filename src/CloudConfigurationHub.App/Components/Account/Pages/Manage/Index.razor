@@ -11,26 +11,26 @@
 
 <PageTitle>@Texts["Identity.Manage.Profile"]</PageTitle>
 
-<h3>@Texts["Identity.Manage.Profile"]</h3>
 <StatusMessage />
 
-<div class="row">
-    <div class="col-xl-6">
-        <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger" role="alert" />
-            <div class="form-floating mb-3">
-                <input type="text" value="@username" id="username" class="form-control" placeholder="@Texts["Identity.Manage.UsernamePlaceholder"]" disabled />
-                <label for="username" class="form-label">@Texts["Identity.Manage.Username"]</label>
-            </div>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="form-control" placeholder="@Texts["Identity.Manage.PhonePlaceholder"]" />
-                <label for="Input.PhoneNumber" class="form-label">@Texts["Identity.Manage.Phone"]</label>
-                <ValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
-            </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">@Texts["Identity.Save"]</button>
-        </EditForm>
+<div class="demo-account-section">
+    <div class="demo-account-section-head">
+        <h2>@Texts["Identity.Manage.Profile"]</h2>
     </div>
+    <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post" class="demo-account-form">
+        <DataAnnotationsValidator />
+        <ValidationSummary class="demo-error" role="alert" />
+        <label class="demo-field">
+            <span>@Texts["Identity.Manage.Username"]</span>
+            <input type="text" value="@username" id="username" class="demo-input" placeholder="@Texts["Identity.Manage.UsernamePlaceholder"]" disabled />
+        </label>
+        <label class="demo-field">
+            <span>@Texts["Identity.Manage.Phone"]</span>
+            <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="demo-input" placeholder="@Texts["Identity.Manage.PhonePlaceholder"]" />
+            <ValidationMessage For="() => Input.PhoneNumber" class="demo-error" />
+        </label>
+        <button type="submit" class="demo-button">@Texts["Identity.Save"]</button>
+    </EditForm>
 </div>
 
 @code {

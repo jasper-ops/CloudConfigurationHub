@@ -15,13 +15,16 @@ public sealed class Project {
     private Project() {
         Name = string.Empty;
         Key = string.Empty;
+        Description = string.Empty;
         AccessKeyHash = string.Empty;
     }
 
-    private Project(Guid id, string name, string key) {
+    private Project(Guid id, string name, string key, string description, DateTimeOffset createdAt) {
         Id = id;
         Name = name;
         Key = key;
+        Description = description;
+        CreatedAt = createdAt;
         AccessKeyHash = string.Empty;
     }
 
@@ -33,12 +36,22 @@ public sealed class Project {
     /// <summary>
     /// 项目显示名称。
     /// </summary>
-    public string Name { get; }
+    public string Name { get; private set; }
 
     /// <summary>
     /// 项目唯一 Key，用于 SDK 读取配置时定位项目。
     /// </summary>
-    public string Key { get; }
+    public string Key { get; private set; }
+
+    /// <summary>
+    /// 项目说明，用于管理端展示业务用途。
+    /// </summary>
+    public string Description { get; private set; }
+
+    /// <summary>
+    /// 项目创建时间。
+    /// </summary>
+    public DateTimeOffset CreatedAt { get; private set; }
 
     /// <summary>
     /// 项目级只读 Access Key 的哈希值。
@@ -72,7 +85,31 @@ public sealed class Project {
     /// <param name="key">项目唯一 Key，会被标准化为小写。</param>
     /// <returns>新建的项目聚合。</returns>
     public static Project Create(string name, string key) {
-        return new Project(Guid.NewGuid(), name, NormalizeKey(key));
+        return Create(name, key, string.Empty, DateTimeOffset.UtcNow);
+    }
+
+    /// <summary>
+    /// 创建一个新的配置项目。
+    /// </summary>
+    /// <param name="name">项目显示名称。</param>
+    /// <param name="key">项目唯一 Key，会被标准化为小写。</param>
+    /// <param name="description">项目说明。</param>
+    /// <param name="createdAt">项目创建时间。</param>
+    /// <returns>新建的项目聚合。</returns>
+    public static Project Create(string name, string key, string description, DateTimeOffset createdAt) {
+        return new Project(Guid.NewGuid(), name, NormalizeKey(key), description.Trim(), createdAt);
+    }
+
+    /// <summary>
+    /// 更新项目基础信息。
+    /// </summary>
+    /// <param name="name">项目显示名称。</param>
+    /// <param name="key">项目唯一 Key，会被标准化为小写。</param>
+    /// <param name="description">项目说明。</param>
+    public void UpdateDetails(string name, string key, string description) {
+        Name = name.Trim();
+        Key = NormalizeKey(key);
+        Description = description.Trim();
     }
 
     /// <summary>
@@ -101,7 +138,7 @@ public sealed class Project {
     /// <param name="isSensitive">是否为敏感配置。</param>
     /// <returns>新建的配置定义。</returns>
     /// <exception cref="DomainException">当分组和 Key 组合在项目内重复时抛出。</exception>
-    public ConfigDefinition AddConfiguration(string group, string key, bool isSensitive) {
+    public ConfigDefinition AddConfiguration(string group, string key, bool isSensitive, string description = "") {
         var normalizedGroup = NormalizeKey(group);
         var normalizedKey = NormalizeKey(key);
         if (_configurations.Any(configuration =>
@@ -109,9 +146,48 @@ public sealed class Project {
             throw new DomainException("项目内配置分组和 Key 组合必须唯一。");
         }
 
-        var configuration = new ConfigDefinition(Guid.NewGuid(), normalizedGroup, normalizedKey, isSensitive);
+        var configuration = new ConfigDefinition(Guid.NewGuid(), normalizedGroup, normalizedKey, isSensitive, description.Trim());
         _configurations.Add(configuration);
         return configuration;
+    }
+
+    /// <summary>
+    /// 更新项目级配置定义。
+    /// </summary>
+    /// <param name="configurationId">配置定义 ID。</param>
+    /// <param name="group">配置分组，会被标准化为小写。</param>
+    /// <param name="key">配置 Key，会被标准化为小写。</param>
+    /// <param name="isSensitive">是否为敏感配置。</param>
+    /// <param name="description">配置说明。</param>
+    /// <returns>更新后的配置定义。</returns>
+    public ConfigDefinition UpdateConfiguration(
+        Guid configurationId,
+        string group,
+        string key,
+        bool isSensitive,
+        string description) {
+        var configuration = _configurations.SingleOrDefault(item => item.Id == configurationId)
+            ?? throw new DomainException("配置项不存在。");
+        var normalizedGroup = NormalizeKey(group);
+        var normalizedKey = NormalizeKey(key);
+        if (_configurations.Any(item =>
+                item.Id != configurationId && item.Group == normalizedGroup && item.Key == normalizedKey)) {
+            throw new DomainException("项目内配置分组和 Key 组合必须唯一。");
+        }
+
+        configuration.Update(normalizedGroup, normalizedKey, isSensitive, description.Trim());
+        return configuration;
+    }
+
+    /// <summary>
+    /// 删除项目级配置定义及其草稿值。
+    /// </summary>
+    /// <param name="configurationId">配置定义 ID。</param>
+    public void RemoveConfiguration(Guid configurationId) {
+        var configuration = _configurations.SingleOrDefault(item => item.Id == configurationId)
+            ?? throw new DomainException("配置项不存在。");
+        _configurations.Remove(configuration);
+        _draftValues.RemoveAll(item => item.ConfigurationId == configurationId);
     }
 
     /// <summary>

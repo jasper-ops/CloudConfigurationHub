@@ -2,17 +2,20 @@
 @layout CloudConfigurationHub.App.Components.Layout.MainLayout
 @inject IStringLocalizer<AppText> Texts
 
-<h1>@Texts["Identity.Manage.AccountTitle"]</h1>
+<section class="demo-account-workbench">
+    <header class="demo-account-head">
+        <div>
+            <h1>@Texts["Identity.Manage.AccountTitle"]</h1>
+            <p>@Texts["Identity.Manage.AccountSettings"]</p>
+        </div>
+    </header>
 
-<div>
-    <h2>@Texts["Identity.Manage.AccountSettings"]</h2>
-    <hr />
-    <div class="row">
-        <div class="col-lg-3">
+    <div class="demo-account-grid">
+        <aside class="demo-account-side">
             <ManageNavMenu />
-        </div>
-        <div class="col-lg-9">
+        </aside>
+        <section class="demo-account-panel">
             @Body
-        </div>
+        </section>
     </div>
-</div>
+</section>

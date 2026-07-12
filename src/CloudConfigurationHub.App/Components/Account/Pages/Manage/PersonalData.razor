@@ -10,21 +10,19 @@
 <PageTitle>@Texts["Identity.Manage.PersonalDataTitle"]</PageTitle>
 
 <StatusMessage />
-<h3>@Texts["Identity.Manage.PersonalDataTitle"]</h3>
 
-<div class="row">
-    <div class="col-md-6">
+<div class="demo-account-section">
+    <div class="demo-account-section-head">
+        <h2>@Texts["Identity.Manage.PersonalDataTitle"]</h2>
         <p>@Texts["Identity.Manage.PersonalDataDescription"]</p>
-        <p>
-            <strong>@Texts["Identity.Manage.PersonalDataDeleteWarning"]</strong>
-        </p>
+    </div>
+    <p class="demo-account-warning">@Texts["Identity.Manage.PersonalDataDeleteWarning"]</p>
+    <div class="demo-account-actions">
         <form action="Account/Manage/DownloadPersonalData" method="post">
             <AntiforgeryToken />
-            <button class="btn btn-primary" type="submit">@Texts["Identity.Download"]</button>
+            <button class="demo-button" type="submit">@Texts["Identity.Download"]</button>
         </form>
-        <p>
-            <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">@Texts["Identity.Delete"]</a>
-        </p>
+        <a href="Account/Manage/DeletePersonalData" class="demo-button danger">@Texts["Identity.Delete"]</a>
     </div>
 </div>
 

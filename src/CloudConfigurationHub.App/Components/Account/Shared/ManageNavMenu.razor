@@ -4,32 +4,18 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IStringLocalizer<AppText> Texts
 
-<ul class="nav nav-pills flex-column">
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage" Match="NavLinkMatch.All">@Texts["Identity.Manage.Profile"]</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/Email">@Texts["Identity.Email"]</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/ChangePassword">@Texts["Identity.Password"]</NavLink>
-    </li>
+<nav class="demo-account-nav" aria-label="@Texts["Identity.Manage.AccountSettings"]">
+    <NavLink class="demo-account-nav-link" href="Account/Manage" Match="NavLinkMatch.All">@Texts["Identity.Manage.Profile"]</NavLink>
+    <NavLink class="demo-account-nav-link" href="Account/Manage/Email">@Texts["Identity.Email"]</NavLink>
+    <NavLink class="demo-account-nav-link" href="Account/Manage/ChangePassword">@Texts["Identity.Password"]</NavLink>
     @if (hasExternalLogins)
     {
-        <li class="nav-item">
-            <NavLink class="nav-link" href="Account/Manage/ExternalLogins">@Texts["Identity.Manage.ExternalLogins"]</NavLink>
-        </li>
+        <NavLink class="demo-account-nav-link" href="Account/Manage/ExternalLogins">@Texts["Identity.Manage.ExternalLogins"]</NavLink>
     }
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/TwoFactorAuthentication">@Texts["Identity.Manage.TwoFactor"]</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/Passkeys">@Texts["Identity.Manage.Passkeys"]</NavLink>
-    </li>
-    <li class="nav-item">
-        <NavLink class="nav-link" href="Account/Manage/PersonalData">@Texts["Identity.Manage.PersonalData"]</NavLink>
-    </li>
-</ul>
+    <NavLink class="demo-account-nav-link" href="Account/Manage/TwoFactorAuthentication">@Texts["Identity.Manage.TwoFactor"]</NavLink>
+    <NavLink class="demo-account-nav-link" href="Account/Manage/Passkeys">@Texts["Identity.Manage.Passkeys"]</NavLink>
+    <NavLink class="demo-account-nav-link" href="Account/Manage/PersonalData">@Texts["Identity.Manage.PersonalData"]</NavLink>
+</nav>
 
 @code {
     private bool hasExternalLogins;

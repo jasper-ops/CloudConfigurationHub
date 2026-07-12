@@ -1,19 +1,19 @@
-@page "/"
+@page "/configs"
 @using System.Globalization
 @using Microsoft.AspNetCore.WebUtilities
 @inject NavigationManager NavigationManager
 
 <PageTitle>@Title</PageTitle>
 
-<DemoWorkbench InitialView="projects" />
+<DemoWorkbench InitialView="configs" />
 
 @code {
     private string Title => ResolveLanguage() switch {
-        "en" => "Projects",
-        "ja" => "プロジェクト管理",
-        "ko" => "프로젝트 관리",
-        "es" => "Proyectos",
-        _ => "项目管理"
+        "en" => "Configs",
+        "ja" => "設定管理",
+        "ko" => "구성 관리",
+        "es" => "Configuración",
+        _ => "配置管理"
     };
 
     private string ResolveLanguage() {

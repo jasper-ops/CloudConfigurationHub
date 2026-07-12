@@ -24,6 +24,8 @@ public sealed class ConfigurationHubDbContext(DbContextOptions<ConfigurationHubD
             builder.HasKey(project => project.Id);
             builder.Property(project => project.Name).HasMaxLength(200).IsRequired();
             builder.Property(project => project.Key).HasMaxLength(100).IsRequired();
+            builder.Property(project => project.Description).HasMaxLength(1000).IsRequired();
+            builder.Property(project => project.CreatedAt).IsRequired();
             builder.Property(project => project.AccessKeyHash).HasMaxLength(128).IsRequired();
             builder.HasIndex(project => project.Key).IsUnique();
             builder.Ignore(project => project.DraftValues);
@@ -48,6 +50,7 @@ public sealed class ConfigurationHubDbContext(DbContextOptions<ConfigurationHubD
                 configurations.Property(configuration => configuration.Id).ValueGeneratedNever();
                 configurations.Property(configuration => configuration.Group).HasMaxLength(100).IsRequired();
                 configurations.Property(configuration => configuration.Key).HasMaxLength(200).IsRequired();
+                configurations.Property(configuration => configuration.Description).HasMaxLength(1000).IsRequired();
                 configurations.Property(configuration => configuration.IsSensitive).IsRequired();
                 configurations.HasIndex("ProjectId", nameof(ConfigDefinition.Group), nameof(ConfigDefinition.Key)).IsUnique();
             });

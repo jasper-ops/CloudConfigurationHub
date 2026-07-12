@@ -33,7 +33,13 @@ public sealed class EfProjectReadModel(
                 project.Key,
                 project.Environments.Count,
                 project.Configurations.Count,
-                project.Releases.Count))
+                project.Releases.Count,
+                project.Description,
+                project.CreatedAt,
+                project.Environments
+                    .OrderBy(environment => environment.Name)
+                    .Select(environment => new EnvironmentSummary(environment.Id, environment.Name, environment.Key))
+                    .ToArray()))
             .ToListAsync(cancellationToken);
 
         logger.LogInformation(
@@ -80,7 +86,8 @@ public sealed class EfProjectReadModel(
                 configuration.IsSensitive,
                 environments
                     .Select(environment => BuildEnvironmentDraftValue(project, configuration, environment))
-                    .ToArray()))
+                    .ToArray(),
+                configuration.Description))
             .ToArray();
         var releases = project.Releases
             .OrderByDescending(item => item.PublishedAt)
@@ -108,7 +115,15 @@ public sealed class EfProjectReadModel(
             environments.Length,
             configurations.Length,
             releases.Length);
-        return new ProjectDetail(project.Id, project.Name, project.Key, environments, configurations, releases);
+        return new ProjectDetail(
+            project.Id,
+            project.Name,
+            project.Key,
+            environments,
+            configurations,
+            releases,
+            project.Description,
+            project.CreatedAt);
     }
 
     private static EnvironmentDraftValue BuildEnvironmentDraftValue(

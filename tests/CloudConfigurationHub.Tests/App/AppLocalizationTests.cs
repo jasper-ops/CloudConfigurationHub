@@ -304,55 +304,6 @@ public sealed class AppLocalizationTests {
     }
 
     [Fact]
-    public void App_shell_uses_cpa_inspired_operational_admin_chrome() {
-        var layoutPath = Path.Combine(
-            AppContext.BaseDirectory,
-            "..",
-            "..",
-            "..",
-            "..",
-            "..",
-            "src",
-            "CloudConfigurationHub.App",
-            "Components",
-            "Layout",
-            "MainLayout.razor");
-        var appCssPath = Path.Combine(
-            AppContext.BaseDirectory,
-            "..",
-            "..",
-            "..",
-            "..",
-            "..",
-            "src",
-            "CloudConfigurationHub.App",
-            "wwwroot",
-            "app.css");
-        var navCssPath = Path.Combine(
-            AppContext.BaseDirectory,
-            "..",
-            "..",
-            "..",
-            "..",
-            "..",
-            "src",
-            "CloudConfigurationHub.App",
-            "Components",
-            "Layout",
-            "NavMenu.razor.css");
-
-        var layoutSource = File.ReadAllText(Path.GetFullPath(layoutPath));
-        var appCssSource = File.ReadAllText(Path.GetFullPath(appCssPath));
-        var navCssSource = File.ReadAllText(Path.GetFullPath(navCssPath));
-
-        Assert.Contains("cpa-topbar-status", layoutSource, StringComparison.Ordinal);
-        Assert.Contains("cpa-shell-grid", appCssSource, StringComparison.Ordinal);
-        Assert.Contains("cpa-status-dot", appCssSource, StringComparison.Ordinal);
-        Assert.Contains("linear-gradient(180deg", navCssSource, StringComparison.Ordinal);
-        Assert.Contains("box-shadow", navCssSource, StringComparison.Ordinal);
-    }
-
-    [Fact]
     public void Project_detail_create_child_pages_declare_routes_and_interactive_commands() {
         var environmentPagePath = Path.Combine(
             AppContext.BaseDirectory,

@@ -1,4 +1,5 @@
-﻿@page "/Account/Login"
+@page "/Account/Login"
+@layout PlainLayout
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
@@ -14,63 +15,51 @@
 
 <PageTitle>@Texts["Identity.Login.PageTitle"]</PageTitle>
 
-<h1>@Texts["Identity.Login.Title"]</h1>
-<div class="row">
-    <div class="col-lg-6">
-        <section>
+<section class="demo-login-shell">
+    <header class="demo-login-header">
+        <div class="demo-setup-brand">
+            <span class="demo-brand-mark" aria-hidden="true"></span>
+            <strong>配置中心</strong>
+        </div>
+        <ThemeSwitcher />
+    </header>
+
+    <main class="demo-login-main">
+        <section class="demo-login-card">
+            <div class="demo-login-title">
+                <h1>登录</h1>
+                <p>请使用管理员账号登录</p>
+            </div>
             <StatusMessage Message="@errorMessage" />
-            <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login">
+            <EditForm EditContext="editContext" method="post" OnSubmit="LoginUser" FormName="login" class="demo-form-stack">
                 <DataAnnotationsValidator />
-                <h2>@Texts["Identity.Login.LocalAccount"]</h2>
-                <hr />
                 <ValidationSummary class="text-danger" role="alert" />
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Email" id="Input.Email" class="form-control" autocomplete="username webauthn" aria-required="true" placeholder="name@example.com" />
-                    <label for="Input.Email" class="form-label">@Texts["Identity.Email"]</label>
+                <div class="demo-field">
+                    <label for="Input.Email">@Texts["Identity.Email"]</label>
+                    <InputText @bind-Value="Input.Email" id="Input.Email" class="demo-input" autocomplete="username webauthn" aria-required="true" placeholder="name@example.com" />
                     <ValidationMessage For="() => Input.Email" class="text-danger" />
                 </div>
-                <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="Input.Password" class="form-label">@Texts["Identity.Password"]</label>
+                <div class="demo-field">
+                    <label for="Input.Password">@Texts["Identity.Password"]</label>
+                    <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="demo-input" autocomplete="current-password" aria-required="true" />
                     <ValidationMessage For="() => Input.Password" class="text-danger" />
                 </div>
-                <div class="checkbox mb-3">
-                    <label class="form-label">
-                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
+                <div class="demo-check">
+                    <label>
+                        <InputCheckbox @bind-Value="Input.RememberMe" />
                         @Texts["Identity.Login.RememberMe"]
                     </label>
                 </div>
-                <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">@Texts["Identity.Login.Submit"]</button>
-                </div>
-                <hr />
-                <div class="d-flex flex-column">
-                    <span class="text-secondary mx-auto mt-2">@Texts["Identity.Or"]</span>
-                    <PasskeySubmit Operation="PasskeyOperation.Request" Name="Input.Passkey" EmailName="Input.Email" class="btn btn-link mx-auto">@Texts["Identity.Login.Passkey"]</PasskeySubmit>
-                </div>
-                <hr />
-                <div>
-                    <p>
-                        <a href="Account/ForgotPassword">@Texts["Identity.Login.ForgotPassword"]</a>
-                    </p>
-                    <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">@Texts["Identity.Login.RegisterLink"]</a>
-                    </p>
-                    <p>
-                        <a href="Account/ResendEmailConfirmation">@Texts["Identity.Login.ResendEmailConfirmation"]</a>
-                    </p>
+                <button type="submit" class="demo-button large full">@Texts["Identity.Login.Submit"]</button>
+                <div class="demo-login-links">
+                    <a href="Account/ForgotPassword">@Texts["Identity.Login.ForgotPassword"]</a>
+                    <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">@Texts["Identity.Login.RegisterLink"]</a>
+                    <a href="Account/ResendEmailConfirmation">@Texts["Identity.Login.ResendEmailConfirmation"]</a>
                 </div>
             </EditForm>
         </section>
-    </div>
-    <div class="col-lg-4 col-lg-offset-2">
-        <section>
-            <h3>@Texts["Identity.Login.ExternalService"]</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
-    </div>
-</div>
+    </main>
+</section>
 
 @code {
     private string? errorMessage;
@@ -91,7 +80,6 @@
         editContext = new EditContext(Input);
 
         if (HttpMethods.IsGet(HttpContext.Request.Method)) {
-            // Clear the existing external cookie to ensure a clean login process
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
         }
     }
@@ -104,17 +92,13 @@
 
         SignInResult result;
         if (!string.IsNullOrEmpty(Input.Passkey?.CredentialJson)) {
-            // When performing passkey sign-in, don't perform form validation.
             result = await SignInManager.PasskeySignInAsync(Input.Passkey.CredentialJson);
         }
         else {
-            // If doing a password sign-in, validate the form.
             if (!editContext.Validate()) {
                 return;
             }
 
-            // This doesn't count login failures towards account lockout
-            // To enable password failures to trigger account lockout, set lockoutOnFailure: true
             result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         }
 

@@ -6,4 +6,5 @@ namespace CloudConfigurationHub.Application.Projects;
 /// <param name="Id">项目聚合 ID。</param>
 /// <param name="Name">项目显示名称。</param>
 /// <param name="Key">项目唯一 Key。</param>
-public sealed record ProjectSummary(Guid Id, string Name, string Key);
+/// <param name="Description">项目说明。</param>
+public sealed record ProjectSummary(Guid Id, string Name, string Key, string Description = "");

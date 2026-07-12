@@ -46,6 +46,18 @@ public sealed class EfProjectRepository(
     }
 
     /// <summary>
+    /// 删除项目聚合并立即提交事务。
+    /// </summary>
+    /// <param name="project">待删除的项目聚合。</param>
+    /// <param name="cancellationToken">取消令牌，用于终止数据库写入。</param>
+    /// <returns>表示异步删除操作的值任务。</returns>
+    public async ValueTask DeleteAsync(Project project, CancellationToken cancellationToken) {
+        dbContext.Projects.Remove(project);
+        await dbContext.SaveChangesAsync(cancellationToken);
+        logger.LogInformation("已删除配置项目。ProjectId={ProjectId}, ProjectKey={ProjectKey}", project.Id, project.Key);
+    }
+
+    /// <summary>
     /// 保存项目聚合上的变更。
     /// </summary>
     /// <param name="project">已发生领域行为的项目聚合。</param>

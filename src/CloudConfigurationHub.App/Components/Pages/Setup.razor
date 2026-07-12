@@ -1,5 +1,6 @@
 @page "/setup"
 @rendermode InteractiveServer
+@layout PlainLayout
 @attribute [AllowAnonymous]
 @inject ISetupStateReader SetupStateReader
 @inject ISetupAdministratorService SetupAdministratorService
@@ -9,61 +10,64 @@
 
 <PageTitle>@Texts["Setup.PageTitle"]</PageTitle>
 
-<section class="hero-panel setup-page">
-    <div class="hero-copy setup-card">
-        <p class="eyebrow">@Texts["Setup.Eyebrow"]</p>
-        <h1>@Texts["Setup.Title"]</h1>
-        <p class="hero-description">@Texts["Setup.Description"]</p>
+<section class="demo-setup-shell">
+    <aside class="demo-setup-aside">
+        <div class="demo-setup-brand">
+            <span class="demo-brand-mark light" aria-hidden="true"></span>
+            <strong>配置中心</strong>
+        </div>
+        <div class="demo-setup-copy">
+            <h1>欢迎使用配置中心</h1>
+            <p>一个简约、易用的多环境应用配置管理平台。</p>
+            <ul>
+                <li>按项目组织配置</li>
+                <li>灵活自定义环境</li>
+                <li>双视角管理配置值</li>
+            </ul>
+        </div>
+        <p class="demo-version">config-center · v1.0</p>
+    </aside>
+
+    <main class="demo-setup-main">
+        <div class="demo-setup-pref"><ThemeSwitcher /></div>
+        <div class="demo-setup-form">
+            <div class="demo-step"><span>01</span>账号信息</div>
+            <h2>创建管理员账号</h2>
+            <p>这是系统首次启动，请先创建一个管理员账号以继续。</p>
 
         @if (!string.IsNullOrWhiteSpace(errorMessage)) {
-            <div class="error-banner" role="alert">@errorMessage</div>
+            <div class="demo-error" role="alert">@errorMessage</div>
         }
 
         @if (isLoading) {
             <FluentProgressRing />
         }
         else {
-            <form class="form-grid setup-form" @onsubmit:preventDefault="true">
-                <label>
+            <form class="demo-form-stack" @onsubmit:preventDefault="true">
+                <label class="demo-field">
                     <span>@Texts["Setup.EmailLabel"]</span>
-                    <input class="text-input" autocomplete="username" name="setup-email" type="email" @bind="FormModel.Email" @bind:event="oninput" />
-                    <small>@Texts["Setup.EmailHelp"]</small>
+                    <input class="demo-input" autocomplete="username" name="setup-email" type="email" @bind="FormModel.Email" @bind:event="oninput" />
                 </label>
 
-                <label>
+                <label class="demo-field">
                     <span>@Texts["Setup.PasswordLabel"]</span>
-                    <input class="text-input" autocomplete="new-password" name="setup-password" type="password" @bind="FormModel.Password" @bind:event="oninput" />
-                    <small>@Texts["Setup.PasswordHelp"]</small>
+                    <input class="demo-input" autocomplete="new-password" name="setup-password" type="password" @bind="FormModel.Password" @bind:event="oninput" />
                 </label>
 
-                <label>
+                <label class="demo-field">
                     <span>@Texts["Setup.ConfirmPasswordLabel"]</span>
-                    <input class="text-input" autocomplete="new-password" name="setup-confirm-password" type="password" @bind="FormModel.ConfirmPassword" @bind:event="oninput" />
+                    <input class="demo-input" autocomplete="new-password" name="setup-confirm-password" type="password" @bind="FormModel.ConfirmPassword" @bind:event="oninput" />
                 </label>
 
-                <div class="form-actions">
-                    <button class="primary-action button-reset" type="button" disabled="@isSubmitting" @onclick="CreateAdministratorAsync">
+                <div>
+                    <button class="demo-button large full" type="button" disabled="@isSubmitting" @onclick="CreateAdministratorAsync">
                         @(isSubmitting ? Texts["Setup.Creating"] : Texts["Setup.Submit"])
                     </button>
                 </div>
             </form>
         }
-    </div>
-
-    <div class="hero-metrics setup-guide" aria-label="@Texts["Setup.GuideTitle"]">
-        <div>
-            <span>@Texts["Setup.GuideUnique"]</span>
-            <strong>@Texts["Setup.GuideUniqueDescription"]</strong>
         </div>
-        <div>
-            <span>@Texts["Setup.GuideCookie"]</span>
-            <strong>@Texts["Setup.GuideCookieDescription"]</strong>
-        </div>
-        <div>
-            <span>@Texts["Setup.GuideAudit"]</span>
-            <strong>@Texts["Setup.GuideAuditDescription"]</strong>
-        </div>
-    </div>
+    </main>
 </section>
 
 @code {

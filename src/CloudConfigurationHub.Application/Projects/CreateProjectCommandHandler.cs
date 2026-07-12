@@ -22,7 +22,7 @@ public sealed class CreateProjectCommandHandler(
     public async ValueTask<ProjectSummary> Handle(
         CreateProjectCommand command,
         CancellationToken cancellationToken) {
-        var project = Project.Create(command.Name, command.Key);
+        var project = Project.Create(command.Name, command.Key, command.Description, DateTimeOffset.UtcNow);
 
         await repository.AddAsync(project, cancellationToken);
 
@@ -32,6 +32,6 @@ public sealed class CreateProjectCommandHandler(
             project.Key,
             project.Name);
 
-        return new ProjectSummary(project.Id, project.Name, project.Key);
+        return new ProjectSummary(project.Id, project.Name, project.Key, project.Description);
     }
 }

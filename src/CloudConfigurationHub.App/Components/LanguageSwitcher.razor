@@ -1,11 +1,28 @@
 @using System.Globalization
+@using Microsoft.AspNetCore.WebUtilities
 @inject NavigationManager NavigationManager
 
-<div class="language-switcher" aria-label="@AriaLabel">
-    <a class="@GetLinkClass("zh-CN")" href="@BuildCultureUrl("zh-CN")" data-enhance-nav="false">中文</a>
-    <span aria-hidden="true">/</span>
-    <a class="@GetLinkClass("en-US")" href="@BuildCultureUrl("en-US")" data-enhance-nav="false">EN</a>
-</div>
+<details class="language-switcher" aria-label="@AriaLabel">
+    <summary title="@CurrentLanguage.NativeLabel">
+        <svg aria-hidden="true" viewBox="0 0 24 24">
+            <path d="m5 8 6 6" />
+            <path d="m4 14 6-6 2-3" />
+            <path d="M2 5h12" />
+            <path d="M7 2h1" />
+            <path d="m22 22-5-10-5 10" />
+            <path d="M14 18h6" />
+        </svg>
+        <span>@CurrentLanguage.ShortLabel</span>
+    </summary>
+    <div class="language-menu">
+        @foreach (var language in Languages) {
+            <a class="@GetLinkClass(language.Culture)" href="@BuildCultureUrl(language.Culture)" data-enhance-nav="false">
+                <span>@language.NativeLabel</span>
+                <small>@language.ShortLabel</small>
+            </a>
+        }
+    </div>
+</details>
 
 @code {
     /// <summary>
@@ -14,7 +31,18 @@
     [Parameter]
     public string AriaLabel { get; set; } = "Language";
 
-    private string CurrentCultureName => CultureInfo.CurrentUICulture.Name;
+    private string CurrentCultureName => ResolveCultureName();
+    private LanguageOption CurrentLanguage => Languages.FirstOrDefault(language =>
+        string.Equals(language.Culture, CurrentCultureName, StringComparison.OrdinalIgnoreCase))
+        ?? Languages[0];
+
+    private static readonly LanguageOption[] Languages = [
+        new("zh-CN", "中文", "ZH"),
+        new("en-US", "English", "EN"),
+        new("ja-JP", "日本語", "JA"),
+        new("ko-KR", "한국어", "KO"),
+        new("es-ES", "Español", "ES")
+    ];
 
     private string BuildCultureUrl(string culture) {
         return NavigationManager.GetUriWithQueryParameters(new Dictionary<string, object?> {
@@ -28,4 +56,20 @@
             ? "active"
             : string.Empty;
     }
+
+    private string ResolveCultureName() {
+        var uri = NavigationManager.ToAbsoluteUri(NavigationManager.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+        if (query.TryGetValue("ui-culture", out var uiCulture) && !string.IsNullOrWhiteSpace(uiCulture)) {
+            return uiCulture.ToString();
+        }
+
+        if (query.TryGetValue("culture", out var culture) && !string.IsNullOrWhiteSpace(culture)) {
+            return culture.ToString();
+        }
+
+        return CultureInfo.CurrentUICulture.Name;
+    }
+
+    private sealed record LanguageOption(string Culture, string NativeLabel, string ShortLabel);
 }
