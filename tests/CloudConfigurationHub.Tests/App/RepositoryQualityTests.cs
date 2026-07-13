@@ -296,6 +296,38 @@ public sealed class RepositoryQualityTests {
     }
 
     [Fact]
+    public void Config_management_shows_publication_status_in_primary_editing_views() {
+        var probe = new DirectoryInfo(AppContext.BaseDirectory);
+        while (probe is not null && !File.Exists(Path.Combine(probe.FullName, "CloudConfigurationHub.slnx"))) {
+            probe = probe.Parent;
+        }
+
+        Assert.NotNull(probe);
+        var repositoryRoot = probe.FullName;
+        var managementWorkbench = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor"));
+        var appCss = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "wwwroot",
+            "app.css"));
+
+        Assert.Contains("cch-publication-cell", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("PublicationStatusBadge", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("PublicationStatusText", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("PublicationStatusCssClass", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains("ValueForEnvironment(selectedConfig, env.Id)", managementWorkbench, StringComparison.Ordinal);
+        Assert.Contains(".cch-publication-pill", appCss, StringComparison.Ordinal);
+        Assert.Contains(".publication-pendingpublish", appCss, StringComparison.Ordinal);
+        Assert.Contains(".publication-published", appCss, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Key_identity_management_pages_do_not_ship_template_english_copy() {
         var repositoryRoot = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,

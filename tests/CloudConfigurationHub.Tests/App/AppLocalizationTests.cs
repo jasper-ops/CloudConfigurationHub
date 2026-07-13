@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using CloudConfigurationHub.App.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -193,6 +194,31 @@ public sealed class AppLocalizationTests {
         Assert.Contains("type=\"button\"", workbenchSource, StringComparison.Ordinal);
         Assert.Contains("SaveProjectAsync", workbenchSource, StringComparison.Ordinal);
         Assert.Contains("@bind=\"projectForm.Name\"", workbenchSource, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void Project_card_manage_config_button_navigates_to_project_detail_route() {
+        var workbenchPath = Path.Combine(
+            FindRepositoryRoot(),
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor");
+
+        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
+
+        Assert.Contains("@onclick=\"() => GoConfig(project.Id)\"", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("NavigationManager.NavigateTo($\"/projects/{projectId}\")", workbenchSource, StringComparison.Ordinal);
+    }
+
+    private static string FindRepositoryRoot([CallerFilePath] string sourceFilePath = "") {
+        for (var current = new FileInfo(sourceFilePath).Directory; current is not null; current = current.Parent) {
+            if (File.Exists(Path.Combine(current.FullName, "CloudConfigurationHub.slnx"))) {
+                return current.FullName;
+            }
+        }
+
+        throw new DirectoryNotFoundException("Could not find repository root.");
     }
 
     [Fact]

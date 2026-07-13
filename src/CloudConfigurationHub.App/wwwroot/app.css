@@ -1683,6 +1683,12 @@ html, body {
     min-width: 180px;
 }
 
+.cch-table-card th.cch-publication-cell,
+.cch-table-card td.cch-publication-cell {
+    min-width: 128px;
+    white-space: nowrap;
+}
+
 .cch-table-card th.cch-actions-cell,
 .cch-table-card td.cch-actions-cell {
     min-width: 96px;
@@ -1921,6 +1927,55 @@ html, body {
     font-family: Consolas, monospace;
     font-size: 12px;
     gap: 6px;
+}
+
+.cch-env-value-edit {
+    align-items: center;
+    display: flex;
+    flex: 1 1 auto;
+    gap: 8px;
+    min-width: 0;
+}
+
+.cch-env-value-edit .cch-input {
+    min-width: 0;
+}
+
+.cch-publication-pill {
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    display: inline-flex;
+    flex: 0 0 auto;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    min-height: 24px;
+    padding: 4px 8px;
+}
+
+.cch-publication-pill.publication-published {
+    background: color-mix(in srgb, var(--cch-success) 12%, transparent);
+    border-color: color-mix(in srgb, var(--cch-success) 36%, var(--border));
+    color: var(--cch-success);
+}
+
+.cch-publication-pill.publication-pendingpublish,
+.cch-publication-pill.publication-notpublished {
+    background: color-mix(in srgb, var(--cch-warning) 14%, transparent);
+    border-color: color-mix(in srgb, var(--cch-warning) 38%, var(--border));
+    color: var(--cch-warning);
+}
+
+.cch-publication-pill.publication-pendingremoval {
+    background: color-mix(in srgb, var(--destructive) 10%, transparent);
+    border-color: color-mix(in srgb, var(--destructive) 34%, var(--border));
+    color: var(--destructive);
+}
+
+.cch-publication-pill.publication-notset {
+    background: color-mix(in srgb, var(--muted) 48%, transparent);
+    color: var(--muted-foreground);
 }
 
 .cch-modal-root {
@@ -3176,6 +3231,15 @@ html[data-theme-mode="dark"] .theme-current.dark {
         align-items: stretch;
         flex-direction: column;
         gap: 6px;
+    }
+
+    .cch-env-value-edit {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .cch-env-value-edit .cch-publication-pill {
+        align-self: flex-start;
     }
 
     .cch-env-value-list span,

@@ -1,3 +1,4 @@
+using CloudConfigurationHub.Application.Security;
 using CloudConfigurationHub.Domain.Projects;
 using CloudConfigurationHub.Infrastructure.Persistence;
 using Microsoft.Data.Sqlite;
@@ -27,7 +28,10 @@ public sealed class EfProjectReadModelTests {
         await repository.AddAsync(orderProject, CancellationToken.None);
         await repository.AddAsync(billingProject, CancellationToken.None);
         await using var assertContext = new ConfigurationHubDbContext(options);
-        var readModel = new EfProjectReadModel(assertContext, NullLogger<EfProjectReadModel>.Instance);
+        var readModel = new EfProjectReadModel(
+            assertContext,
+            new PassThroughSecretProtector(),
+            NullLogger<EfProjectReadModel>.Instance);
 
         var projects = await readModel.ListProjectsAsync(CancellationToken.None);
 
@@ -36,5 +40,13 @@ public sealed class EfProjectReadModelTests {
         Assert.Equal(1, orderCard.EnvironmentCount);
         Assert.Equal(1, orderCard.ConfigurationCount);
         Assert.Equal(1, orderCard.ReleaseCount);
+    }
+
+    private sealed class PassThroughSecretProtector : ISecretProtector {
+        public string Protect(string plainText) => plainText;
+
+        public string Unprotect(string protectedText) => protectedText;
+
+        public bool IsProtected(string value) => false;
     }
 }

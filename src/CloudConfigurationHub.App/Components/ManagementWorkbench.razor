@@ -104,6 +104,7 @@ else if (InitialView == "configs") {
                                         <th class="cch-row-number">#</th>
                                         <th class="cch-key-cell">KEY</th>
                                         <th class="cch-value-cell">@L("值", "Value") · @CurrentEnvironmentName(project)</th>
+                                        <th class="cch-publication-cell">@L("发布状态", "Publication")</th>
                                         <th class="hide-sm">@L("更新于", "Updated")</th>
                                         <th class="cch-actions-cell right">@L("操作", "Actions")</th>
                                     </tr>
@@ -111,7 +112,7 @@ else if (InitialView == "configs") {
                                 <tbody>
                                     @if (envConfigs.Count == 0) {
                                         <tr class="cch-table-empty-row">
-                                            <td colspan="5" class="cch-table-empty">
+                                            <td colspan="6" class="cch-table-empty">
                                                 <div class="cch-config-empty-state cch-table-empty-state">
                                                     <span class="cch-empty-icon">
                                                         <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 12.5-9.17 4.17a2 2 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 4.17a2 2 0 0 1-1.66 0L2 17.5"/></svg>
@@ -127,6 +128,7 @@ else if (InitialView == "configs") {
                                         </tr>
                                     }
                                     @foreach (var (config, configIndex) in envConfigs.Select((config, configIndex) => (config, configIndex))) {
+                                        var currentValue = selectedEnvironmentId is { } envId ? ValueForEnvironment(config, envId) : null;
                                         <tr>
                                             <td class="cch-row-number">@(configIndex + 1)</td>
                                             <td class="cch-key-cell">
@@ -136,7 +138,10 @@ else if (InitialView == "configs") {
                                                 }
                                             </td>
                                             <td class="cch-value-cell">
-                                                <input class="cch-input mono compact" value="@CurrentValue(config)" @onchange="e => SaveDraftValueAsync(project, config, selectedEnvironmentId!.Value, e.Value?.ToString() ?? string.Empty)" />
+                                                <input class="cch-input mono compact" value="@(currentValue?.DisplayValue ?? string.Empty)" @onchange="e => SaveDraftValueAsync(project, config, selectedEnvironmentId!.Value, e.Value?.ToString() ?? string.Empty)" />
+                                            </td>
+                                            <td class="cch-publication-cell">
+                                                @PublicationStatusBadge(currentValue)
                                             </td>
                                             <td class="mono hide-sm">@FormatDate(project.CreatedAt)</td>
                                             <td class="cch-actions-cell right">
@@ -213,10 +218,13 @@ else if (InitialView == "configs") {
                             <div class="cch-env-value-list">
                                 <p class="mono">@L("各环境取值", "Values across environments")</p>
                                 @foreach (var env in project.Environments) {
-                                    var value = selectedConfig.Values.SingleOrDefault(item => item.EnvironmentId == env.Id)?.DisplayValue ?? string.Empty;
-                                    <label>
+                                    var value = ValueForEnvironment(selectedConfig, env.Id);
+                                    <label class="cch-env-value-row">
                                         <span><i style="@DotStyle(env.Key)"></i>@env.Name</span>
-                                        <input class="cch-input mono compact" value="@value" @onchange="e => SaveDraftValueAsync(project, selectedConfig, env.Id, e.Value?.ToString() ?? string.Empty)" />
+                                        <div class="cch-env-value-edit">
+                                            <input class="cch-input mono compact" value="@(value?.DisplayValue ?? string.Empty)" @onchange="e => SaveDraftValueAsync(project, selectedConfig, env.Id, e.Value?.ToString() ?? string.Empty)" />
+                                            @PublicationStatusBadge(value)
+                                        </div>
                                     </label>
                                 }
                             </div>
@@ -250,10 +258,13 @@ else if (InitialView == "configs") {
                                     </div>
                                     <div class="cch-env-value-list">
                                         @foreach (var env in project.Environments) {
-                                            var value = selectedConfig.Values.SingleOrDefault(item => item.EnvironmentId == env.Id)?.DisplayValue ?? string.Empty;
-                                            <label>
+                                            var value = ValueForEnvironment(selectedConfig, env.Id);
+                                            <label class="cch-env-value-row">
                                                 <span><i style="@DotStyle(env.Key)"></i>@env.Name</span>
-                                                <input class="cch-input mono compact" value="@value" @onchange="e => SaveDraftValueAsync(project, selectedConfig, env.Id, e.Value?.ToString() ?? string.Empty)" />
+                                                <div class="cch-env-value-edit">
+                                                    <input class="cch-input mono compact" value="@(value?.DisplayValue ?? string.Empty)" @onchange="e => SaveDraftValueAsync(project, selectedConfig, env.Id, e.Value?.ToString() ?? string.Empty)" />
+                                                    @PublicationStatusBadge(value)
+                                                </div>
                                             </label>
                                         }
                                     </div>
@@ -771,6 +782,7 @@ else {
         InitialView = "configs";
         selectedEnvironmentId = SelectedProject?.Environments.FirstOrDefault()?.Id;
         selectedConfigurationId = SelectedProject?.Configurations.FirstOrDefault()?.Id;
+        NavigationManager.NavigateTo($"/projects/{projectId}");
     }
 
     private void ApplyRouteState() {
@@ -1108,8 +1120,44 @@ else {
 
     private string CurrentValue(ConfigurationDetail config) =>
         selectedEnvironmentId is { } envId
-            ? config.Values.SingleOrDefault(item => item.EnvironmentId == envId)?.DisplayValue ?? string.Empty
+            ? ValueForEnvironment(config, envId)?.DisplayValue ?? string.Empty
             : string.Empty;
+
+    private static EnvironmentDraftValue? ValueForEnvironment(ConfigurationDetail config, Guid environmentId) =>
+        config.Values.SingleOrDefault(item => item.EnvironmentId == environmentId);
+
+    private RenderFragment PublicationStatusBadge(EnvironmentDraftValue? value) => builder => {
+        var state = value?.PublicationState ?? ConfigurationValuePublicationState.NotSet;
+        builder.OpenElement(0, "span");
+        builder.AddAttribute(1, "class", $"cch-publication-pill {PublicationStatusCssClass(state)}");
+        builder.AddAttribute(2, "title", PublicationStatusTitle(value));
+        builder.AddContent(3, PublicationStatusText(state));
+        builder.CloseElement();
+    };
+
+    private string PublicationStatusText(ConfigurationValuePublicationState state) =>
+        state switch {
+            ConfigurationValuePublicationState.Published => L("已发布", "Published"),
+            ConfigurationValuePublicationState.PendingPublish => L("待发布", "Pending"),
+            ConfigurationValuePublicationState.NotPublished => L("未发布", "Unpublished"),
+            ConfigurationValuePublicationState.PendingRemoval => L("待移除", "Remove"),
+            _ => L("未设置", "Not set")
+        };
+
+    private static string PublicationStatusCssClass(ConfigurationValuePublicationState state) =>
+        $"publication-{state.ToString().ToLowerInvariant()}";
+
+    private string PublicationStatusTitle(EnvironmentDraftValue? value) {
+        var state = value?.PublicationState ?? ConfigurationValuePublicationState.NotSet;
+        if (value?.LatestPublishedVersion is not { } version || value.LatestPublishedAt is not { } publishedAt) {
+            return PublicationStatusText(state);
+        }
+
+        return string.Format(
+            L("最新发布 v{0} · {1}", "Latest release v{0} · {1}"),
+            version,
+            FormatDateTime(publishedAt));
+    }
 
     private string GetConfigFormValue(Guid environmentId) =>
         configForm.Values.TryGetValue(environmentId, out var value) ? value : string.Empty;
