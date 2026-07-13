@@ -271,6 +271,7 @@
   <data name="Identity.Manage.AddAuthenticatorApp" xml:space="preserve"><value>Add authenticator app</value></data>
   <data name="Identity.Manage.AddPasskey" xml:space="preserve"><value>Add a new passkey</value></data>
   <data name="Identity.Manage.AuthenticatorApp" xml:space="preserve"><value>Authenticator app</value></data>
+  <data name="Identity.Manage.AuthenticatorQrCodeAlt" xml:space="preserve"><value>Authenticator app QR code</value></data>
   <data name="Identity.Manage.BrowserForgotten" xml:space="preserve"><value>The current browser has been forgotten. The next sign-in from this browser will require your 2FA code.</value></data>
   <data name="Identity.Manage.CanGenerateRecoveryCodesPrefix" xml:space="preserve"><value>You can</value></data>
   <data name="Identity.Manage.ChangeEmail" xml:space="preserve"><value>Change email</value></data>

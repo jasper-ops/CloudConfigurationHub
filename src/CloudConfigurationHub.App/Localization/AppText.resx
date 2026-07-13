@@ -271,6 +271,7 @@
   <data name="Identity.Manage.AddAuthenticatorApp" xml:space="preserve"><value>添加身份验证器应用</value></data>
   <data name="Identity.Manage.AddPasskey" xml:space="preserve"><value>添加通行密钥</value></data>
   <data name="Identity.Manage.AuthenticatorApp" xml:space="preserve"><value>身份验证器应用</value></data>
+  <data name="Identity.Manage.AuthenticatorQrCodeAlt" xml:space="preserve"><value>身份验证器应用二维码</value></data>
   <data name="Identity.Manage.BrowserForgotten" xml:space="preserve"><value>当前浏览器已忘记。下次从该浏览器登录时，需要输入双重认证代码。</value></data>
   <data name="Identity.Manage.CanGenerateRecoveryCodesPrefix" xml:space="preserve"><value>你可以</value></data>
   <data name="Identity.Manage.ChangeEmail" xml:space="preserve"><value>修改邮箱</value></data>

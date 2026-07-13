@@ -381,4 +381,27 @@ public sealed class RepositoryQualityTests {
 
         Assert.Empty(violations);
     }
+
+    [Fact]
+    public void Enable_authenticator_page_renders_qr_code_image() {
+        var repositoryRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            ".."));
+        var enableAuthenticatorPage = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Account",
+            "Pages",
+            "Manage",
+            "EnableAuthenticator.razor"));
+
+        Assert.Contains("data:image/png;base64,", enableAuthenticatorPage, StringComparison.Ordinal);
+        Assert.DoesNotContain("data-url=\"@authenticatorUri\"", enableAuthenticatorPage, StringComparison.Ordinal);
+    }
 }
