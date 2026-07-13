@@ -317,6 +317,52 @@ public sealed class AppLocalizationTests {
     }
 
     [Fact]
+    public void Forgot_password_pages_use_shared_login_page_visual_shell() {
+        var forgotPasswordPath = RepositoryFile(
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Account",
+            "Pages",
+            "ForgotPassword.razor");
+        var confirmationPath = RepositoryFile(
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Account",
+            "Pages",
+            "ForgotPasswordConfirmation.razor");
+
+        var forgotPasswordSource = File.ReadAllText(forgotPasswordPath);
+        var confirmationSource = File.ReadAllText(confirmationPath);
+
+        foreach (var source in new[] { forgotPasswordSource, confirmationSource }) {
+            Assert.Contains("cch-login-shell", source, StringComparison.Ordinal);
+            Assert.Contains("cch-login-header", source, StringComparison.Ordinal);
+            Assert.Contains("cch-login-card", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("class=\"row\"", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("form-floating", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("btn-lg", source, StringComparison.Ordinal);
+        }
+    }
+
+    private static string RepositoryFile(params string[] pathParts) {
+        foreach (var start in new[] { Environment.CurrentDirectory, AppContext.BaseDirectory }) {
+            var directory = new DirectoryInfo(start);
+            while (directory is not null) {
+                var marker = Path.Combine(directory.FullName, "CloudConfigurationHub.slnx");
+                if (File.Exists(marker)) {
+                    return Path.Combine(new[] { directory.FullName }.Concat(pathParts).ToArray());
+                }
+
+                directory = directory.Parent;
+            }
+        }
+
+        throw new DirectoryNotFoundException($"Could not locate repository root for {Path.Combine(pathParts)}.");
+    }
+
+    [Fact]
     public void Project_detail_create_child_pages_declare_routes_and_interactive_commands() {
         var environmentPagePath = Path.Combine(
             AppContext.BaseDirectory,
