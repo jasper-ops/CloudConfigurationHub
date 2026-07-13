@@ -67,6 +67,10 @@ else if (InitialView == "configs") {
                             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
                             @L("新增环境", "New env")
                         </button>
+                        <button class="cch-button outline" type="button" disabled="@(CurrentEnvironment is null)" @onclick="() => OpenEditEnvironment(CurrentEnvironment!)">
+                            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                            @L("编辑环境", "Edit env")
+                        </button>
                         <button class="cch-button outline" type="button" disabled="@(selectedEnvironmentId is null)" @onclick="OpenPublishPanel">
                             <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="m16 6-4-4-4 4"/><path d="M12 2v14"/></svg>
                             @L("发布", "Publish")
@@ -106,7 +110,21 @@ else if (InitialView == "configs") {
                                 </thead>
                                 <tbody>
                                     @if (envConfigs.Count == 0) {
-                                        <tr><td colspan="5" class="cch-table-empty">@L("暂无数据", "No data")</td></tr>
+                                        <tr class="cch-table-empty-row">
+                                            <td colspan="5" class="cch-table-empty">
+                                                <div class="cch-config-empty-state cch-table-empty-state">
+                                                    <span class="cch-empty-icon">
+                                                        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 12.5-9.17 4.17a2 2 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 4.17a2 2 0 0 1-1.66 0L2 17.5"/></svg>
+                                                    </span>
+                                                    <h3>@L("还没有配置项", "No configs yet")</h3>
+                                                    <p>@L("创建后可在这里维护各环境的配置值", "Create one to manage values across environments")</p>
+                                                    <button class="cch-button outline" type="button" @onclick="OpenNewConfig">
+                                                        <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                                                        @L("新建配置项", "New config")
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     }
                                     @foreach (var (config, configIndex) in envConfigs.Select((config, configIndex) => (config, configIndex))) {
                                         <tr>
@@ -361,9 +379,9 @@ else {
 @if (environmentModalOpen && SelectedProject is not null) {
     <div class="cch-modal-root">
         <button class="cch-modal-scrim" type="button" @onclick="CloseEnvironmentModal" aria-label="@L("关闭", "Close")"></button>
-        <section class="cch-modal project-modal" role="dialog" aria-modal="true" aria-label="@L("新增环境", "New environment")">
+        <section class="cch-modal project-modal" role="dialog" aria-modal="true" aria-label="@EnvironmentModalTitle">
             <header class="cch-modal-header">
-                <h2>@L("新增环境", "New environment")</h2>
+                <h2>@EnvironmentModalTitle</h2>
                 <button type="button" class="cch-icon-button" @onclick="CloseEnvironmentModal" aria-label="@L("关闭", "Close")">
                     <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
                 </button>
@@ -638,6 +656,7 @@ else {
     private bool accessKeyPanelOpen;
     private bool configValueSheetOpen;
     private Guid? editingProjectId;
+    private Guid? editingEnvironmentId;
     private Guid? editingConfigId;
     private Guid? deleteProjectTarget;
     private Guid? deleteConfigTarget;
@@ -676,6 +695,7 @@ else {
         SelectedProject is null || selectedEnvironmentId is null ? [] : BuildDiffRows(SelectedProject, selectedEnvironmentId.Value);
 
     private string ProjectModalTitle => editingProjectId is null ? L("新建项目", "New project") : L("编辑项目", "Edit project");
+    private string EnvironmentModalTitle => editingEnvironmentId is null ? L("新增环境", "New environment") : L("编辑环境", "Edit environment");
     private string ConfigModalTitle => editingConfigId is null ? L("新建配置项", "New config") : L("编辑配置项", "Edit config");
     private string ProjectPickerText =>
         projectPickerOpen ? projectPickerQuery : projects.FirstOrDefault(item => item.Id == selectedProjectId)?.Name ?? string.Empty;
@@ -869,7 +889,19 @@ else {
     }
 
     private void OpenNewEnvironment() {
+        editingEnvironmentId = null;
         environmentForm = new EnvironmentFormModel();
+        formError = string.Empty;
+        environmentModalOpen = true;
+    }
+
+    private void OpenEditEnvironment(EnvironmentSummary environment) {
+        selectedEnvironmentId = environment.Id;
+        editingEnvironmentId = environment.Id;
+        environmentForm = new EnvironmentFormModel {
+            Name = environment.Name,
+            Key = environment.Key
+        };
         formError = string.Empty;
         environmentModalOpen = true;
     }
@@ -881,9 +913,13 @@ else {
         }
 
         var key = string.IsNullOrWhiteSpace(environmentForm.Key) ? Slug(environmentForm.Name) : environmentForm.Key.Trim();
-        var environment = await Sender.Send(
-            new AddEnvironmentCommand(selectedProjectId.Value, environmentForm.Name.Trim(), key),
-            CancellationToken.None);
+        var environment = editingEnvironmentId is { } environmentId
+            ? await Sender.Send(
+                new UpdateEnvironmentCommand(selectedProjectId.Value, environmentId, environmentForm.Name.Trim(), key),
+                CancellationToken.None)
+            : await Sender.Send(
+                new AddEnvironmentCommand(selectedProjectId.Value, environmentForm.Name.Trim(), key),
+                CancellationToken.None);
         selectedEnvironmentId = environment.Id;
         CloseEnvironmentModal();
         await ReloadAsync();
@@ -1366,7 +1402,10 @@ else {
     }
 
     private void CloseProjectModal() => projectModalOpen = false;
-    private void CloseEnvironmentModal() => environmentModalOpen = false;
+    private void CloseEnvironmentModal() {
+        environmentModalOpen = false;
+        editingEnvironmentId = null;
+    }
     private void CloseConfigModal() => configModalOpen = false;
     private void ClosePublishPanel() => publishPanelOpen = false;
     private void CloseReleaseHistoryPanel() => releaseHistoryPanelOpen = false;

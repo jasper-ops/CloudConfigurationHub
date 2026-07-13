@@ -23,10 +23,15 @@ public sealed class ProjectEnvironment {
     /// <summary>
     /// 环境显示名称。
     /// </summary>
-    public string Name { get; }
+    public string Name { get; private set; }
 
     /// <summary>
     /// 环境唯一 Key，用于 SDK 读取和发布粒度定位。
     /// </summary>
-    public string Key { get; }
+    public string Key { get; private set; }
+
+    internal void Update(string name, string key) {
+        Name = name.Trim();
+        Key = key.Trim().ToLowerInvariant();
+    }
 }

@@ -40,6 +40,22 @@ public sealed class ProjectDomainTests {
     }
 
     [Fact]
+    public void UpdateEnvironment_changes_display_fields_and_rejects_duplicate_key() {
+        var project = Project.Create("Order Service", "order-service");
+        var dev = project.AddEnvironment("Development", "dev");
+        var prod = project.AddEnvironment("Production", "prod");
+
+        var updated = project.UpdateEnvironment(dev.Id, "Testing", " Test ");
+
+        Assert.Same(dev, updated);
+        Assert.Equal("Testing", dev.Name);
+        Assert.Equal("test", dev.Key);
+        var exception = Assert.Throws<DomainException>(() =>
+            project.UpdateEnvironment(prod.Id, "Production Copy", "test"));
+        Assert.Equal("项目内环境 Key 必须唯一。", exception.Message);
+    }
+
+    [Fact]
     public void UpdateConfiguration_changes_definition_and_rejects_duplicate_key() {
         var project = Project.Create("Order Service", "order-service");
         var first = project.AddConfiguration("database", "host", isSensitive: false, description: "Host");

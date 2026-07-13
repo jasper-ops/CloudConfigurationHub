@@ -442,6 +442,8 @@ public sealed class AppLocalizationTests {
         Assert.Contains("@page \"/projects/{ProjectId:guid}/configurations/new\"", configurationSource, StringComparison.Ordinal);
         Assert.Contains("RoutePanel=\"configuration-new\"", configurationSource, StringComparison.Ordinal);
         Assert.Contains("new AddEnvironmentCommand", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("OpenEditEnvironment", workbenchSource, StringComparison.Ordinal);
+        Assert.Contains("new UpdateEnvironmentCommand", workbenchSource, StringComparison.Ordinal);
         Assert.Contains("new AddConfigurationCommand", workbenchSource, StringComparison.Ordinal);
         Assert.Contains("@bind=\"configForm.IsSensitive\"", workbenchSource, StringComparison.Ordinal);
     }

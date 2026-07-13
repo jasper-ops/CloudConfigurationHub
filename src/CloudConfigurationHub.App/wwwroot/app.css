@@ -1634,6 +1634,20 @@ html, body {
     background: color-mix(in srgb, var(--muted) 30%, transparent);
 }
 
+.cch-table-card tbody tr.cch-table-empty-row:hover {
+    background: transparent;
+}
+
+.cch-table-card td.cch-table-empty {
+    padding: 20px;
+}
+
+.cch-table-empty-state {
+    border: 1px dashed var(--border);
+    margin-top: 0;
+    min-height: 200px;
+}
+
 .cch-table-card td p {
     color: var(--muted-foreground);
     font-size: 12px;

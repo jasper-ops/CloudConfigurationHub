@@ -131,6 +131,25 @@ public sealed class Project {
     }
 
     /// <summary>
+    /// 更新项目环境基础信息。
+    /// </summary>
+    /// <param name="environmentId">环境 ID。</param>
+    /// <param name="name">环境显示名称。</param>
+    /// <param name="key">环境唯一 Key，会被标准化为小写。</param>
+    /// <returns>更新后的项目环境。</returns>
+    public ProjectEnvironment UpdateEnvironment(Guid environmentId, string name, string key) {
+        var environment = _environments.SingleOrDefault(item => item.Id == environmentId)
+            ?? throw new DomainException("环境不存在。");
+        var normalizedKey = NormalizeKey(key);
+        if (_environments.Any(item => item.Id != environmentId && item.Key == normalizedKey)) {
+            throw new DomainException("项目内环境 Key 必须唯一。");
+        }
+
+        environment.Update(name, normalizedKey);
+        return environment;
+    }
+
+    /// <summary>
     /// 添加项目级配置定义。
     /// </summary>
     /// <param name="group">配置分组，会被标准化为小写。</param>

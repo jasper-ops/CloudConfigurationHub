@@ -23,6 +23,23 @@ public sealed class ProjectCrudCommandHandlerTests {
     }
 
     [Fact]
+    public async Task UpdateEnvironment_updates_environment_and_saves_project() {
+        var project = Project.Create("Order Service", "order-service");
+        var environment = project.AddEnvironment("Development", "dev");
+        var repository = new FakeProjectRepository(project);
+        var handler = new UpdateEnvironmentCommandHandler(repository, new FakeLogger<UpdateEnvironmentCommandHandler>());
+
+        var result = await handler.Handle(
+            new UpdateEnvironmentCommand(project.Id, environment.Id, "Testing", "test"),
+            CancellationToken.None);
+
+        Assert.Equal(environment.Id, result.Id);
+        Assert.Equal("Testing", result.Name);
+        Assert.Equal("test", result.Key);
+        Assert.True(repository.WasSaved);
+    }
+
+    [Fact]
     public async Task DeleteProject_deletes_project_from_repository() {
         var project = Project.Create("Order Service", "order-service");
         var repository = new FakeProjectRepository(project);
