@@ -980,6 +980,7 @@ html, body {
 
 .cch-sidebar-brand {
     padding: 0 16px;
+    position: relative;
 }
 
 .cch-brand-mark {
@@ -1754,12 +1755,100 @@ html, body {
     color: var(--foreground);
 }
 
+.cch-config-list-empty {
+    align-items: center;
+    color: var(--muted-foreground);
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    gap: 6px;
+    justify-content: center;
+    min-height: 132px;
+    padding: 20px 14px;
+    text-align: center;
+}
+
+.cch-config-list-empty svg {
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary) 18%, var(--border));
+    border-radius: 10px;
+    color: var(--primary);
+    fill: none;
+    height: 34px;
+    padding: 7px;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+    width: 34px;
+}
+
+.cch-config-list-empty strong {
+    color: var(--foreground);
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.cch-config-list-empty span {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
 .mobile-sheet-trigger {
     display: none;
 }
 
 .cch-config-detail {
     padding: 20px;
+}
+
+.cch-config-empty-state {
+    align-items: center;
+    background:
+        linear-gradient(180deg, color-mix(in srgb, var(--muted) 32%, transparent), transparent 78%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 40px;
+    min-height: 152px;
+    padding: 28px 20px;
+}
+
+.cch-empty-icon {
+    align-items: center;
+    background: color-mix(in srgb, var(--primary) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--primary) 20%, var(--border));
+    border-radius: 10px;
+    color: var(--primary);
+    display: inline-flex;
+    height: 40px;
+    justify-content: center;
+    width: 40px;
+}
+
+.cch-empty-icon svg {
+    fill: none;
+    height: 20px;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.8;
+    width: 20px;
+}
+
+.cch-config-empty-state h3 {
+    color: var(--foreground);
+    font-size: 15px;
+    font-weight: 650;
+    margin: 0;
+}
+
+.cch-config-empty-state p {
+    color: var(--muted-foreground);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: -4px 0 4px;
+    max-width: 300px;
 }
 
 .cch-configurations-workbench .cch-page-head {
@@ -2182,6 +2271,26 @@ html, body {
     width: 32px;
 }
 
+.cch-collapse-button {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    box-shadow: 0 6px 14px color-mix(in srgb, var(--foreground) 10%, transparent);
+    height: 26px;
+    margin-left: 0;
+    position: absolute;
+    right: -13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 26px;
+    z-index: 2;
+}
+
+.cch-collapse-button svg {
+    height: 14px;
+    width: 14px;
+}
+
 .cch-mobile-menu {
     display: none;
     margin-left: 0;
@@ -2222,8 +2331,8 @@ html, body {
 
 .cch-sidebar-toggle:checked ~ .cch-sidebar .cch-sidebar-brand {
     gap: 6px;
-    justify-content: space-between;
-    padding: 0 5px;
+    justify-content: center;
+    padding: 0;
 }
 
 .cch-sidebar-toggle:checked ~ .cch-sidebar .cch-brand-mark {
@@ -2237,7 +2346,7 @@ html, body {
 }
 
 .cch-sidebar-toggle:checked ~ .cch-sidebar .cch-collapse-button {
-    transform: rotate(180deg);
+    transform: translateY(-50%) rotate(180deg);
 }
 
 .cch-sidebar-toggle:checked ~ .cch-main {
@@ -2667,6 +2776,32 @@ html[data-theme-mode="dark"] .theme-current.dark {
     .cch-sidebar-toggle:checked ~ .cch-sidebar .cch-nav-button span,
     .cch-sidebar-toggle:checked ~ .cch-sidebar .cch-logout span {
         display: grid;
+    }
+
+    .cch-sidebar-toggle:checked ~ .cch-sidebar .cch-sidebar-brand {
+        justify-content: flex-start;
+        padding: 0 16px;
+    }
+
+    .cch-collapse-button {
+        background: transparent;
+        border: 0;
+        border-radius: 6px;
+        box-shadow: none;
+        height: 32px;
+        margin-left: auto;
+        position: static;
+        transform: none;
+        width: 32px;
+    }
+
+    .cch-collapse-button svg {
+        height: 17px;
+        width: 17px;
+    }
+
+    .cch-sidebar-toggle:checked ~ .cch-sidebar .cch-collapse-button {
+        transform: rotate(180deg);
     }
 
     .cch-sidebar-toggle:checked ~ .cch-sidebar-scrim {
