@@ -152,7 +152,11 @@ else if (InitialView == "configs") {
                             <input class="cch-input compact mono" placeholder="@L("搜索配置键", "Search config keys")" @bind="configQuery" @bind:event="oninput" />
                         </div>
                         @if (visibleConfigs.Count == 0) {
-                            <p>@L("暂无数据", "No data")</p>
+                            <div class="cch-config-list-empty">
+                                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/><path d="m22 12.5-9.17 4.17a2 2 0 0 1-1.66 0L2 12.5"/><path d="m22 17.5-9.17 4.17a2 2 0 0 1-1.66 0L2 17.5"/></svg>
+                                <strong>@L("还没有配置项", "No configs yet")</strong>
+                                <span>@L("新建后会显示在这里", "New configs will appear here")</span>
+                            </div>
                         }
                         @foreach (var config in visibleConfigs) {
                             <button class="cch-config-list-item desktop-inline @(selectedConfig?.Id == config.Id ? "active" : null)" type="button" @onclick="() => selectedConfigurationId = config.Id">@ConfigDisplayKey(config)</button>
@@ -161,7 +165,17 @@ else if (InitialView == "configs") {
                     </aside>
                     <section class="cch-config-detail desktop-inline">
                         @if (selectedConfig is null) {
-                            <div class="cch-empty inner">@L("暂无数据", "No data")</div>
+                            <div class="cch-empty cch-config-empty-state inner">
+                                <span class="cch-empty-icon">
+                                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/><path d="M4 7.5 12 3l8 4.5-8 4.5Z"/><path d="M4 12.5 12 17l8-4.5"/></svg>
+                                </span>
+                                <h3>@L("还没有配置项", "No configs yet")</h3>
+                                <p>@L("创建后可在这里维护各环境的配置值", "Create one to manage values across environments")</p>
+                                <button class="cch-button outline" type="button" @onclick="OpenNewConfig">
+                                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                                    @L("新建配置项", "New config")
+                                </button>
+                            </div>
                         }
                         else {
                             <div class="cch-detail-head">
@@ -1202,6 +1216,9 @@ else {
         ["该项目暂无环境，请先在项目设置中添加环境"] = "このプロジェクトには環境がありません",
         ["搜索配置键"] = "設定キーを検索",
         ["新建配置项"] = "設定を作成",
+        ["还没有配置项"] = "設定はまだありません",
+        ["新建后会显示在这里"] = "作成した設定はここに表示されます",
+        ["创建后可在这里维护各环境的配置值"] = "作成後、各環境の値をここで管理できます",
         ["值"] = "値",
         ["更新于"] = "更新日時",
         ["操作"] = "操作",
@@ -1251,6 +1268,9 @@ else {
         ["该项目暂无环境，请先在项目设置中添加环境"] = "이 프로젝트에는 아직 환경이 없습니다",
         ["搜索配置键"] = "구성 키 검색",
         ["新建配置项"] = "구성 추가",
+        ["还没有配置项"] = "아직 구성 항목이 없습니다",
+        ["新建后会显示在这里"] = "새 구성 항목이 여기에 표시됩니다",
+        ["创建后可在这里维护各环境的配置值"] = "생성 후 여기에서 환경별 값을 관리할 수 있습니다",
         ["值"] = "값",
         ["更新于"] = "업데이트",
         ["操作"] = "작업",
@@ -1300,6 +1320,9 @@ else {
         ["该项目暂无环境，请先在项目设置中添加环境"] = "Este proyecto no tiene entornos",
         ["搜索配置键"] = "Buscar claves",
         ["新建配置项"] = "Nueva configuración",
+        ["还没有配置项"] = "No hay configuraciones",
+        ["新建后会显示在这里"] = "Las nuevas configuraciones aparecerán aquí",
+        ["创建后可在这里维护各环境的配置值"] = "Crea una para gestionar valores por entorno",
         ["值"] = "Valor",
         ["更新于"] = "Actualizado",
         ["操作"] = "Acciones",
