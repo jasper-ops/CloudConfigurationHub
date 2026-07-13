@@ -51,7 +51,12 @@
                 </label>
                 <span class="cch-brand-mark" aria-hidden="true"></span>
                 <span class="cch-topbar-title">@CurrentTitle</span>
-                <div class="cch-service-status" aria-label="@L("服务连接状态", "Service connection status")">
+                <div class="cch-service-status"
+                     aria-label="@L("服务连接状态", "Service connection status")"
+                     data-connected-label="@L("服务已连接", "Connected")"
+                     data-reconnecting-label="@L("正在重连", "Reconnecting")"
+                     data-disconnected-label="@L("连接中断", "Disconnected")"
+                     data-paused-label="@L("会话暂停", "Session paused")">
                     <span class="cch-status-dot" aria-hidden="true"></span>
                     <span>@L("服务已连接", "Connected")</span>
                 </div>
@@ -114,6 +119,9 @@
                 "账号设置" => "アカウント設定",
                 "服务连接状态" => "サービス接続状態",
                 "服务已连接" => "接続済み",
+                "正在重连" => "再接続中",
+                "连接中断" => "切断",
+                "会话暂停" => "セッション一時停止",
                 "打开导航" => "ナビゲーションを開く",
                 "折叠导航" => "ナビゲーション切替",
                 _ => zh
@@ -126,6 +134,9 @@
                 "账号设置" => "계정 설정",
                 "服务连接状态" => "서비스 연결 상태",
                 "服务已连接" => "연결됨",
+                "正在重连" => "재연결 중",
+                "连接中断" => "연결 끊김",
+                "会话暂停" => "세션 일시 중지",
                 "打开导航" => "내비게이션 열기",
                 "折叠导航" => "내비게이션 전환",
                 _ => zh
@@ -138,6 +149,9 @@
                 "账号设置" => "Cuenta",
                 "服务连接状态" => "Estado del servicio",
                 "服务已连接" => "Conectado",
+                "正在重连" => "Reconectando",
+                "连接中断" => "Desconectado",
+                "会话暂停" => "Sesion pausada",
                 "打开导航" => "Abrir navegación",
                 "折叠导航" => "Alternar navegación",
                 _ => zh

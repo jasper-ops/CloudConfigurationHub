@@ -853,6 +853,8 @@ a:hover, .btn-link:hover {
 
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
         scroll-behavior: auto !important;
         transition-duration: 0.01ms !important;
     }
@@ -2399,6 +2401,7 @@ html[data-theme="dark"] .cch-topbar {
     gap: 8px;
     min-height: 32px;
     padding: 0 12px;
+    transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
 }
 
 .cch-status-dot {
@@ -2407,6 +2410,43 @@ html[data-theme="dark"] .cch-topbar {
     box-shadow: 0 0 0 4px color-mix(in srgb, #22c55e 18%, transparent);
     height: 8px;
     width: 8px;
+}
+
+.cch-service-status.is-reconnecting {
+    background: color-mix(in srgb, var(--cch-warning) 14%, transparent);
+    border-color: color-mix(in srgb, var(--cch-warning) 38%, var(--border));
+    color: var(--cch-warning);
+}
+
+.cch-service-status.is-reconnecting .cch-status-dot {
+    animation: cch-status-pulse 1.2s ease-in-out infinite;
+    background: var(--cch-warning);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--cch-warning) 18%, transparent);
+}
+
+.cch-service-status.is-disconnected,
+.cch-service-status.is-paused {
+    background: color-mix(in srgb, var(--cch-danger) 12%, transparent);
+    border-color: color-mix(in srgb, var(--cch-danger) 34%, var(--border));
+    color: var(--cch-danger);
+}
+
+.cch-service-status.is-disconnected .cch-status-dot,
+.cch-service-status.is-paused .cch-status-dot {
+    background: var(--cch-danger);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--cch-danger) 16%, transparent);
+}
+
+@keyframes cch-status-pulse {
+    0%, 100% {
+        opacity: 0.55;
+        transform: scale(0.88);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .language-switcher {

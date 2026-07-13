@@ -118,6 +118,41 @@ public sealed class RepositoryQualityTests {
     }
 
     [Fact]
+    public void Reconnect_notice_is_non_blocking_and_top_aligned() {
+        var repositoryRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            ".."));
+        var reconnectScript = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Layout",
+            "ReconnectModal.razor.js"));
+        var reconnectCss = File.ReadAllText(Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Layout",
+            "ReconnectModal.razor.css"));
+
+        Assert.Contains("reconnectModal.show();", reconnectScript, StringComparison.Ordinal);
+        Assert.Contains("cch-service-status", reconnectScript, StringComparison.Ordinal);
+        Assert.Contains("is-reconnecting", reconnectScript, StringComparison.Ordinal);
+        Assert.Contains("is-disconnected", reconnectScript, StringComparison.Ordinal);
+        Assert.DoesNotContain("showModal", reconnectScript, StringComparison.Ordinal);
+        Assert.Contains("position: fixed;", reconnectCss, StringComparison.Ordinal);
+        Assert.Contains("top: 62px;", reconnectCss, StringComparison.Ordinal);
+        Assert.Contains("left: 264px;", reconnectCss, StringComparison.Ordinal);
+        Assert.DoesNotContain("::backdrop", reconnectCss, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void Management_ui_uses_formal_workbench_naming() {
         var probe = new DirectoryInfo(AppContext.BaseDirectory);
         while (probe is not null && !File.Exists(Path.Combine(probe.FullName, "CloudConfigurationHub.slnx"))) {

@@ -11,147 +11,129 @@
 #components-reconnect-modal.components-reconnect-show .components-rejoining-animation,
 #components-reconnect-modal.components-reconnect-paused .components-pause-visible,
 #components-reconnect-modal.components-reconnect-resume-failed .components-resume-failed-visible,
-#components-reconnect-modal.components-reconnect-retrying,
 #components-reconnect-modal.components-reconnect-retrying .components-reconnect-repeated-attempt-visible,
 #components-reconnect-modal.components-reconnect-retrying .components-rejoining-animation,
-#components-reconnect-modal.components-reconnect-failed,
 #components-reconnect-modal.components-reconnect-failed .components-reconnect-failed-visible {
     display: block;
 }
 
-
 #components-reconnect-modal {
-    background-color: white;
-    width: 20rem;
-    margin: 20vh auto;
-    padding: 2rem;
-    border: 0;
-    border-radius: 0.5rem;
-    box-shadow: 0 3px 6px 2px rgba(0, 0, 0, 0.3);
-    opacity: 0;
-    transition: display 0.5s allow-discrete, overlay 0.5s allow-discrete;
-    animation: components-reconnect-modal-fadeOutOpacity 0.5s both;
-    &[open]
-
-{
-    animation: components-reconnect-modal-slideUp 1.5s cubic-bezier(.05, .89, .25, 1.02) 0.3s, components-reconnect-modal-fadeInOpacity 0.5s ease-in-out 0.3s;
-    animation-fill-mode: both;
+    background: var(--cch-surface-strong, #ffffff);
+    border: 1px solid var(--cch-border, rgba(15, 23, 42, 0.12));
+    border-radius: 8px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+    color: var(--cch-text, #1f2937);
+    left: 264px;
+    margin: 0;
+    max-width: min(320px, calc(100vw - 32px));
+    padding: 12px 14px;
+    position: fixed;
+    right: auto;
+    top: 62px;
+    width: max-content;
+    z-index: 140;
 }
 
-}
-
-#components-reconnect-modal::backdrop {
-    background-color: rgba(0, 0, 0, 0.4);
-    animation: components-reconnect-modal-fadeInOpacity 0.5s ease-in-out;
-    opacity: 1;
-}
-
-@keyframes components-reconnect-modal-slideUp {
-    0% {
-        transform: translateY(30px) scale(0.95);
-    }
-
-    100% {
-        transform: translateY(0);
-    }
-}
-
-@keyframes components-reconnect-modal-fadeInOpacity {
-    0% {
-        opacity: 0;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-@keyframes components-reconnect-modal-fadeOutOpacity {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
+#components-reconnect-modal:not([open]) {
+    display: none;
 }
 
 .components-reconnect-container {
-    display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 1rem;
+    display: grid;
+    gap: 10px 12px;
+    grid-template-columns: auto minmax(0, 1fr);
 }
 
 #components-reconnect-modal p {
+    font-size: 13px;
+    grid-column: 2;
+    line-height: 1.45;
     margin: 0;
-    text-align: center;
 }
 
 #components-reconnect-modal button {
+    background: var(--cch-accent, #409eff);
     border: 0;
-    background-color: #6b9ed2;
-    color: white;
-    padding: 4px 24px;
-    border-radius: 4px;
+    border-radius: 6px;
+    color: #ffffff;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 650;
+    grid-column: 2;
+    min-height: 32px;
+    padding: 6px 12px;
+    width: fit-content;
 }
 
-    #components-reconnect-modal button:hover {
-        background-color: #3b6ea2;
-    }
+#components-reconnect-modal button:hover,
+#components-reconnect-modal button:focus-visible {
+    background: var(--cch-accent-strong, #337ecc);
+}
 
-    #components-reconnect-modal button:active {
-        background-color: #6b9ed2;
-    }
+#components-reconnect-modal.components-reconnect-failed .components-reconnect-failed-visible,
+#components-reconnect-modal.components-reconnect-paused .components-pause-visible,
+#components-reconnect-modal.components-reconnect-resume-failed .components-resume-failed-visible {
+    grid-column: 1 / -1;
+}
 
 .components-rejoining-animation {
+    height: 18px;
     position: relative;
-    width: 80px;
-    height: 80px;
+    width: 18px;
 }
 
-    .components-rejoining-animation div {
-        position: absolute;
-        border: 3px solid #0087ff;
-        opacity: 1;
-        border-radius: 50%;
-        animation: components-rejoining-animation 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
-    }
+.components-rejoining-animation div {
+    animation: components-rejoining-animation 1.4s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    border: 2px solid var(--cch-warning, #e6a23c);
+    border-radius: 50%;
+    opacity: 1;
+    position: absolute;
+}
 
-        .components-rejoining-animation div:nth-child(2) {
-            animation-delay: -0.5s;
-        }
+.components-rejoining-animation div:nth-child(2) {
+    animation-delay: -0.45s;
+}
 
 @keyframes components-rejoining-animation {
     0% {
-        top: 40px;
-        left: 40px;
-        width: 0;
         height: 0;
+        left: 9px;
         opacity: 0;
+        top: 9px;
+        width: 0;
     }
 
-    4.9% {
-        top: 40px;
-        left: 40px;
-        width: 0;
-        height: 0;
-        opacity: 0;
-    }
-
-    5% {
-        top: 40px;
-        left: 40px;
-        width: 0;
-        height: 0;
+    10% {
         opacity: 1;
     }
 
     100% {
-        top: 0px;
-        left: 0px;
-        width: 80px;
-        height: 80px;
+        height: 18px;
+        left: 0;
         opacity: 0;
+        top: 0;
+        width: 18px;
+    }
+}
+
+@media (max-width: 900px) {
+    #components-reconnect-modal {
+        left: 12px;
+        max-width: calc(100vw - 24px);
+        right: 12px;
+        top: 58px;
+        width: auto;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .components-rejoining-animation div {
+        animation: none;
+        height: 12px;
+        left: 3px;
+        opacity: 1;
+        top: 3px;
+        width: 12px;
     }
 }

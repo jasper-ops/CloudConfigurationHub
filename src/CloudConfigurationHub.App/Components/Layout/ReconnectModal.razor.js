@@ -8,12 +8,26 @@ retryButton.addEventListener("click", retry);
 const resumeButton = document.getElementById("components-resume-button");
 resumeButton.addEventListener("click", resume);
 
+const serviceStatus = document.querySelector(".cch-service-status");
+const serviceStatusText = serviceStatus?.querySelector("span:last-child");
+const connectedLabel = serviceStatusText?.textContent?.trim() || "Connected";
+const statusLabels = {
+    connected: serviceStatus?.dataset.connectedLabel || connectedLabel,
+    reconnecting: serviceStatus?.dataset.reconnectingLabel || "Reconnecting",
+    disconnected: serviceStatus?.dataset.disconnectedLabel || "Disconnected",
+    paused: serviceStatus?.dataset.pausedLabel || "Session paused"
+};
+
 function handleReconnectStateChanged(event) {
     if (event.detail.state === "show") {
-        reconnectModal.showModal();
+        showReconnectNotice();
+        setServiceStatus("reconnecting");
     } else if (event.detail.state === "hide") {
-        reconnectModal.close();
+        closeReconnectNotice();
+        setServiceStatus("connected");
     } else if (event.detail.state === "failed") {
+        showReconnectNotice();
+        setServiceStatus("disconnected");
         document.addEventListener("visibilitychange", retryWhenDocumentBecomesVisible);
     } else if (event.detail.state === "rejected") {
         location.reload();
@@ -22,6 +36,7 @@ function handleReconnectStateChanged(event) {
 
 async function retry() {
     document.removeEventListener("visibilitychange", retryWhenDocumentBecomesVisible);
+    setServiceStatus("reconnecting");
 
     try {
         // Reconnect will asynchronously return:
@@ -36,23 +51,34 @@ async function retry() {
             if (!resumeSuccessful) {
                 location.reload();
             } else {
-                reconnectModal.close();
+                closeReconnectNotice();
+                setServiceStatus("connected");
             }
+        } else {
+            closeReconnectNotice();
+            setServiceStatus("connected");
         }
     } catch (err) {
         // We got an exception, server is currently unavailable
+        setServiceStatus("disconnected");
         document.addEventListener("visibilitychange", retryWhenDocumentBecomesVisible);
     }
 }
 
 async function resume() {
+    setServiceStatus("reconnecting");
+
     try {
         const successful = await Blazor.resumeCircuit();
         if (!successful) {
             location.reload();
+        } else {
+            closeReconnectNotice();
+            setServiceStatus("connected");
         }
     } catch {
         reconnectModal.classList.replace("components-reconnect-paused", "components-reconnect-resume-failed");
+        setServiceStatus("paused");
     }
 }
 
@@ -60,4 +86,34 @@ async function retryWhenDocumentBecomesVisible() {
     if (document.visibilityState === "visible") {
         await retry();
     }
+}
+
+function showReconnectNotice() {
+    if (!reconnectModal.open) {
+        reconnectModal.show();
+    }
+}
+
+function closeReconnectNotice() {
+    if (reconnectModal.open) {
+        reconnectModal.close();
+    }
+}
+
+function setServiceStatus(state) {
+    if (!serviceStatus || !serviceStatusText) {
+        return;
+    }
+
+    serviceStatus.classList.remove("is-reconnecting", "is-disconnected", "is-paused");
+
+    if (state === "reconnecting") {
+        serviceStatus.classList.add("is-reconnecting");
+    } else if (state === "disconnected") {
+        serviceStatus.classList.add("is-disconnected");
+    } else if (state === "paused") {
+        serviceStatus.classList.add("is-paused");
+    }
+
+    serviceStatusText.textContent = statusLabels[state] || connectedLabel;
 }
