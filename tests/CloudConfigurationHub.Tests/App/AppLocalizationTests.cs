@@ -346,6 +346,38 @@ public sealed class AppLocalizationTests {
         }
     }
 
+    [Fact]
+    public void Two_factor_login_pages_use_shared_login_page_visual_shell() {
+        var twoFactorPath = RepositoryFile(
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Account",
+            "Pages",
+            "LoginWith2fa.razor");
+        var recoveryCodePath = RepositoryFile(
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Account",
+            "Pages",
+            "LoginWithRecoveryCode.razor");
+
+        var twoFactorSource = File.ReadAllText(twoFactorPath);
+        var recoveryCodeSource = File.ReadAllText(recoveryCodePath);
+
+        foreach (var source in new[] { twoFactorSource, recoveryCodeSource }) {
+            Assert.Contains("@layout PlainLayout", source, StringComparison.Ordinal);
+            Assert.Contains("cch-login-shell", source, StringComparison.Ordinal);
+            Assert.Contains("cch-login-header", source, StringComparison.Ordinal);
+            Assert.Contains("cch-login-card", source, StringComparison.Ordinal);
+            Assert.Contains("cch-form-stack", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("class=\"row\"", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("form-floating", source, StringComparison.Ordinal);
+            Assert.DoesNotContain("btn-lg", source, StringComparison.Ordinal);
+        }
+    }
+
     private static string RepositoryFile(params string[] pathParts) {
         foreach (var start in new[] { Environment.CurrentDirectory, AppContext.BaseDirectory }) {
             var directory = new DirectoryInfo(start);
