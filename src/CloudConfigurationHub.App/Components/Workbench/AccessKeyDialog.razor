@@ -1,0 +1,35 @@
+@inherits ManagementWorkbenchComponentBase
+
+@if (accessKeyPanelOpen && SelectedProject is { } accessProject) {
+    <div class="cch-modal-root">
+        <button class="cch-modal-scrim" type="button" @onclick="CloseAccessKeyPanel" aria-label="@L("关闭", "Close")"></button>
+        <section class="cch-modal project-modal" role="dialog" aria-modal="true" aria-label="@L("访问密钥", "Access key")">
+            <header class="cch-modal-header">
+                <h2>@L("访问密钥", "Access key")</h2>
+                <button type="button" class="cch-icon-button" @onclick="CloseAccessKeyPanel" aria-label="@L("关闭", "Close")">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </header>
+            <div class="cch-modal-body">
+                <p class="cch-muted-line">@L("轮换后旧密钥会立即失效，明文只显示一次。", "Rotating invalidates the previous key. The new secret is shown once.")</p>
+                <label class="cch-field">
+                    <span>@L("项目标识", "Project key")</span>
+                    <input class="cch-input mono" readonly value="@accessProject.Key" />
+                </label>
+                @if (!string.IsNullOrWhiteSpace(generatedAccessKey)) {
+                    <label class="cch-field">
+                        <span>@L("新访问密钥", "New access key")</span>
+                        <input class="cch-input mono" readonly value="@generatedAccessKey" />
+                    </label>
+                }
+                @if (!string.IsNullOrWhiteSpace(panelError)) {
+                    <p class="cch-error" role="alert">@panelError</p>
+                }
+            </div>
+            <footer class="cch-modal-footer">
+                <button class="cch-button outline" type="button" @onclick="CloseAccessKeyPanel">@L("关闭", "Close")</button>
+                <button class="cch-button danger" type="button" disabled="@isRotatingAccessKey" @onclick="RotateAccessKeyAsync">@(isRotatingAccessKey ? L("轮换中...", "Rotating...") : L("轮换密钥", "Rotate key"))</button>
+            </footer>
+        </section>
+    </div>
+}

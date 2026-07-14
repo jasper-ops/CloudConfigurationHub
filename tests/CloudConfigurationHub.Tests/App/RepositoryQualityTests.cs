@@ -194,12 +194,7 @@ public sealed class RepositoryQualityTests {
 
         Assert.NotNull(probe);
         var repositoryRoot = probe.FullName;
-        var managementWorkbench = File.ReadAllText(Path.Combine(
-            repositoryRoot,
-            "src",
-            "CloudConfigurationHub.App",
-            "Components",
-            "ManagementWorkbench.razor"));
+        var managementWorkbench = ReadManagementWorkbenchSources(repositoryRoot);
         var appCss = File.ReadAllText(Path.Combine(
             repositoryRoot,
             "src",
@@ -225,12 +220,7 @@ public sealed class RepositoryQualityTests {
 
         Assert.NotNull(probe);
         var repositoryRoot = probe.FullName;
-        var managementWorkbench = File.ReadAllText(Path.Combine(
-            repositoryRoot,
-            "src",
-            "CloudConfigurationHub.App",
-            "Components",
-            "ManagementWorkbench.razor"));
+        var managementWorkbench = ReadManagementWorkbenchSources(repositoryRoot);
 
         Assert.Contains("PublishEnvironmentCommand", managementWorkbench, StringComparison.Ordinal);
         Assert.Contains("RollbackEnvironmentCommand", managementWorkbench, StringComparison.Ordinal);
@@ -249,12 +239,7 @@ public sealed class RepositoryQualityTests {
 
         Assert.NotNull(probe);
         var repositoryRoot = probe.FullName;
-        var managementWorkbench = File.ReadAllText(Path.Combine(
-            repositoryRoot,
-            "src",
-            "CloudConfigurationHub.App",
-            "Components",
-            "ManagementWorkbench.razor"));
+        var managementWorkbench = ReadManagementWorkbenchSources(repositoryRoot);
         var modeBranchIndex = managementWorkbench.IndexOf("@if (configMode == \"env\")", StringComparison.Ordinal);
         var publishActionIndex = managementWorkbench.IndexOf("@onclick=\"OpenPublishPanel\"", StringComparison.Ordinal);
         var historyActionIndex = managementWorkbench.IndexOf("@onclick=\"OpenReleaseHistoryPanel\"", StringComparison.Ordinal);
@@ -272,12 +257,7 @@ public sealed class RepositoryQualityTests {
 
         Assert.NotNull(probe);
         var repositoryRoot = probe.FullName;
-        var managementWorkbench = File.ReadAllText(Path.Combine(
-            repositoryRoot,
-            "src",
-            "CloudConfigurationHub.App",
-            "Components",
-            "ManagementWorkbench.razor"));
+        var managementWorkbench = ReadManagementWorkbenchSources(repositoryRoot);
         var appCss = File.ReadAllText(Path.Combine(
             repositoryRoot,
             "src",
@@ -304,12 +284,7 @@ public sealed class RepositoryQualityTests {
 
         Assert.NotNull(probe);
         var repositoryRoot = probe.FullName;
-        var managementWorkbench = File.ReadAllText(Path.Combine(
-            repositoryRoot,
-            "src",
-            "CloudConfigurationHub.App",
-            "Components",
-            "ManagementWorkbench.razor"));
+        var managementWorkbench = ReadManagementWorkbenchSources(repositoryRoot);
         var appCss = File.ReadAllText(Path.Combine(
             repositoryRoot,
             "src",
@@ -470,5 +445,61 @@ public sealed class RepositoryQualityTests {
 
         Assert.Contains("data:image/png;base64,", enableAuthenticatorPage, StringComparison.Ordinal);
         Assert.DoesNotContain("data-url=\"@authenticatorUri\"", enableAuthenticatorPage, StringComparison.Ordinal);
+    }
+
+    private static string ReadManagementWorkbenchSources(string repositoryRoot) {
+        var componentRoot = Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components");
+        var workbenchRoot = Path.Combine(componentRoot, "Workbench");
+        var files = new[] {
+                Path.Combine(componentRoot, "ManagementWorkbench.razor"),
+                Path.Combine(componentRoot, "ManagementWorkbench.razor.cs")
+            }
+            .Concat(Directory.Exists(workbenchRoot)
+                ? Directory.EnumerateFiles(workbenchRoot, "*.*", SearchOption.TopDirectoryOnly)
+                    .Where(path => path.EndsWith(".razor", StringComparison.OrdinalIgnoreCase)
+                        || path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(path => path, StringComparer.Ordinal)
+                : []);
+
+        return string.Join(Environment.NewLine, files.Select(File.ReadAllText));
+    }
+
+    [Fact]
+    public void Management_workbench_is_split_into_focused_components() {
+        var repositoryRoot = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory,
+            "..",
+            "..",
+            "..",
+            "..",
+            ".."));
+        var workbenchPath = Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "ManagementWorkbench.razor");
+        var workbenchDirectory = Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components",
+            "Workbench");
+
+        var workbenchLines = File.ReadAllLines(workbenchPath).Length;
+        var childComponents = Directory.Exists(workbenchDirectory)
+            ? Directory.EnumerateFiles(workbenchDirectory, "*.razor", SearchOption.TopDirectoryOnly).ToArray()
+            : [];
+
+        Assert.True(workbenchLines <= 250, $"ManagementWorkbench.razor should remain a composition root, but has {workbenchLines} lines.");
+        Assert.True(childComponents.Length >= 8, "Management workbench markup should live in focused child components.");
+        Assert.All(childComponents, component => {
+            var lineCount = File.ReadAllLines(component).Length;
+            Assert.True(lineCount <= 300, $"{Path.GetFileName(component)} has {lineCount} lines; keep workbench components focused.");
+        });
     }
 }

@@ -28,6 +28,16 @@ public sealed class ProjectDomainTests {
     }
 
     [Fact]
+    public void AddConfiguration_preserves_group_and_key_casing() {
+        var project = Project.Create("Order Service", "order-service");
+
+        var configuration = project.AddConfiguration("Database", "ConnectionString", isSensitive: true);
+
+        Assert.Equal("Database", configuration.Group);
+        Assert.Equal("ConnectionString", configuration.Key);
+    }
+
+    [Fact]
     public void UpdateDetails_changes_project_display_fields_and_normalizes_key() {
         var project = Project.Create("Order Service", "order-service", "Old description", DateTimeOffset.Parse("2026-07-12T08:00:00Z"));
 
@@ -61,10 +71,10 @@ public sealed class ProjectDomainTests {
         var first = project.AddConfiguration("database", "host", isSensitive: false, description: "Host");
         var second = project.AddConfiguration("database", "port", isSensitive: false, description: "Port");
 
-        project.UpdateConfiguration(first.Id, "redis", "url", isSensitive: true, description: "Redis URL");
+        project.UpdateConfiguration(first.Id, "Redis", "Url", isSensitive: true, description: "Redis URL");
 
-        Assert.Equal("redis", first.Group);
-        Assert.Equal("url", first.Key);
+        Assert.Equal("Redis", first.Group);
+        Assert.Equal("Url", first.Key);
         Assert.True(first.IsSensitive);
         Assert.Equal("Redis URL", first.Description);
         var exception = Assert.Throws<DomainException>(() =>

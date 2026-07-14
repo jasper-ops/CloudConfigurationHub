@@ -132,7 +132,7 @@ public sealed class EfProjectRepositoryTests {
             .ThenInclude(item => item.Values)
             .SingleAsync(item => item.Id == project.Id);
         Assert.Equal("prod", Assert.Single(savedProject.Environments).Key);
-        Assert.Equal("database", Assert.Single(savedProject.Configurations).Group);
+        Assert.Equal("Database", Assert.Single(savedProject.Configurations).Group);
         var release = Assert.Single(savedProject.Releases);
         Assert.Equal(1, release.Version);
         Assert.Equal("server=prod", Assert.Single(release.Values).Value);

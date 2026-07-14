@@ -152,8 +152,8 @@ public sealed class Project {
     /// <summary>
     /// 添加项目级配置定义。
     /// </summary>
-    /// <param name="group">配置分组，会被标准化为小写。</param>
-    /// <param name="key">配置 Key，会被标准化为小写。</param>
+    /// <param name="group">配置分组，会保留显示大小写，并按大小写不敏感规则判断唯一性。</param>
+    /// <param name="key">配置 Key，会保留显示大小写，并按大小写不敏感规则判断唯一性。</param>
     /// <param name="isSensitive">是否为敏感配置。</param>
     /// <returns>新建的配置定义。</returns>
     /// <exception cref="DomainException">当分组和 Key 组合在项目内重复时抛出。</exception>
@@ -161,11 +161,11 @@ public sealed class Project {
         var normalizedGroup = NormalizeKey(group);
         var normalizedKey = NormalizeKey(key);
         if (_configurations.Any(configuration =>
-                configuration.Group == normalizedGroup && configuration.Key == normalizedKey)) {
+                IsSameConfigurationKey(configuration, normalizedGroup, normalizedKey))) {
             throw new DomainException("项目内配置分组和 Key 组合必须唯一。");
         }
 
-        var configuration = new ConfigDefinition(Guid.NewGuid(), normalizedGroup, normalizedKey, isSensitive, description.Trim());
+        var configuration = new ConfigDefinition(Guid.NewGuid(), group.Trim(), key.Trim(), isSensitive, description.Trim());
         _configurations.Add(configuration);
         return configuration;
     }
@@ -174,8 +174,8 @@ public sealed class Project {
     /// 更新项目级配置定义。
     /// </summary>
     /// <param name="configurationId">配置定义 ID。</param>
-    /// <param name="group">配置分组，会被标准化为小写。</param>
-    /// <param name="key">配置 Key，会被标准化为小写。</param>
+    /// <param name="group">配置分组，会保留显示大小写，并按大小写不敏感规则判断唯一性。</param>
+    /// <param name="key">配置 Key，会保留显示大小写，并按大小写不敏感规则判断唯一性。</param>
     /// <param name="isSensitive">是否为敏感配置。</param>
     /// <param name="description">配置说明。</param>
     /// <returns>更新后的配置定义。</returns>
@@ -190,11 +190,11 @@ public sealed class Project {
         var normalizedGroup = NormalizeKey(group);
         var normalizedKey = NormalizeKey(key);
         if (_configurations.Any(item =>
-                item.Id != configurationId && item.Group == normalizedGroup && item.Key == normalizedKey)) {
+                item.Id != configurationId && IsSameConfigurationKey(item, normalizedGroup, normalizedKey))) {
             throw new DomainException("项目内配置分组和 Key 组合必须唯一。");
         }
 
-        configuration.Update(normalizedGroup, normalizedKey, isSensitive, description.Trim());
+        configuration.Update(group.Trim(), key.Trim(), isSensitive, description.Trim());
         return configuration;
     }
 
@@ -258,7 +258,7 @@ public sealed class Project {
                 var configuration = _configurations.Single(item => item.Id == draftValue.ConfigurationId);
                 return new ConfigReleaseValue(
                     configuration.Id,
-                    $"{configuration.Group}:{configuration.Key}",
+                    $"{NormalizeKey(configuration.Group)}:{NormalizeKey(configuration.Key)}",
                     draftValue.Value,
                     configuration.IsSensitive);
             })
@@ -334,5 +334,13 @@ public sealed class Project {
 
     private static string NormalizeKey(string key) {
         return key.Trim().ToLowerInvariant();
+    }
+
+    private static bool IsSameConfigurationKey(
+        ConfigDefinition configuration,
+        string normalizedGroup,
+        string normalizedKey) {
+        return NormalizeKey(configuration.Group) == normalizedGroup
+            && NormalizeKey(configuration.Key) == normalizedKey;
     }
 }

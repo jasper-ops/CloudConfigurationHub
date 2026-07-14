@@ -1,0 +1,32 @@
+@inherits ManagementWorkbenchComponentBase
+
+@if (environmentModalOpen && SelectedProject is not null) {
+    <div class="cch-modal-root">
+        <button class="cch-modal-scrim" type="button" @onclick="CloseEnvironmentModal" aria-label="@L("关闭", "Close")"></button>
+        <section class="cch-modal project-modal" role="dialog" aria-modal="true" aria-label="@EnvironmentModalTitle">
+            <header class="cch-modal-header">
+                <h2>@EnvironmentModalTitle</h2>
+                <button type="button" class="cch-icon-button" @onclick="CloseEnvironmentModal" aria-label="@L("关闭", "Close")">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </header>
+            <div class="cch-modal-body">
+                <label class="cch-field">
+                    <span>@L("名称", "Name")</span>
+                    <input class="cch-input" @bind="environmentForm.Name" />
+                </label>
+                <label class="cch-field">
+                    <span>@L("标识", "Key")</span>
+                    <input class="cch-input mono" @bind="environmentForm.Key" />
+                </label>
+                @if (!string.IsNullOrWhiteSpace(formError)) {
+                    <p class="cch-error">@formError</p>
+                }
+            </div>
+            <footer class="cch-modal-footer">
+                <button class="cch-button outline" type="button" @onclick="CloseEnvironmentModal">@L("取消", "Cancel")</button>
+                <button class="cch-button" type="button" @onclick="SaveEnvironmentAsync">@L("保存", "Save")</button>
+            </footer>
+        </section>
+    </div>
+}

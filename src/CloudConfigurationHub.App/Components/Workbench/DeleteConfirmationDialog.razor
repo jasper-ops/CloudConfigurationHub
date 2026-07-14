@@ -1,0 +1,22 @@
+@inherits ManagementWorkbenchComponentBase
+
+@if (deleteProjectTarget is not null || deleteConfigTarget is not null) {
+    <div class="cch-modal-root">
+        <button class="cch-modal-scrim" type="button" @onclick="CloseConfirm" aria-label="@L("关闭", "Close")"></button>
+        <section class="cch-modal cch-confirm" role="dialog" aria-modal="true" aria-label="@L("删除确认", "Delete confirmation")">
+            <header class="cch-modal-header">
+                <h2>@L("删除", "Delete")</h2>
+                <button type="button" class="cch-icon-button" @onclick="CloseConfirm" aria-label="@L("关闭", "Close")">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </header>
+            <div class="cch-modal-body">
+                <p>@(deleteProjectTarget is not null ? L("确定删除该项目吗？其下所有配置将一并删除，此操作不可恢复。", "Delete this project? All configurations under it will also be removed. This cannot be undone.") : L("确定删除该配置项吗？它在所有环境下的值都将被删除。", "Delete this config? Its values in all environments will be removed."))</p>
+            </div>
+            <footer class="cch-modal-footer">
+                <button class="cch-button outline" type="button" @onclick="CloseConfirm">@L("取消", "Cancel")</button>
+                <button class="cch-button danger" type="button" @onclick="ConfirmDeleteAsync">@L("删除", "Delete")</button>
+            </footer>
+        </section>
+    </div>
+}

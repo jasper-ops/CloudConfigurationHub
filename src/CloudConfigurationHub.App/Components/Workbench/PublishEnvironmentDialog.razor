@@ -1,0 +1,58 @@
+@inherits ManagementWorkbenchComponentBase
+
+@if (publishPanelOpen && SelectedProject is { } publishProject && CurrentEnvironment is { } publishEnvironment) {
+    <div class="cch-modal-root">
+        <button class="cch-modal-scrim" type="button" @onclick="ClosePublishPanel" aria-label="@L("关闭", "Close")"></button>
+        <section class="cch-modal release-modal" role="dialog" aria-modal="true" aria-label="@L("发布环境配置", "Publish environment configuration")">
+            <header class="cch-modal-header">
+                <h2>@L("发布环境配置", "Publish environment configuration")</h2>
+                <button type="button" class="cch-icon-button" @onclick="ClosePublishPanel" aria-label="@L("关闭", "Close")">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </header>
+            <div class="cch-modal-body">
+                <p class="cch-muted-line">@publishProject.Name / <span class="mono">@publishEnvironment.Key</span></p>
+                @if (!string.IsNullOrWhiteSpace(panelError)) {
+                    <p class="cch-error" role="alert">@panelError</p>
+                }
+                @if (LatestRelease is null) {
+                    <p class="cch-warning">@L("当前环境还没有发布版本，本次发布将创建首个快照。", "This environment has no releases yet. This publish will create the first snapshot.")</p>
+                }
+                <div class="cch-table-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>KEY</th>
+                                <th>@L("差异", "Diff")</th>
+                                <th>@L("最新发布值", "Published")</th>
+                                <th>@L("草稿值", "Draft")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var row in DiffRows) {
+                                <tr>
+                                    <td class="mono">@row.ConfigurationKey</td>
+                                    <td><span class="cch-status-pill @row.StatusCssClass">@row.StatusText</span></td>
+                                    <td>@(row.HasLatestReleaseValue ? row.LatestReleaseValue : L("未设置", "Not set"))</td>
+                                    <td>@(row.HasDraftValue ? row.DraftValue : L("未设置", "Not set"))</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <label class="cch-field">
+                    <span>@L("发布备注", "Release note")</span>
+                    <textarea class="cch-input" rows="2" @bind="publishForm.Note"></textarea>
+                </label>
+                <label class="cch-field">
+                    <span>@L("发布人", "Published by")</span>
+                    <input class="cch-input" @bind="publishForm.PublishedBy" />
+                </label>
+            </div>
+            <footer class="cch-modal-footer">
+                <button class="cch-button outline" type="button" @onclick="ClosePublishPanel">@L("取消", "Cancel")</button>
+                <button class="cch-button" type="button" disabled="@isPublishing" @onclick="PublishEnvironmentAsync">@(isPublishing ? L("正在发布...", "Publishing...") : L("发布配置", "Publish configuration"))</button>
+            </footer>
+        </section>
+    </div>
+}

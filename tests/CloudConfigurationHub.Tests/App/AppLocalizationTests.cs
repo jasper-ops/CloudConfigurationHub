@@ -187,7 +187,7 @@ public sealed class AppLocalizationTests {
             "ManagementWorkbench.razor");
 
         var pageSource = File.ReadAllText(Path.GetFullPath(pagePath));
-        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
+        var workbenchSource = ReadManagementWorkbenchSources();
 
         Assert.Contains("@page \"/projects/new\"", pageSource, StringComparison.Ordinal);
         Assert.Contains("RoutePanel=\"project-new\"", pageSource, StringComparison.Ordinal);
@@ -205,7 +205,7 @@ public sealed class AppLocalizationTests {
             "Components",
             "ManagementWorkbench.razor");
 
-        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
+        var workbenchSource = ReadManagementWorkbenchSources();
 
         Assert.Contains("@onclick=\"() => GoConfig(project.Id)\"", workbenchSource, StringComparison.Ordinal);
         Assert.Contains("NavigationManager.NavigateTo($\"/projects/{projectId}\")", workbenchSource, StringComparison.Ordinal);
@@ -219,6 +219,28 @@ public sealed class AppLocalizationTests {
         }
 
         throw new DirectoryNotFoundException("Could not find repository root.");
+    }
+
+    private static string ReadManagementWorkbenchSources() {
+        var repositoryRoot = FindRepositoryRoot();
+        var componentRoot = Path.Combine(
+            repositoryRoot,
+            "src",
+            "CloudConfigurationHub.App",
+            "Components");
+        var workbenchRoot = Path.Combine(componentRoot, "Workbench");
+        var files = new[] {
+                Path.Combine(componentRoot, "ManagementWorkbench.razor"),
+                Path.Combine(componentRoot, "ManagementWorkbench.razor.cs")
+            }
+            .Concat(Directory.Exists(workbenchRoot)
+                ? Directory.EnumerateFiles(workbenchRoot, "*.*", SearchOption.TopDirectoryOnly)
+                    .Where(path => path.EndsWith(".razor", StringComparison.OrdinalIgnoreCase)
+                        || path.EndsWith(".cs", StringComparison.OrdinalIgnoreCase))
+                    .OrderBy(path => path, StringComparer.Ordinal)
+                : []);
+
+        return string.Join(Environment.NewLine, files.Select(File.ReadAllText));
     }
 
     [Fact]
@@ -460,7 +482,7 @@ public sealed class AppLocalizationTests {
 
         var environmentSource = File.ReadAllText(Path.GetFullPath(environmentPagePath));
         var configurationSource = File.ReadAllText(Path.GetFullPath(configurationPagePath));
-        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
+        var workbenchSource = ReadManagementWorkbenchSources();
 
         Assert.Contains("@page \"/projects/{ProjectId:guid}/environments/new\"", environmentSource, StringComparison.Ordinal);
         Assert.Contains("RoutePanel=\"environment-new\"", environmentSource, StringComparison.Ordinal);
@@ -527,7 +549,7 @@ public sealed class AppLocalizationTests {
         var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
         var environmentDraftSource = File.ReadAllText(Path.GetFullPath(environmentDraftPagePath));
         var configurationDraftSource = File.ReadAllText(Path.GetFullPath(configurationDraftPagePath));
-        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
+        var workbenchSource = ReadManagementWorkbenchSources();
 
         Assert.Contains("ProjectId=\"ProjectId\"", projectDetailSource, StringComparison.Ordinal);
 
@@ -580,7 +602,7 @@ public sealed class AppLocalizationTests {
             "ManagementWorkbench.razor");
         var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
         var publishSource = File.ReadAllText(Path.GetFullPath(publishPagePath));
-        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
+        var workbenchSource = ReadManagementWorkbenchSources();
 
         Assert.Contains("ProjectId=\"ProjectId\"", projectDetailSource, StringComparison.Ordinal);
 
@@ -632,7 +654,7 @@ public sealed class AppLocalizationTests {
             "ManagementWorkbench.razor");
         var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
         var accessKeySource = File.ReadAllText(Path.GetFullPath(accessKeyPagePath));
-        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
+        var workbenchSource = ReadManagementWorkbenchSources();
 
         Assert.Contains("ProjectId=\"ProjectId\"", projectDetailSource, StringComparison.Ordinal);
 
@@ -682,7 +704,7 @@ public sealed class AppLocalizationTests {
             "ManagementWorkbench.razor");
         var projectDetailSource = File.ReadAllText(Path.GetFullPath(projectDetailPath));
         var releaseHistorySource = File.ReadAllText(Path.GetFullPath(releaseHistoryPagePath));
-        var workbenchSource = File.ReadAllText(Path.GetFullPath(workbenchPath));
+        var workbenchSource = ReadManagementWorkbenchSources();
 
         Assert.Contains("ProjectId=\"ProjectId\"", projectDetailSource, StringComparison.Ordinal);
 

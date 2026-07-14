@@ -147,8 +147,11 @@ public sealed class EfProjectReadModel(
         var draftValue = project.DraftValues.SingleOrDefault(item =>
             item.EnvironmentId == environment.Id && item.ConfigurationId == configuration.Id);
         var configurationKey = $"{configuration.Group}:{configuration.Key}";
+        var publishedConfigurationKey = $"{NormalizeKey(configuration.Group)}:{NormalizeKey(configuration.Key)}";
         var latestReleaseValue = latestRelease?.Values.SingleOrDefault(item =>
-            item.ConfigurationId == configuration.Id || item.ConfigurationKey == configurationKey);
+            item.ConfigurationId == configuration.Id
+                || item.ConfigurationKey == configurationKey
+                || item.ConfigurationKey == publishedConfigurationKey);
         var publicationState = ResolvePublicationState(project, configuration, environment, draftValue, latestReleaseValue);
         var latestPublishedDisplayValue = latestReleaseValue is null
             ? string.Empty
@@ -226,5 +229,9 @@ public sealed class EfProjectReadModel(
                 configuration.Id);
             return string.Equals(draftValue.Value, latestReleaseValue.Value, StringComparison.Ordinal);
         }
+    }
+
+    private static string NormalizeKey(string key) {
+        return key.Trim().ToLowerInvariant();
     }
 }

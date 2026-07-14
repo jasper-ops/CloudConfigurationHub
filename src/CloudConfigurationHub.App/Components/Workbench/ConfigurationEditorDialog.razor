@@ -1,0 +1,46 @@
+@inherits ManagementWorkbenchComponentBase
+
+@if (configModalOpen && SelectedProject is not null) {
+    <div class="cch-modal-root">
+        <button class="cch-modal-scrim" type="button" @onclick="CloseConfigModal" aria-label="@L("关闭", "Close")"></button>
+        <section class="cch-modal config-modal" role="dialog" aria-modal="true" aria-label="@ConfigModalTitle">
+            <header class="cch-modal-header">
+                <h2>@ConfigModalTitle</h2>
+                <button type="button" class="cch-icon-button" @onclick="CloseConfigModal" aria-label="@L("关闭", "Close")">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </header>
+            <div class="cch-modal-body">
+                <label class="cch-field">
+                    <span>@L("标识", "Key")</span>
+                    <input class="cch-input mono" placeholder="database.host" @bind="configForm.Key" />
+                    <small>@L("配置键，项目内唯一", "Configuration key, unique within the project")</small>
+                </label>
+                <label class="cch-field">
+                    <span>@L("描述", "Description") <em>@L("选填", "Optional")</em></span>
+                    <textarea class="cch-input" rows="2" @bind="configForm.Description"></textarea>
+                </label>
+                <label class="cch-check">
+                    <input type="checkbox" @bind="configForm.IsSensitive" />
+                    <span>@L("敏感配置", "Sensitive config")</span>
+                </label>
+                <div class="cch-env-values">
+                    <p>@L("环境取值", "Environment values")</p>
+                    @foreach (var env in SelectedProject.Environments) {
+                        <label>
+                            <span><i style="@DotStyle(env.Key)"></i>@env.Name</span>
+                            <input class="cch-input mono compact" value="@GetConfigFormValue(env.Id)" @oninput="e => SetConfigFormValue(env.Id, e.Value?.ToString() ?? string.Empty)" />
+                        </label>
+                    }
+                </div>
+                @if (!string.IsNullOrWhiteSpace(formError)) {
+                    <p class="cch-error">@formError</p>
+                }
+            </div>
+            <footer class="cch-modal-footer">
+                <button class="cch-button outline" type="button" @onclick="CloseConfigModal">@L("取消", "Cancel")</button>
+                <button class="cch-button" type="button" @onclick="SaveConfigAsync">@L("保存", "Save")</button>
+            </footer>
+        </section>
+    </div>
+}

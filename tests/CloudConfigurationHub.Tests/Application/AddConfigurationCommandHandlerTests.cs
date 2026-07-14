@@ -17,15 +17,15 @@ public sealed class AddConfigurationCommandHandlerTests {
             CancellationToken.None);
 
         Assert.NotEqual(Guid.Empty, result.Id);
-        Assert.Equal("database", result.Group);
-        Assert.Equal("connectionstring", result.Key);
+        Assert.Equal("Database", result.Group);
+        Assert.Equal("ConnectionString", result.Key);
         Assert.True(result.IsSensitive);
         Assert.True(repository.WasSaved);
         var logEntry = Assert.Single(logger.Entries);
         Assert.Equal(LogLevel.Information, logEntry.Level);
         Assert.Contains("已添加配置定义", logEntry.Message, StringComparison.Ordinal);
-        Assert.Contains("database", logEntry.Message, StringComparison.Ordinal);
-        Assert.Contains("connectionstring", logEntry.Message, StringComparison.Ordinal);
+        Assert.Contains("Database", logEntry.Message, StringComparison.Ordinal);
+        Assert.Contains("ConnectionString", logEntry.Message, StringComparison.Ordinal);
     }
 
     private sealed class FakeProjectRepository(Project? project) : IProjectRepository {

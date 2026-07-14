@@ -36,11 +36,11 @@ public sealed class EfProjectDetailReadModelTests {
 
         Assert.NotNull(detail);
         var passwordValue = detail.Configurations
-            .Single(item => item.Key == "password")
+            .Single(item => item.Key == "Password")
             .Values
             .Single(item => item.EnvironmentKey == "prod");
         var featureValue = detail.Configurations
-            .Single(item => item.Key == "enabled")
+            .Single(item => item.Key == "Enabled")
             .Values
             .Single(item => item.EnvironmentKey == "prod");
         Assert.Equal("******", passwordValue.DisplayValue);
@@ -157,22 +157,22 @@ public sealed class EfProjectDetailReadModelTests {
         Assert.NotNull(detail);
         Assert.Equal(
             ConfigurationValuePublicationState.Published,
-            ValueFor(detail, "published").PublicationState);
+            ValueFor(detail, "Published").PublicationState);
         Assert.Equal(
             ConfigurationValuePublicationState.PendingPublish,
-            ValueFor(detail, "modified").PublicationState);
+            ValueFor(detail, "Modified").PublicationState);
         Assert.Equal(
             ConfigurationValuePublicationState.PendingRemoval,
-            ValueFor(detail, "removed").PublicationState);
+            ValueFor(detail, "Removed").PublicationState);
         Assert.Equal(
             ConfigurationValuePublicationState.NotPublished,
-            ValueFor(detail, "notpublished").PublicationState);
+            ValueFor(detail, "NotPublished").PublicationState);
         Assert.Equal(
             ConfigurationValuePublicationState.NotSet,
-            ValueFor(detail, "notset").PublicationState);
-        Assert.Equal("old", ValueFor(detail, "modified").LatestPublishedDisplayValue);
-        Assert.Equal(1, ValueFor(detail, "modified").LatestPublishedVersion);
-        Assert.Equal(DateTimeOffset.Parse("2026-07-11T12:00:00Z"), ValueFor(detail, "modified").LatestPublishedAt);
+            ValueFor(detail, "NotSet").PublicationState);
+        Assert.Equal("old", ValueFor(detail, "Modified").LatestPublishedDisplayValue);
+        Assert.Equal(1, ValueFor(detail, "Modified").LatestPublishedVersion);
+        Assert.Equal(DateTimeOffset.Parse("2026-07-11T12:00:00Z"), ValueFor(detail, "Modified").LatestPublishedAt);
     }
 
     [Fact]
@@ -201,7 +201,7 @@ public sealed class EfProjectDetailReadModelTests {
         var detail = await readModel.GetProjectDetailAsync(project.Id, CancellationToken.None);
 
         Assert.NotNull(detail);
-        var value = ValueFor(detail, "password");
+        var value = ValueFor(detail, "Password");
         Assert.Equal(ConfigurationValuePublicationState.PendingPublish, value.PublicationState);
         Assert.Equal("******", value.DisplayValue);
         Assert.Equal("******", value.LatestPublishedDisplayValue);

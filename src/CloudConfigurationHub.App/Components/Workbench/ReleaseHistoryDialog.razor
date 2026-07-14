@@ -1,0 +1,58 @@
+@inherits ManagementWorkbenchComponentBase
+
+@if (releaseHistoryPanelOpen && SelectedProject is { } historyProject && CurrentEnvironment is { } historyEnvironment) {
+    <div class="cch-modal-root">
+        <button class="cch-modal-scrim" type="button" @onclick="CloseReleaseHistoryPanel" aria-label="@L("关闭", "Close")"></button>
+        <section class="cch-modal release-modal" role="dialog" aria-modal="true" aria-label="@L("发布历史", "Release history")">
+            <header class="cch-modal-header">
+                <h2>@L("发布历史", "Release history")</h2>
+                <button type="button" class="cch-icon-button" @onclick="CloseReleaseHistoryPanel" aria-label="@L("关闭", "Close")">
+                    <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                </button>
+            </header>
+            <div class="cch-modal-body">
+                <p class="cch-muted-line">@historyProject.Name / <span class="mono">@historyEnvironment.Key</span></p>
+                @if (!string.IsNullOrWhiteSpace(panelStatus)) {
+                    <p class="cch-success" role="status">@panelStatus</p>
+                }
+                @if (!string.IsNullOrWhiteSpace(panelError)) {
+                    <p class="cch-error" role="alert">@panelError</p>
+                }
+                <div class="cch-table-card">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>@L("版本", "Version")</th>
+                                <th>@L("备注", "Note")</th>
+                                <th>@L("发布人", "Published by")</th>
+                                <th>@L("发布时间", "Published at")</th>
+                                <th class="right">@L("操作", "Actions")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ReleaseRows.Count == 0) {
+                                <tr><td colspan="5" class="cch-table-empty">@L("暂无发布版本", "No releases")</td></tr>
+                            }
+                            @foreach (var release in ReleaseRows) {
+                                <tr>
+                                    <td class="mono">@($"v{release.Version}")</td>
+                                    <td>@release.Note</td>
+                                    <td>@release.PublishedBy</td>
+                                    <td>@FormatDateTime(release.PublishedAt)</td>
+                                    <td class="right">
+                                        <button class="cch-button outline small" type="button" disabled="@isRollingBack" @onclick="() => RollbackEnvironmentAsync(release)">
+                                            @(isRollingBack && rollingBackReleaseId == release.Id ? L("回滚中...", "Rolling back...") : L("回滚", "Rollback"))
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <footer class="cch-modal-footer">
+                <button class="cch-button outline" type="button" @onclick="CloseReleaseHistoryPanel">@L("关闭", "Close")</button>
+            </footer>
+        </section>
+    </div>
+}
