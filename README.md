@@ -53,15 +53,25 @@ using CloudConfigurationHub.Sdk;
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Configuration.AddCloudConfigurationHub(options => {
-    options.BaseAddress = new Uri("https://config.example.com");
-    options.ProjectId = Guid.Parse("00000000-0000-0000-0000-000000000000");
+    options.Endpoint = new Uri("https://config.example.com");
+    options.ProjectId = "order-service";
     options.EnvironmentKey = "prod";
     options.AccessKey = builder.Configuration["CloudConfigurationHub:AccessKey"]!;
     options.LocalCachePath = "configuration-cache/cloudconfigurationhub.json";
-    options.EnableStreamingRefresh = true;
+    options.EnableSse = true;
 });
 ```
 
 SDK 请求服务端时会发送 `X-CCH-Access-Key`。配置输出 Key 使用 `Group:Key` 格式，例如 `Database:ConnectionString`，可直接交给 Options 绑定。
 
 SDK 默认保留内存缓存，并在远端可用时刷新本地 JSON 缓存。远端不可用但本地 JSON 缓存存在时会降级启动；远端不可用且没有本地缓存时启动失败。本地 JSON 缓存为明文文件，生产环境应使用操作系统文件权限限制读取范围，不要提交到仓库。
+
+## SDK Demo
+
+仓库提供了一个可直接运行的控制台 Demo，用于观察首次配置加载、SSE 实时刷新和本地缓存降级：
+
+```powershell
+dotnet run --project samples/CloudConfigurationHub.Sdk.Demo -- --help
+```
+
+完整准备步骤和测试方法见 [SDK Demo 使用说明](samples/CloudConfigurationHub.Sdk.Demo/README.md)。
