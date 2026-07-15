@@ -29,7 +29,7 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-发布到 NuGet.org 仅使用 Trusted Publishing，不保存长期 API Key。NuGet.org Trusted Publishing policy 绑定 GitHub 仓库 `jasper-ops/CloudConfigurationHub` 和 workflow 文件 `release-sdk.yml`；GitHub 仓库变量 `NUGET_USER` 配置为 NuGet.org 用户名。
+发布到 NuGet.org 使用仓库 Actions Secret `NUGET_API_KEY`。建议在 NuGet.org 创建仅允许推送 `CloudConfigurationHub.Sdk` 的最小权限 API Key，并将其保存为 GitHub 仓库 Secret；workflow 文件为 `release-sdk.yml`。
 
 本地发布前验证：
 

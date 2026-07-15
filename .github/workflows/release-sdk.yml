@@ -8,7 +8,6 @@ on:
 
 permissions:
   contents: read
-  id-token: write
 
 concurrency:
   group: release-sdk-${{ github.ref_name }}
@@ -61,13 +60,7 @@ jobs:
             ${{ env.PACKAGES_DIR }}/*.snupkg
           if-no-files-found: error
 
-      - name: Login to NuGet.org with Trusted Publishing
-        id: nuget-login
-        uses: NuGet/login@v1
-        with:
-          user: ${{ vars.NUGET_USER }}
-
       - name: Publish to NuGet.org
         shell: pwsh
         run: |
-          dotnet nuget push "${{ env.PACKAGES_DIR }}/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --skip-duplicate
+          dotnet nuget push "${{ env.PACKAGES_DIR }}/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "${{ secrets.NUGET_API_KEY }}" --skip-duplicate
