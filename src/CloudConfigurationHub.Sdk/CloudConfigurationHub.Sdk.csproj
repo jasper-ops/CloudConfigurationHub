@@ -10,7 +10,8 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/cloudconfigurationhub/cloudconfigurationhub</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/jasper-ops/CloudConfigurationHub</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/jasper-ops/CloudConfigurationHub</RepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>

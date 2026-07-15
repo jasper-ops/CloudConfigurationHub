@@ -29,7 +29,7 @@ git tag v1.0.0
 git push origin v1.0.0
 ```
 
-发布到 NuGet.org 默认使用 Trusted Publishing；需要先在 NuGet.org 为本仓库创建 Trusted Publishing policy，并在 GitHub 仓库变量中配置 `NUGET_USER`。如果 NuGet.org 账号暂未配置 Trusted Publishing，可在仓库 Secrets 中配置 `NUGET_API_KEY` 作为兼容方案。
+发布到 NuGet.org 仅使用 Trusted Publishing，不保存长期 API Key。NuGet.org Trusted Publishing policy 绑定 GitHub 仓库 `jasper-ops/CloudConfigurationHub` 和 workflow 文件 `release-sdk.yml`；GitHub 仓库变量 `NUGET_USER` 配置为 NuGet.org 用户名。
 
 本地发布前验证：
 

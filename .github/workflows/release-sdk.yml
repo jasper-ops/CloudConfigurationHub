@@ -10,9 +10,16 @@ permissions:
   contents: read
   id-token: write
 
+concurrency:
+  group: release-sdk-${{ github.ref_name }}
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: windows-latest
+
+    env:
+      PACKAGES_DIR: artifacts/packages
 
     steps:
       - name: Checkout
@@ -30,6 +37,10 @@ jobs:
         shell: pwsh
         run: |
           $version = "${env:GITHUB_REF_NAME}".TrimStart("v")
+          if ($version -notmatch '^[0-9]+\.[0-9]+\.[0-9]+(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$') {
+            throw "Tag '$env:GITHUB_REF_NAME' is not a supported SemVer tag. Use v1.2.3 or v1.2.3-preview.1."
+          }
+
           "value=$version" >> $env:GITHUB_OUTPUT
 
       - name: Restore
@@ -39,25 +50,24 @@ jobs:
         run: dotnet test --configuration Release --verbosity normal
 
       - name: Pack SDK
-        run: dotnet pack src/CloudConfigurationHub.Sdk/CloudConfigurationHub.Sdk.csproj --configuration Release --no-restore --output artifacts/packages /p:Version=${{ steps.version.outputs.value }} /p:ContinuousIntegrationBuild=true
+        run: dotnet pack src/CloudConfigurationHub.Sdk/CloudConfigurationHub.Sdk.csproj --configuration Release --no-restore --output ${{ env.PACKAGES_DIR }} /p:PackageVersion=${{ steps.version.outputs.value }} /p:ContinuousIntegrationBuild=true /p:RepositoryCommit=${{ github.sha }}
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: CloudConfigurationHub.Sdk-${{ steps.version.outputs.value }}
+          path: |
+            ${{ env.PACKAGES_DIR }}/*.nupkg
+            ${{ env.PACKAGES_DIR }}/*.snupkg
+          if-no-files-found: error
 
       - name: Login to NuGet.org with Trusted Publishing
         id: nuget-login
         uses: NuGet/login@v1
-        continue-on-error: true
         with:
           user: ${{ vars.NUGET_USER }}
 
-      - name: Publish with Trusted Publishing
-        if: steps.nuget-login.outcome == 'success'
+      - name: Publish to NuGet.org
         shell: pwsh
         run: |
-          dotnet nuget push "artifacts/packages/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --skip-duplicate
-          dotnet nuget push "artifacts/packages/*.snupkg" --source https://api.nuget.org/v3/index.json --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --skip-duplicate
-
-      - name: Publish with repository secret fallback
-        if: steps.nuget-login.outcome != 'success'
-        shell: pwsh
-        run: |
-          dotnet nuget push "artifacts/packages/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "${{ secrets.NUGET_API_KEY }}" --skip-duplicate
-          dotnet nuget push "artifacts/packages/*.snupkg" --source https://api.nuget.org/v3/index.json --api-key "${{ secrets.NUGET_API_KEY }}" --skip-duplicate
+          dotnet nuget push "${{ env.PACKAGES_DIR }}/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --skip-duplicate

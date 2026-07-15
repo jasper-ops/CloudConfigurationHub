@@ -31,7 +31,9 @@ public sealed class ReleaseWorkflowTests {
         Assert.Contains("v*.*.*-*", workflow, StringComparison.Ordinal);
         Assert.Contains("id-token: write", workflow, StringComparison.Ordinal);
         Assert.Contains("NuGet/login@v1", workflow, StringComparison.Ordinal);
-        Assert.Contains("NUGET_API_KEY", workflow, StringComparison.Ordinal);
+        Assert.Contains("vars.NUGET_USER", workflow, StringComparison.Ordinal);
+        Assert.Contains("steps.nuget-login.outputs.NUGET_API_KEY", workflow, StringComparison.Ordinal);
+        Assert.DoesNotContain("secrets.NUGET_API_KEY", workflow, StringComparison.Ordinal);
         Assert.Contains("dotnet pack src/CloudConfigurationHub.Sdk/CloudConfigurationHub.Sdk.csproj", workflow, StringComparison.Ordinal);
         Assert.Contains("*.nupkg", workflow, StringComparison.Ordinal);
         Assert.Contains("*.snupkg", workflow, StringComparison.Ordinal);
@@ -57,6 +59,7 @@ public sealed class ReleaseWorkflowTests {
         Assert.Contains("X-CCH-Access-Key", readme, StringComparison.Ordinal);
         Assert.Contains("本地 JSON 缓存", readme, StringComparison.Ordinal);
         Assert.Contains("Trusted Publishing policy", readme, StringComparison.Ordinal);
-        Assert.Contains("NUGET_API_KEY", readme, StringComparison.Ordinal);
+        Assert.Contains("NUGET_USER", readme, StringComparison.Ordinal);
+        Assert.DoesNotContain("NUGET_API_KEY", readme, StringComparison.Ordinal);
     }
 }
