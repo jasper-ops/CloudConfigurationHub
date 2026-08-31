@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Runtime.CompilerServices;
 using CloudConfigurationHub.App.Localization;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
@@ -211,8 +210,8 @@ public sealed class AppLocalizationTests {
         Assert.Contains("NavigationManager.NavigateTo($\"/projects/{projectId}\")", workbenchSource, StringComparison.Ordinal);
     }
 
-    private static string FindRepositoryRoot([CallerFilePath] string sourceFilePath = "") {
-        for (var current = new FileInfo(sourceFilePath).Directory; current is not null; current = current.Parent) {
+    private static string FindRepositoryRoot() {
+        for (var current = new DirectoryInfo(AppContext.BaseDirectory); current is not null; current = current.Parent) {
             if (File.Exists(Path.Combine(current.FullName, "CloudConfigurationHub.slnx"))) {
                 return current.FullName;
             }
