@@ -15,6 +15,8 @@ using CloudConfigurationHub.Application.Security;
 using CloudConfigurationHub.App.Setup;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -129,7 +131,42 @@ static async Task InitializeConfigurationHubDatabaseAsync(WebApplication app) {
 static async Task InitializeIdentityDatabaseAsync(WebApplication app) {
     using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    await AlignLegacyIdentityMigrationHistoryAsync(dbContext, CancellationToken.None);
     await dbContext.Database.MigrateAsync(CancellationToken.None);
+}
+
+static async Task AlignLegacyIdentityMigrationHistoryAsync(
+    ApplicationDbContext dbContext,
+    CancellationToken cancellationToken) {
+    const string legacyMigrationId = "00000000000000_CreateIdentitySchema";
+    var currentMigrationId = dbContext.Database.GetMigrations()
+        .FirstOrDefault(migrationId => migrationId.EndsWith("_CreateIdentitySchema", StringComparison.Ordinal));
+    if (currentMigrationId is null || currentMigrationId == legacyMigrationId) {
+        return;
+    }
+
+    var historyRepository = dbContext.Database.GetService<IHistoryRepository>();
+    if (!await historyRepository.ExistsAsync(cancellationToken)) {
+        return;
+    }
+
+    var appliedMigrations = await historyRepository.GetAppliedMigrationsAsync(cancellationToken);
+    var legacyMigration = appliedMigrations.SingleOrDefault(
+        migration => migration.MigrationId == legacyMigrationId);
+    if (legacyMigration is null
+        || appliedMigrations.Any(migration => migration.MigrationId == currentMigrationId)) {
+        return;
+    }
+
+    await using var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken);
+    await dbContext.Database.ExecuteSqlRawAsync(
+        historyRepository.GetDeleteScript(legacyMigrationId),
+        cancellationToken);
+    await dbContext.Database.ExecuteSqlRawAsync(
+        historyRepository.GetInsertScript(
+            new HistoryRow(currentMigrationId, ProductInfo.GetVersion())),
+        cancellationToken);
+    await transaction.CommitAsync(cancellationToken);
 }
 
 /// <summary>

@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Logging;
 using System.Data.Common;
 
@@ -20,22 +20,35 @@ public sealed class ConfigurationHubDatabaseInitializer(
     /// <param name="cancellationToken">取消令牌，用于终止数据库初始化。</param>
     /// <returns>表示数据库初始化过程的异步任务。</returns>
     public async Task InitializeAsync(CancellationToken cancellationToken) {
-        var creator = dbContext.Database.GetService<IRelationalDatabaseCreator>();
-        if (!await creator.ExistsAsync(cancellationToken)) {
-            logger.LogInformation("配置中心数据库不存在，开始创建数据库和业务表。");
-            await creator.CreateAsync(cancellationToken);
-            await creator.CreateTablesAsync(cancellationToken);
-            return;
-        }
-
         if (await ProjectsTableExistsAsync(cancellationToken)) {
             await EnsureCompatibilityColumnsAsync(cancellationToken);
-            logger.LogInformation("配置中心数据库表已存在，跳过初始化。");
+            await BaselineInitialMigrationAsync(cancellationToken);
+        }
+
+        logger.LogInformation("开始应用配置中心数据库迁移。");
+        await dbContext.Database.MigrateAsync(cancellationToken);
+        logger.LogInformation("配置中心数据库迁移已完成。");
+    }
+
+    private async Task BaselineInitialMigrationAsync(CancellationToken cancellationToken) {
+        var initialMigration = dbContext.Database.GetMigrations().FirstOrDefault();
+        if (initialMigration is null) {
             return;
         }
 
-        logger.LogInformation("配置中心数据库已存在但缺少业务表，开始创建业务表。");
-        await creator.CreateTablesAsync(cancellationToken);
+        var historyRepository = dbContext.Database.GetService<IHistoryRepository>();
+        await historyRepository.CreateIfNotExistsAsync(cancellationToken);
+        var appliedMigrations = await historyRepository.GetAppliedMigrationsAsync(cancellationToken);
+        if (appliedMigrations.Any(migration => migration.MigrationId == initialMigration)) {
+            return;
+        }
+
+        var insertScript = historyRepository.GetInsertScript(
+            new HistoryRow(initialMigration, ProductInfo.GetVersion()));
+        await dbContext.Database.ExecuteSqlRawAsync(insertScript, cancellationToken);
+        logger.LogInformation(
+            "检测到迁移系统启用前创建的配置中心表，已将初始迁移 {MigrationId} 标记为已应用。",
+            initialMigration);
     }
 
     private async Task<bool> ProjectsTableExistsAsync(CancellationToken cancellationToken) {

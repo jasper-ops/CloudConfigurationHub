@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace CloudConfigurationHub.App.Migrations
+namespace CloudConfigurationHub.App.Data.Migrations
 {
     /// <inheritdoc />
     public partial class CreateIdentitySchema : Migration

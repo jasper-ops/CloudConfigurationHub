@@ -47,6 +47,7 @@ public sealed class RepositoryQualityTests {
             .SelectMany(root => Directory.EnumerateFiles(root, "*.cs", SearchOption.AllDirectories))
             .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase)
                 && !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase)
+                && !path.Contains($"{Path.DirectorySeparatorChar}Migrations{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase)
                 && !Path.GetFileName(path).EndsWith(".Designer.cs", StringComparison.OrdinalIgnoreCase))
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new {
