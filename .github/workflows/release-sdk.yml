@@ -70,4 +70,6 @@ jobs:
       - name: Publish to NuGet.org
         shell: pwsh
         run: |
-          dotnet nuget push "${{ env.PACKAGES_DIR }}/*.nupkg" --source https://api.nuget.org/v3/index.json --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --skip-duplicate
+          Get-ChildItem -Path "${{ env.PACKAGES_DIR }}" -Filter *.nupkg | ForEach-Object {
+            dotnet nuget push $_.FullName --source https://api.nuget.org/v3/index.json --api-key "${{ steps.nuget-login.outputs.NUGET_API_KEY }}" --skip-duplicate
+          }
