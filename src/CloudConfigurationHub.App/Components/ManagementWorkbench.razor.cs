@@ -664,7 +664,23 @@ public partial class ManagementWorkbench {
 
     internal static string DotStyle(string key) {
         var colors = new[] { "#22c55e", "#3b82f6", "#f59e0b", "#a855f7", "#ef4444" };
-        var index = Math.Abs(key.GetHashCode()) % colors.Length;
+        var normalizedKey = key.Trim().ToLowerInvariant();
+        var semanticColor = normalizedKey switch {
+            "dev" or "development" => "#3b82f6",
+            "test" or "testing" or "qa" or "staging" => "#f59e0b",
+            "prod" or "production" or "live" => "#ef4444",
+            _ => null
+        };
+
+        if (semanticColor is not null) {
+            return $"background-color:{semanticColor}";
+        }
+
+        var index = 0;
+        foreach (var character in normalizedKey) {
+            index = ((index * 31) + character) % colors.Length;
+        }
+
         return $"background-color:{colors[index]}";
     }
 

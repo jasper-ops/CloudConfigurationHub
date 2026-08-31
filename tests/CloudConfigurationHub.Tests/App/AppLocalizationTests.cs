@@ -290,7 +290,7 @@ public sealed class AppLocalizationTests {
             "CloudConfigurationHub.App",
             "wwwroot",
             "theme.js");
-        var enhancedScriptPath = Path.Combine(
+        var bootstrapScriptPath = Path.Combine(
             AppContext.BaseDirectory,
             "..",
             "..",
@@ -300,16 +300,17 @@ public sealed class AppLocalizationTests {
             "src",
             "CloudConfigurationHub.App",
             "wwwroot",
-            "theme-enhanced.js");
+            "theme-bootstrap.js");
 
         var appSource = File.ReadAllText(Path.GetFullPath(appPath));
         var layoutSource = File.ReadAllText(Path.GetFullPath(layoutPath));
         var switcherSource = File.ReadAllText(Path.GetFullPath(switcherPath));
         var scriptSource = File.ReadAllText(Path.GetFullPath(scriptPath));
-        var enhancedScriptSource = File.ReadAllText(Path.GetFullPath(enhancedScriptPath));
+        var bootstrapScriptSource = File.ReadAllText(Path.GetFullPath(bootstrapScriptPath));
 
         Assert.Contains("theme.js", appSource, StringComparison.Ordinal);
-        Assert.Contains("theme-enhanced.js", appSource, StringComparison.Ordinal);
+        Assert.Contains("theme-bootstrap.js", appSource, StringComparison.Ordinal);
+        Assert.Contains("type=\"module\"", appSource, StringComparison.Ordinal);
         Assert.Contains("<ThemeSwitcher", layoutSource, StringComparison.Ordinal);
         Assert.Contains("data-theme-switcher", switcherSource, StringComparison.Ordinal);
         Assert.Contains("data-theme-option=\"system\"", switcherSource, StringComparison.Ordinal);
@@ -321,7 +322,10 @@ public sealed class AppLocalizationTests {
         Assert.Contains("data-theme", scriptSource, StringComparison.Ordinal);
         Assert.Contains("enhancedload", scriptSource, StringComparison.Ordinal);
         Assert.Contains("pageshow", scriptSource, StringComparison.Ordinal);
-        Assert.Contains("Blazor.addEventListener(\"enhancedload\"", enhancedScriptSource, StringComparison.Ordinal);
+        Assert.Contains("document.addEventListener(\"click\"", scriptSource, StringComparison.Ordinal);
+        Assert.Contains("Blazor.addEventListener(\"enhancedload\"", scriptSource, StringComparison.Ordinal);
+        Assert.Contains("localStorage", bootstrapScriptSource, StringComparison.Ordinal);
+        Assert.Contains("data-theme", bootstrapScriptSource, StringComparison.Ordinal);
     }
 
     [Fact]

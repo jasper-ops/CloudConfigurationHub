@@ -1,106 +1,88 @@
-(function () {
-    const storageKey = "cloud-configuration-hub.theme";
+const storageKey = "cloud-configuration-hub.theme";
+const supportedThemes = new Set(["light", "dark", "system"]);
+const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+function normalizeTheme(theme) {
+    return supportedThemes.has(theme) ? theme : "system";
+}
+
+function resolveTheme(theme) {
+    return theme === "system"
+        ? mediaQuery.matches ? "dark" : "light"
+        : theme;
+}
+
+export function readTheme() {
+    try {
+        return normalizeTheme(localStorage.getItem(storageKey));
+    }
+    catch {
+        return "system";
+    }
+}
+
+function persistTheme(theme) {
+    try {
+        localStorage.setItem(storageKey, theme);
+    }
+    catch {
+        // 浏览器禁用存储时仍允许本次页面会话应用主题。
+    }
+}
+
+function markActive(theme) {
+    document.querySelectorAll("[data-theme-option]").forEach(button => {
+        const active = button.getAttribute("data-theme-option") === theme;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", active ? "true" : "false");
+    });
+}
+
+export function applyTheme(theme) {
+    const normalizedTheme = normalizeTheme(theme);
+    const resolvedTheme = resolveTheme(normalizedTheme);
     const root = document.documentElement;
-    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
 
-    function normalizeTheme(theme) {
-        return theme === "light" || theme === "dark" || theme === "system"
-            ? theme
-            : "system";
-    }
+    root.setAttribute("data-theme-mode", normalizedTheme);
+    root.setAttribute("data-theme", resolvedTheme);
+    root.style.colorScheme = resolvedTheme;
+    markActive(normalizedTheme);
+}
 
-    function resolveTheme(theme) {
-        if (theme === "dark") {
-            return "dark";
-        }
+export function setTheme(theme) {
+    const normalizedTheme = normalizeTheme(theme);
+    persistTheme(normalizedTheme);
+    applyTheme(normalizedTheme);
+}
 
-        if (theme === "light") {
-            return "light";
-        }
-
-        return mediaQuery.matches ? "dark" : "light";
-    }
-
-    function readTheme() {
-        try {
-            return normalizeTheme(localStorage.getItem(storageKey));
-        }
-        catch {
-            return "system";
-        }
-    }
-
-    function persistTheme(theme) {
-        try {
-            localStorage.setItem(storageKey, theme);
-        }
-        catch {
-            // 浏览器禁用存储时仍允许本次页面会话应用主题。
-        }
-    }
-
-    function markActive(theme) {
-        document.querySelectorAll("[data-theme-option]").forEach(function (button) {
-            const active = button.getAttribute("data-theme-option") === theme;
-            button.classList.toggle("active", active);
-            button.setAttribute("aria-pressed", active ? "true" : "false");
-        });
-    }
-
-    function applyTheme(theme) {
-        const normalized = normalizeTheme(theme);
-        const resolved = resolveTheme(normalized);
-        root.setAttribute("data-theme-mode", normalized);
-        root.setAttribute("data-theme", resolved);
-        root.style.colorScheme = resolved;
-        markActive(normalized);
-    }
-
-    function setTheme(theme) {
-        const normalized = normalizeTheme(theme);
-        persistTheme(normalized);
-        applyTheme(normalized);
-    }
-
-    function bindSwitcher() {
-        document.querySelectorAll("[data-theme-option]").forEach(function (button) {
-            if (button.dataset.themeBound === "true") {
-                return;
-            }
-
-            button.dataset.themeBound = "true";
-            button.addEventListener("click", function () {
-                setTheme(button.getAttribute("data-theme-option"));
-            });
-        });
-        markActive(readTheme());
-    }
-
+function restoreTheme() {
     applyTheme(readTheme());
-    mediaQuery.addEventListener("change", function () {
-        if (readTheme() === "system") {
-            applyTheme("system");
-        }
-    });
+}
 
-    if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", bindSwitcher);
-    }
-    else {
-        bindSwitcher();
+document.addEventListener("click", event => {
+    if (!(event.target instanceof Element)) {
+        return;
     }
 
-    document.addEventListener("enhancedload", function () {
-        applyTheme(readTheme());
-        bindSwitcher();
-    });
-    window.addEventListener("pageshow", function () {
-        applyTheme(readTheme());
-    });
+    const button = event.target.closest("button[data-theme-option]");
+    if (!(button instanceof HTMLButtonElement)) {
+        return;
+    }
 
-    window.CloudConfigurationHubTheme = {
-        applyTheme,
-        setTheme,
-        readTheme
-    };
-})();
+    setTheme(button.dataset.themeOption);
+});
+
+mediaQuery.addEventListener("change", () => {
+    if (readTheme() === "system") {
+        applyTheme("system");
+    }
+});
+
+document.addEventListener("enhancedload", restoreTheme);
+window.addEventListener("pageshow", restoreTheme);
+
+if (window.Blazor && typeof window.Blazor.addEventListener === "function") {
+    window.Blazor.addEventListener("enhancedload", restoreTheme);
+}
+
+restoreTheme();
